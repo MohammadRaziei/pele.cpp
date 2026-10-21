@@ -7,3 +7,6 @@ endfunction()
 
 pele_add_test(test_layered layered_cases.txt)
 pele_add_test(test_compound compound_cases.txt)
+pele_add_test(test_label label_cases.txt)
+pele_add_test(test_svg svg_cases.txt)
+pele_add_test(test_theme theme_cases.txt)

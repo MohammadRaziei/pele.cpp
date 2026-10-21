@@ -18,6 +18,12 @@ endif()
 add_library(pele
   src/layered.cpp
   src/compound.cpp
+  src/ustring.cpp
+  src/text_measurer.cpp
+  src/entities.cpp
+  src/label.cpp
+  src/svg.cpp
+  src/theme.cpp
 )
 add_library(pele::pele ALIAS pele)
 target_include_directories(pele PUBLIC include PRIVATE src)
