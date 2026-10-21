@@ -32,6 +32,7 @@ add_library(pele
   src/errors.cpp
   src/detect.cpp
   src/yaml.cpp
+  src/preprocess.cpp
 )
 add_library(pele::pele ALIAS pele)
 target_include_directories(pele PUBLIC include PRIVATE src)
