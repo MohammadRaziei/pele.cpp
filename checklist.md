@@ -4,11 +4,20 @@
 مرجع: خروجی `pele.js` در Node با اندازه‌گیر متن ثابت (جدول Arial). ورودی یکسان ⇒ SVG یکسان.
 پیش‌نمایش PNG فقط با `novasvg` (ابزار کمکی، جزو پروژه نیست).
 
+## معماری (شی‌گرا، همه‌چیز در `namespace pele`)
+- Strategy: `flat_layout_engine` ← `layered_layouter`؛ `text_measurer` ← `metrics_measurer`؛ `shape` ← شکل‌ها
+- Dependency Injection: `compound_layouter` موتور چیدمان را از بیرون می‌گیرد
+- Registry: `shape_registry` (انجام شد)؛ `diagram_registry` برای انواع دیاگرام (مرحله ۶)
+- Builder: `svg_builder` برای ساخت خروجی SVG
+- هر نوع دیاگرام یک کلاس است: `diagram` (رابط) ← `flowchart_diagram` و غیره
+- Value objects: `theme`، `render_options`، `render_result`
+- خطاها: `pele_error` (از `std::runtime_error`)
+
 ## قواعد
 - [x] تمام کد C++ است، بدون وابستگی خارجی
 - [x] `-ffp-contract=off` تا ترتیب عملیات اعشاری مثل JS بماند
 - [x] هر مرحله با داده‌ی تولیدشده از `pele.js` تست می‌شود
-- [ ] هر مرحله که تمام شد، zip و ارسال
+- [x] هر مرحله که تمام شد، zip و ارسال (`pele.cpp-step-NN-*.zip`)
 
 ## مرحله ۰ — آماده‌سازی
 - [x] خواندن ریپوی Pele و ساختار `src/`
@@ -24,25 +33,32 @@
 - [x] مولد تست `tools/gen_layered_cases.mjs` + `tests/test_layered.cpp`
 - [x] ۳٬۶۰۰ گراف تصادفی: تطابق ۱۰۰٪
 
-## مرحله ۲ — چیدمان گروه‌ها (`layout/compound.ts`)
-- [x] `compound.h`
-- [ ] `compound.cpp`
-- [ ] مولد تست و تطابق با TS
+## مرحله ۲ — چیدمان گروه‌ها (`layout/compound.ts` → `src/compound.cpp`)
+- [x] `flat_layout_engine` (Strategy) و `layered_layouter`
+- [x] `compound_layouter` با تزریق موتور (Dependency Injection)، کلاس‌های `level` و `session`
+- [x] مولد تست `tools/gen_compound_cases.mjs` + `tests/test_compound.cpp`
+- [x] ۲٬۸۰۰ گراف تودرتو: تطابق ۱۰۰٪
 
 ## مرحله ۳ — زیرساخت متن و SVG
-- [ ] جدول متریک Arial (`text/metrics.ts`) و `metrics_measurer`
-- [ ] entities، label (markup، wrap، CJK)
-- [ ] svg builder: `num`، `esc`، `label_svg`
-- [ ] theme، root (`svg_document`)، ROOT_STYLE
-- [ ] edges: `route_path`، marker، `edge_label_svg`، `loop_path`
-- [ ] shapes (حدود ۵۰ شکل)
-- [ ] cluster، title
+- [x] `ustring` (UTF-16 مثل JS)، `chars.h`، `js_math.h` (`js_round`، `js_hypot` عین V8)
+- [x] `text_measurer` (Strategy) و `metrics_measurer` با جدول Arial
+- [x] entities (نام‌دار، عددی، placeholderهای Mermaid) — ۶٬۶۰۰ مورد تطابق
+- [x] `label_layouter`: markup، markdown، wrap، CJK، آیکون
+- [x] `svg::` ابزارها: `num`، `esc`، `esc_text`، `label_svg` — ۲٬۰۰۰ مورد
+- [x] `theme`: `font_style`، `resolve_style`، `class_names`، `series_color` — ۲٬۰۰۰ مورد (جدول یونیکد تولیدشده)
+- [x] `edge_geometry`: `route_path`، `marker`، `loop_path`، `side_reach` — ۱۲٬۶۰۰ مورد
+- [x] `svg_document`، `with_title`، `crossing_map`/`struck_title` — ۱٬۲۰۰ مورد
+- [x] `shape_registry` (Registry): ۵۸ شکل، `end_side`، `inset_route` — ۱٬۰۹۶ مورد
+- [x] `render_options`
 
 ## مرحله ۴ — پیش‌پردازش
-- [ ] preprocess: front matter، directive، comment
-- [ ] YAML ساده‌شده (`util/yaml.ts`)
-- [ ] detect نوع دیاگرام
-- [ ] errors (`pele_error`)
+- [x] `pele_error` و `error_code`، `locate`، `syntax_error` (پیام‌ها عین Mermaid)
+- [x] `diagram_detector`: ۳۷ آشکارساز به ترتیب Mermaid (شامل regex ناقص C4 که فقط اولی لنگر دارد)
+- [x] `yaml_value` با ترتیب کلید مثل JS (کلیدهای عددی اول) و `parse_yaml` (block، flow، block scalar، escape)
+- [x] `parse_json` (معادل `JSON.parse`)
+- [x] `preprocess`: front matter، directive (`%%{init}%%`، `%%{wrap}%%`)، کامنت، تگ HTML
+- [x] `encode_entities`، `cleanup_comments`
+- [x] تست با مرجع TS: ۲۴٬۰۰۰+ مورد YAML/JSON/detect/locate و ۳۲٬۰۰۰+ مورد preprocess
 
 ## مرحله ۵ — فلوچارت
 - [ ] tokens، lexer
