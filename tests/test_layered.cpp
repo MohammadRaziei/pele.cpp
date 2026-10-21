@@ -100,7 +100,7 @@ int main(int argc, char** argv) {
     std::getline(in, line);  // end
 
     total++;
-    const layered_result res = layered_layout(nodes, edges, opt);
+    const layered_result res = layered_layouter(opt).layout(nodes, edges);
     std::string why;
     if (!close(res.width, rw) || !close(res.height, rh)) why = "size";
     for (int i = 0; why.empty() && i < n; i++)

@@ -13,6 +13,9 @@ enum class flow_dir { tb, bt, lr, rl };
 flow_dir parse_direction(std::string_view dir);
 
 struct compound_node {
+  compound_node() = default;
+  compound_node(double w_, double h_, int parent_ = -1) : w(w_), h(h_), parent(parent_) {}
+
   double w = 0;
   double h = 0;
   int parent = -1;
@@ -32,6 +35,10 @@ struct compound_node {
 };
 
 struct compound_edge {
+  compound_edge() = default;
+  compound_edge(int src_, int dst_, int minlen_ = 1, double label_w_ = 0, double label_h_ = 0)
+      : src(src_), dst(dst_), minlen(minlen_), label_w(label_w_), label_h(label_h_) {}
+
   int src = 0;
   int dst = 0;
   int minlen = 1;
@@ -48,13 +55,20 @@ struct compound_result {
   double height = 0;
 };
 
-compound_node make_compound_node(double w, double h, int parent = -1);
-
-void shift_layout(std::vector<compound_node>& nodes, std::vector<compound_edge>& edges, double ox, double oy);
-
 // Lays out a graph whose nodes may be nested in groups. Each group is laid out on its own, in its
-// own direction, and then placed in its parent as a single box. An edge that crosses a group's
-// border passes through a port on the side facing its other end.
-compound_result compound_layout(std::vector<compound_node>& nodes, std::vector<compound_edge>& edges, flow_dir root_dir, const layered_options& opt);
+// own direction, by the flat engine it is given, and then placed in its parent as a single box.
+// An edge that crosses a group's border passes through a port on the side facing its other end.
+class compound_layouter {
+ public:
+  explicit compound_layouter(const flat_layout_engine& engine) : engine_(engine) {}
+
+  compound_result layout(std::vector<compound_node>& nodes, std::vector<compound_edge>& edges, flow_dir root_dir) const;
+
+  // Moves a finished layout, its edges and labels included.
+  static void shift(std::vector<compound_node>& nodes, std::vector<compound_edge>& edges, double ox, double oy);
+
+ private:
+  const flat_layout_engine& engine_;
+};
 
 }  // namespace pele

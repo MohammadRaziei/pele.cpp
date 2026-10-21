@@ -12,6 +12,9 @@ namespace pele {
 enum class node_kind : std::uint8_t { node = 0, dummy = 1, label = 2, start_port = 3, end_port = 4 };
 
 struct layered_node {
+  layered_node() = default;
+  layered_node(double w_, double h_, node_kind kind_ = node_kind::node) : w(w_), h(h_), kind(kind_) {}
+
   double w = 0;
   double h = 0;
   node_kind kind = node_kind::node;
@@ -24,6 +27,10 @@ struct layered_node {
 };
 
 struct layered_edge {
+  layered_edge() = default;
+  layered_edge(int tail_, int head_, int minlen_ = 1, double label_w_ = 0, double label_h_ = 0)
+      : tail(tail_), head(head_), minlen(minlen_), label_w(label_w_), label_h(label_h_) {}
+
   int tail = 0;
   int head = 0;
   int minlen = 1;
@@ -60,15 +67,37 @@ struct layered_result {
   double height = 0;
 };
 
-layered_node make_layered_node(double w, double h, node_kind kind = node_kind::node);
-layered_edge make_layered_edge(int tail, int head, int minlen = 1, double label_w = 0, double label_h = 0);
+// A layout of one flat graph. Strategy: callers that lay out nested graphs depend on this
+// interface and not on one algorithm.
+class flat_layout_engine {
+ public:
+  virtual ~flat_layout_engine() = default;
 
-// Reverses the edges that close a cycle, found by depth-first search in declaration order.
-void orient(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges);
-void assign_ranks(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges, int step);
-layered_result layered_layout(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges, const layered_options& opt);
+  // Places the nodes and routes the edges; the result is the size of the drawing.
+  virtual layered_result layout(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges) const = 0;
 
-// How far along the flow the handles of a plain S reach, as a share of the way it travels along it.
-double ease(double across, double along);
+  // Only decides which way each edge runs and which rank each node is in (node.rank, edge.reversed).
+  virtual void rank_nodes(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges) const = 0;
+};
+
+class layered_layouter final : public flat_layout_engine {
+ public:
+  explicit layered_layouter(layered_options options) : options_(options) {}
+
+  layered_result layout(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges) const override;
+  void rank_nodes(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges) const override;
+
+  const layered_options& options() const { return options_; }
+
+  // Reverses the edges that close a cycle, found by depth-first search in declaration order.
+  static void orient(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges);
+  static void assign_ranks(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges, int step);
+
+  // How far along the flow the handles of a plain S reach, as a share of the way it travels along it.
+  static double ease(double across, double along);
+
+ private:
+  layered_options options_;
+};
 
 }  // namespace pele

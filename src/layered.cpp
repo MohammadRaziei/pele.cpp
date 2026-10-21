@@ -1,5 +1,7 @@
 #include "layered.h"
 
+#include "js_math.h"
+
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
@@ -473,7 +475,7 @@ bool empty_ranks(const graph& g, u8s& empty) {
 
 }  // namespace
 
-double ease(double across, double along) {
+double layered_layouter::ease(double across, double along) {
   return std::max(0.25, std::min(0.5, (4 * std::abs(along)) / (std::abs(across) != 0 ? std::abs(across) : 1)));
 }
 
@@ -622,7 +624,7 @@ void assign_tracks(pieces_t& pieces, i32s& track_count, bool curved, const f64s&
   // The least distance between a and b as plain curves across a gap that leaves them `height` to turn in.
   constexpr int kSamples = 16;
   auto sample = [&](int k, double h, f64s& out) {
-    const double c = ease(to[k] - from[k], h);
+    const double c = layered_layouter::ease(to[k] - from[k], h);
     for (int i = 0; i <= kSamples; i++) {
       const double t = static_cast<double>(i) / kSamples;
       const double u = 1 - t;
@@ -642,7 +644,7 @@ void assign_tracks(pieces_t& pieces, i32s& track_count, bool curved, const f64s&
         const double dy = line[2 * j + 3] - line[2 * j + 1];
         const double den = dx * dx + dy * dy;
         const double t = std::max(0.0, std::min(1.0, ((px - line[2 * j]) * dx + (py - line[2 * j + 1]) * dy) / (den != 0 ? den : 1)));
-        const double d = std::hypot(px - line[2 * j] - t * dx, py - line[2 * j + 1] - t * dy);
+        const double d = js_hypot(px - line[2 * j] - t * dx, py - line[2 * j + 1] - t * dy);
         if (d < least) least = d;
       }
     }
@@ -1275,25 +1277,7 @@ f64s position(graph& g, const layered_options& opt) {
 
 }  // namespace
 
-layered_node make_layered_node(double w, double h, node_kind kind) {
-  layered_node n;
-  n.w = w;
-  n.h = h;
-  n.kind = kind;
-  return n;
-}
-
-layered_edge make_layered_edge(int tail, int head, int minlen, double label_w, double label_h) {
-  layered_edge e;
-  e.tail = tail;
-  e.head = head;
-  e.minlen = minlen;
-  e.label_w = label_w;
-  e.label_h = label_h;
-  return e;
-}
-
-void orient(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges) {
+void layered_layouter::orient(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges) {
   const int n = static_cast<int>(nodes.size());
   const int m = static_cast<int>(edges.size());
   i32s start(n + 1, 0);
@@ -1334,7 +1318,7 @@ void orient(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges) 
   }
 }
 
-void assign_ranks(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges, int step) {
+void layered_layouter::assign_ranks(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges, int step) {
   const int n = static_cast<int>(nodes.size());
   const int m = static_cast<int>(edges.size());
   i32s from(m);
@@ -1436,7 +1420,13 @@ void assign_ranks(std::vector<layered_node>& nodes, std::vector<layered_edge>& e
   for (int i = 0; i < n; i++) nodes[i].rank = r[i] - mn;
 }
 
-layered_result layered_layout(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges, const layered_options& opt) {
+void layered_layouter::rank_nodes(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges) const {
+  orient(nodes, edges);
+  assign_ranks(nodes, edges, 1);
+}
+
+layered_result layered_layouter::layout(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges) const {
+  const layered_options& opt = options_;
   const int real = static_cast<int>(nodes.size());
   if (real == 0) return {0, 0};
   const int m = static_cast<int>(edges.size());

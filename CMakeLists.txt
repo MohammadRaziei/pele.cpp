@@ -17,6 +17,7 @@ endif()
 
 add_library(pele
   src/layered.cpp
+  src/compound.cpp
 )
 add_library(pele::pele ALIAS pele)
 target_include_directories(pele PUBLIC include PRIVATE src)

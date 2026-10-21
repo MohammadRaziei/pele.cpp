@@ -1,4 +1,9 @@
-add_executable(test_layered test_layered.cpp)
-target_link_libraries(test_layered PRIVATE pele)
-target_include_directories(test_layered PRIVATE ${CMAKE_SOURCE_DIR}/src)
-add_test(NAME layered COMMAND test_layered ${CMAKE_SOURCE_DIR}/tests/data/layered_cases.txt)
+function(pele_add_test name)
+  add_executable(${name} ${name}.cpp)
+  target_link_libraries(${name} PRIVATE pele)
+  target_include_directories(${name} PRIVATE ${CMAKE_SOURCE_DIR}/src)
+  add_test(NAME ${name} COMMAND ${name} ${CMAKE_SOURCE_DIR}/tests/data/${ARGV1})
+endfunction()
+
+pele_add_test(test_layered layered_cases.txt)
+pele_add_test(test_compound compound_cases.txt)
