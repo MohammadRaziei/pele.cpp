@@ -29,6 +29,9 @@ add_library(pele
   src/shapes.cpp
   src/title.cpp
   src/svg_document.cpp
+  src/errors.cpp
+  src/detect.cpp
+  src/yaml.cpp
 )
 add_library(pele::pele ALIAS pele)
 target_include_directories(pele PUBLIC include PRIVATE src)
