@@ -44,6 +44,12 @@ class pele_error : public std::runtime_error {
   int column() const { return info_.column; }
   const std::string& snippet() const { return info_.snippet; }
 
+  // Names the diagram type the error belongs to, unless it already says.
+  void tag(const std::string& type, const std::string& mermaid_type) {
+    if (!info_.type) info_.type = type;
+    if (!info_.mermaid_type) info_.mermaid_type = mermaid_type;
+  }
+
  private:
   error_code code_;
   error_info info_;

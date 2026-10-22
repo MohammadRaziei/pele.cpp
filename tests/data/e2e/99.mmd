@@ -1,0 +1,14 @@
+flowchart TB
+  日本 o--o E
+  D ~~~ F -.-> G
+  C:::cls ~~~ 日本(-No-)
+  subgraph s3
+H ==> end1(-Two words-)
+F --> A
+D -- "quoted" --> F{text}
+é o--o H{No} & B{x&amp;y}:::cls
+end
+  subgraph s4[Title 4]
+日本 --> D
+end
+  end1[fa:fa-car Car] --> H[(Yes)]

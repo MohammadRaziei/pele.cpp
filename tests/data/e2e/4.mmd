@@ -1,0 +1,14 @@
+flowchart RL
+  C -..-> D["Long label that will need to wrap across several lines of text"]
+  start --> C
+  node1 --> H
+  F(("`**bold** and *it*`")) x--x start
+  end1 --> 日本
+  subgraph "quoted title"
+D{{a<br/>b}} --x 日本[\Two words\]
+start[/Yes/] & E --> F
+日本 ~~~ F(No)
+G --> E
+end
+  node1>"`**bold** and *it*`"] -..-> F
+  B[/No/] === A

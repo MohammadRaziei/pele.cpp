@@ -1,0 +1,5 @@
+syntax
+Parse error on line 3:
+  B[T}wo words] ----> node1{日本語}
+-----^
+Expecting 'SQE', 'UNICODE_TEXT', 'TEXT', 'TAGSTART', got 'DIAMOND_STOP'

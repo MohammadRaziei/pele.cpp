@@ -1,0 +1,5 @@
+syntax
+Parse error on line 7:
+ [ A --o|text| 日本
+-^
+Expecting 'SEMI', 'NEWLINE', 'SPACE', 'EOF', 'subgraph', 'acc_title', 'acc_descr', 'acc_descr_multiline_value', 'STYLE', 'LINKSTYLE', 'CLASSDEF', 'CLASS', 'CLICK', 'NODE_STRING', got 'SQS'

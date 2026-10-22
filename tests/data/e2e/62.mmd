@@ -1,0 +1,14 @@
+graph TD
+  日本 --> D
+  node1 -->|Yes| A & F
+  日本 --> H
+  subgraph s1
+日本@{ shape: sl-rect }
+A("Long label that will need to wrap across several lines of text") o--o 日本[/text/]:::cls
+direction LR
+end
+  node1("quoted"):::cls <--> node1 & F[/fa:fa-car Car\]
+  E -- <b>b</b> i --> node1
+  node1[("`**bold** and *it*`")] & C --->|Hello World| start(-"quoted"-)
+  F ----> F
+  E((("Long label that will need to wrap across several lines of text"))) -- text --> A & A

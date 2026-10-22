@@ -1,0 +1,8 @@
+flowchart BT
+  G o--o end1
+  F --- F[\a<br/>b/]
+  A[/"quoted"/] <--> end1
+  start[\"`**bold** and *it*`"\] -.-> A>x&amp;y]
+  A([text]) --o é
+  end1 & node1 o--o end1([Hello World])
+  H & F["Long label that will need to wrap across several lines of text"] o--o end1("Long label that will need to wrap across several lines of text")

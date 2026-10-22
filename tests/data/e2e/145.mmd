@@ -1,0 +1,15 @@
+%%{init: {"flowchart": {"curve": "step"}}}%%
+graph TD
+  H ==> node1
+  subgraph "quoted title"
+E(-"Long label that will need to wrap across several lines of text"-) ~~~ D{{text}}
+D@{ shape: trap-b }
+node1{Yes}:::cls --o 日本
+subgraph s2
+C[x&amp;y] & C[/<b>b</b> i\] ----> F[\"quoted"/]:::cls & é
+C --> é
+end
+direction BT
+end
+  H --> A
+  H[/"`**bold** and *it*`"\]:::cls --> F

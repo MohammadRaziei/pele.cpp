@@ -65,7 +65,7 @@ std::string svg_document::build(std::string_view type, double width, double heig
     head += "<desc id=\"" + prefix + "-desc\">" + svg::esc_text(acc.description) + "</desc>";
     aria += " aria-describedby=\"" + prefix + "-desc\"";
   }
-  const std::string fit = options.responsive ? "max-width:100%;height:auto;" : "";
+  const std::string fit = options.responsive.value_or(true) ? "max-width:100%;height:auto;" : "";
   // Which of the weights and the corner radius the content uses.
   std::set<std::string> used;
   for (std::size_t i = 0; i < content.size(); i++) {

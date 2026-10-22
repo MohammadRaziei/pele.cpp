@@ -1,0 +1,16 @@
+---
+title: A longer title for the chart
+---
+graph TD
+  C:::cls -.- D
+  D --> A
+  A ---> A([<b>b</b> i])
+  A("Long label that will need to wrap across several lines of text") x--x G[(<b>b</b> i)] & G
+  B -.- F
+  subgraph s1[Title 2]
+E("`**bold** and *it*`") -.- H[\"Long label that will need to wrap across several lines of text"/]
+E -..-> B(-Two words-) & H(No)
+日本 -.-> E{<b>b</b> i}
+G>Two words] --x|"`**bold** and *it*`"| node1[text]:::cls
+end
+  C(-a<br/>b-) & E --> G

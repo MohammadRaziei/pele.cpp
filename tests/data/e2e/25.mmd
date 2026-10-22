@@ -1,0 +1,10 @@
+flowchart LR
+  E --> é
+  H{Yes} --- 日本
+  H(["quoted"]) ==> F[/Yes\]
+  G:::cls o--o D[(<b>b</b> i)]
+  E>Two words]:::cls ---> G & end1(((No)))
+  F[["`**bold** and *it*`"]] <--> D:::cls
+  F ----> G x--x G
+  日本 x--x end1 -..-> E
+  click A "http://x.y" "tip"

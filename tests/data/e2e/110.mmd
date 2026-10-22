@@ -1,0 +1,11 @@
+%%{init: {"flowchart": {"curve": "step"}}}%%
+flowchart RL
+  F --- node1
+  A --> H
+  F ---> é
+  A@{ shape: diam }
+  F -.- C:::cls & start[(a<br/>b)]
+  start(x&amp;y):::cls -.- 日本:::cls
+  end1(((fa:fa-car Car))) -- Yes --> 日本
+  F((Two words)) --o end1[\Hello World/]
+  node1 --> E

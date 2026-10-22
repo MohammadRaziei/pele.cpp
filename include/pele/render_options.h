@@ -7,6 +7,7 @@
 
 #include "icons.h"
 #include "text_measurer.h"
+#include "yaml.h"
 
 namespace pele {
 
@@ -19,7 +20,8 @@ struct render_options {
   std::optional<std::string> font_family_mono;
   std::optional<double> font_size;
   std::optional<std::string> id_prefix;
-  bool responsive = true;
+  // Whether the SVG scales down with its container. Unset, it follows `useMaxWidth` in the diagram's config.
+  std::optional<bool> responsive;
   // The width the host has for the diagram, in pixels. A type that can draw itself narrower does,
   // so that its text is not shrunk with it.
   std::optional<double> max_width;
@@ -41,6 +43,8 @@ struct render_options {
   std::optional<std::string> link_rel;
   // The host's icons.
   icon_set::resolver icons;
+  // Settings that apply before the diagram's own front matter and directives.
+  std::optional<yaml_value> config;
 };
 
 }  // namespace pele

@@ -33,12 +33,28 @@ add_library(pele
   src/detect.cpp
   src/yaml.cpp
   src/preprocess.cpp
+  src/url.cpp
+  src/flowchart/lexer.cpp
+  src/flowchart/shape_names.cpp
+  src/flowchart/db.cpp
+  src/flowchart/parser.cpp
+  src/flowchart/graph.cpp
+  src/flowchart/render.cpp
+  src/diagram.cpp
+  src/core.cpp
+  src/fit_width.cpp
 )
 add_library(pele::pele ALIAS pele)
-target_include_directories(pele PUBLIC include PRIVATE src)
+target_include_directories(pele PUBLIC include PRIVATE include/pele src src/flowchart)
 
 option(PELE_BUILD_TESTS "Build tests" ON)
 if(PELE_BUILD_TESTS)
   enable_testing()
   add_subdirectory(tests)
+endif()
+
+option(PELE_BUILD_CLI "Build the pele-cli tool" ON)
+if(PELE_BUILD_CLI)
+  add_executable(pele-cli tools/pele_cli.cpp)
+  target_link_libraries(pele-cli PRIVATE pele)
 endif()

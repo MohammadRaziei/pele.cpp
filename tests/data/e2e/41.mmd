@@ -1,0 +1,15 @@
+flowchart TB
+  F --x C[(x&amp;y)]
+  F --x E
+  D[No] o--o B
+  F[/"Long label that will need to wrap across several lines of text"\] & C>"Long label that will need to wrap across several lines of text"] -..-> D[\"`**bold** and *it*`"/]
+  subgraph s4[Title 3]
+F --> A
+node1[\"`**bold** and *it*`"/] -- Yes --> E
+F{a<br/>b} -..-> F
+subgraph s4
+é --> start{{Hello World}} & H[/Yes/]
+end
+direction RL
+end
+  linkStyle 0 stroke:red,stroke-width:3px

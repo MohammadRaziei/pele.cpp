@@ -1,0 +1,11 @@
+flowchart TD
+  A[/x&amp;y/] --> A
+  F -.-> node1[<b>b</b> i]
+  H@{ shape: hex }
+  end1@{ shape: rect }
+  G[(x&amp;y)] ----> G
+  D([Hello World]) --o 日本
+  C{<b>b</b> i} -->|"Long label that will need to wrap across several lines of text"| H>"quoted"]
+  H ----> 日本 --> E
+  é ==> 日本 -.- G
+  style A fill:#f9f,stroke:#333,stroke-width:4px

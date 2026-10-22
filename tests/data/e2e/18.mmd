@@ -1,0 +1,7 @@
+flowchart BT
+  E ---> B[[a<br/>b]]:::cls & node1([Hello World])
+  C x--x node1
+  日本@{ shape: tri }
+  B((Yes)) ---> E:::cls
+  F(<b>b</b> i) ~~~ node1[/"Long label that will need to wrap across several lines of text"/] & F
+  node1 & C --- start

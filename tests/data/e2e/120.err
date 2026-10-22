@@ -1,0 +1,5 @@
+syntax
+Parse error on line 5:
+subgraph s3[T}itle 3]
+-------------^
+Expecting 'SQE', 'UNICODE_TEXT', 'TEXT', 'TAGSTART', got 'DIAMOND_STOP'

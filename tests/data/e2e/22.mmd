@@ -1,0 +1,15 @@
+flowchart LR
+  B o--o B(((Yes))):::cls
+  subgraph s3
+D -- x&amp;y --> C & 日本
+E -.-> start
+日本 --> E[(Yes)]
+direction BT
+end
+  F[/"Long label that will need to wrap across several lines of text"\] & é x--x node1["quoted"]
+  é(Two words) -.- A:::cls
+  end1[\fa:fa-car Car/] & end1 ----> end1
+  start --> start
+  start[\"quoted"\] ~~~ C("Long label that will need to wrap across several lines of text")
+  end1[(text)] & 日本{"Long label that will need to wrap across several lines of text"} -- fa:fa-car Car --> H>Yes]
+  node1[\<b>b</b> i/] -- No --> 日本

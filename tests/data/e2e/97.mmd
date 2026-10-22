@@ -1,0 +1,13 @@
+graph LR
+  B --> node1
+  subgraph "quoted title"
+E("Long label that will need to wrap across several lines of text") -.- D[[Two words]] & G
+start --> é
+F --- E(((日本語))) & D(Two words)
+G[\x&amp;y/] --> B{{text}}
+end
+  F <--> G:::cls
+  G --> H
+  H o--o G --- B
+  é -.- H
+  H@{ shape: h-cyl }

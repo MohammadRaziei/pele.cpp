@@ -1,0 +1,11 @@
+flowchart RL
+  subgraph s2[Title 1]
+E ~~~ start
+C[/a<br/>b\] -.-> C
+E[Yes] ----> start
+node1 -.- H[(Yes)] & C
+end
+  end1@{ shape: fork }
+  D@{ shape: tri }
+  C>fa:fa-car Car] -.- G>"quoted"]:::cls
+  D[\Two words\] & F[[fa:fa-car Car]] -- "`**bold** and *it*`" --> F{{"quoted"}} & end1((("Long label that will need to wrap across several lines of text"))):::cls

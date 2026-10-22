@@ -1,0 +1,5 @@
+syntax
+Parse error on line 5:
+node1 & H[\text\]| === C("`**bold** and *it*`")
+-----------------^
+Expecting 'SEMI', 'NEWLINE', 'EOF', got 'PIPE'

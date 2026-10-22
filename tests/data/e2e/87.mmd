@@ -1,0 +1,13 @@
+flowchart BT
+  H --> é
+  subgraph "quoted title"
+C ---> A o--o end1
+B["Long label that will need to wrap across several lines of text"] & C(["`**bold** and *it*`"]) --- H(Two words) & F
+end1@{ shape: cloud }
+F --> B
+end
+  E("quoted") -- Two words --> E
+  日本[/x&amp;y/] --> end1[/"`**bold** and *it*`"\]
+  B -..->|Two words| C[Hello World]
+  start@{ shape: diam }
+  click A "http://x.y" "tip"

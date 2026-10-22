@@ -1,0 +1,10 @@
+flowchart TB
+  C -.- C === H
+  node1 --> B
+  B & C:::cls ~~~ end1((fa:fa-car Car))
+  B@{ shape: h-cyl }
+  end1>Yes] --> G[fa:fa-car Car]
+  B:::cls -- Two words --> A(-日本語-):::cls
+  node1 --> G
+  G[(fa:fa-car Car)]:::cls -.- A & A(Yes)
+  A[\"Long label that will need to wrap across several lines of text"\] ---> node1

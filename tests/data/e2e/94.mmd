@@ -1,0 +1,6 @@
+graph TD
+  node1(-"Long label that will need to wrap across several lines of text"-) o--o H("`**bold** and *it*`")
+  B[["Long label that will need to wrap across several lines of text"]] -- 日本語 --> start[/Two words/]
+  C --> start
+  node1[("quoted")] -..-> A[("quoted")]
+  H@{ shape: doc }

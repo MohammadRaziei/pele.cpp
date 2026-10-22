@@ -1,0 +1,7 @@
+graph TD
+  start("quoted") -- 日本語 --> C(Yes)
+  日本[["Long label that will need to wrap across several lines of text"]] -.-> G[/text\]
+  D[[Yes]] -- "Long label that will need to wrap across several lines of text" --> G & 日本
+  B ==> C ---> D
+  E --> A
+  日本 <--> A

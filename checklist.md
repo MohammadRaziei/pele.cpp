@@ -61,19 +61,22 @@
 - [x] تست با مرجع TS: ۲۴٬۰۰۰+ مورد YAML/JSON/detect/locate و ۳۲٬۰۰۰+ مورد preprocess
 
 ## مرحله ۵ — فلوچارت
-- [ ] tokens، lexer
-- [ ] parser
-- [ ] db (vertex، edge، subgraph، class، style، click)
-- [ ] graph (`build_flow_graph`)
-- [ ] shapes map
-- [ ] render
-- [ ] تطابق SVG با `tests/compat` و رندرهای مرجع
+- [x] tokens (۷۷ توکن، تولیدشده از TS) و lexer دستی با همه‌ی regexهای sticky — ۲۰٬۰۰۰+ مورد
+- [x] parser (descent بازگشتی، subgraph بدون بازگشت) + `flow_db` (گره‌ها به ترتیب اعلان) — ۲۰٬۰۰۰+ مورد
+- [x] `url`: `sanitize_url`، `safe_url`، `link_url`، `image_url`، `linked` — ۱۵٬۰۰۰+ مورد
+- [x] `shape_names`، `build_flow_graph` (subgraph جمع‌شده، استایل کلاس‌ها، پیش‌فرض یال‌ها)
+- [x] `fit_width` (tighten، turn_to_fit)
+- [x] `flowchart_renderer`: خوشه‌ها، ۵۸ شکل، آیکون/تصویر، لینک، tooltip، حلقه‌ی خودی، برچسب یال
+- [x] **تطابق بایت‌به‌بایت SVG با `pele.js`**: ۳٬۱۰۰+ فلوچارت تصادفی، همه‌ی پیام‌های خطا هم‌متن
+- [ ] نسخه‌های دیگر فلوچارت (swimlane و `FlowVariant`)
 
 ## مرحله ۶ — API و ابزار
-- [ ] `pele.h`: `render()`، `parse()`، `render_options`
-- [ ] CLI: `pele-cli in.mmd > out.svg`
-- [ ] تست تطابق خودکار SVG (diff با `pele.js`)
-- [ ] CI
+- [x] `pele.h`: `render()`، `detect_type()`، `supports()`، `render_options`، `render_result`
+- [x] `diagram` (رابط) و `diagram_registry` (Registry)؛ `flowchart_diagram`
+- [x] CLI: `pele-cli in.mmd > out.svg`
+- [x] تست پایان‌به‌پایان `test_e2e` (۱۵۰ دیاگرام ثابت، بدون نیاز به Node)
+- [ ] `parse()` جدا از `render()` (مدل قابل‌استفاده‌ی مجدد)
+- [ ] CI (GitHub Actions)
 
 ## مرحله ۷ — بقیه‌ی انواع دیاگرام (هر کدام یک مرحله)
 - [ ] pie، sequence، class، state، er، gantt، gitGraph
@@ -85,3 +88,7 @@
 - Pele چیدمان dagre/ELK ندارد؛ `layered.ts` خودش نوشته شده و حالا در C++ هم عین آن است.
 - `position()` فهرست همسایه‌ها را در جا مرتب می‌کند و مراحل بعد به این ترتیب وابسته‌اند.
 - `graph` در C++ باید تنها مرجع `efd`/`etd` باشد (کپی محلی باعث اختلاف می‌شد).
+
+## ابزارهای تست (بیرون از C++)
+- `tools/gen_*_cases.mjs`: مرجع TS را روی ورودی تصادفی اجرا می‌کنند (نیاز به `/home/claude/pele` و Node)
+- `tools/gen_e2e_cases.mjs` + `tools/compare_e2e.sh`: مقایسه‌ی SVG کامل با `pele.js` روی صدها فلوچارت تصادفی
