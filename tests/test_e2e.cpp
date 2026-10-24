@@ -79,6 +79,9 @@ int run_manifest(const char* path) {
   std::string line;
   int total = 0, failed = 0;
   while (std::getline(in, line)) {
+    // A checkout that converted line endings leaves a \r here; real ones are escaped in the data.
+    if (!line.empty() && line.back() == '\r') line.pop_back();
+    if (line.empty()) continue;
     std::vector<std::string> f;
     std::size_t from = 0;
     for (int i = 0; i < 3; i++) {

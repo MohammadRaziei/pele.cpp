@@ -22,8 +22,11 @@ bool in_set(int c, const char16_t* set) {
   return false;
 }
 
-const char16_t* const kClose = u"、。，．：；！？）］｝」』】〕〉》〙〗ー…‥・ゝゞぁぃぅぇぉっゃゅょゎァィゥェォッャュョヮ,.:;!?)]}";
-const char16_t* const kOpen = u"（［｛「『【〔〈《〘〖([{";
+// Written as escapes, not as the characters, so that a compiler that reads sources in the system
+// code page (MSVC without /utf-8) sees the same text. kClose may not start a line (CJK closing
+// punctuation, the long vowel mark, small kana, and ASCII closers); kOpen may not end one.
+const char16_t* const kClose = u"\u3001\u3002\uFF0C\uFF0E\uFF1A\uFF1B\uFF01\uFF1F\uFF09\uFF3D\uFF5D\u300D\u300F\u3011\u3015\u3009\u300B\u3019\u3017\u30FC\u2026\u2025\u30FB\u309D\u309E\u3041\u3043\u3045\u3047\u3049\u3063\u3083\u3085\u3087\u308E\u30A1\u30A3\u30A5\u30A7\u30A9\u30C3\u30E3\u30E5\u30E7\u30EE,.:;!?)]}";
+const char16_t* const kOpen = u"\uFF08\uFF3B\uFF5B\u300C\u300E\u3010\u3014\u3008\u300A\u3018\u3016([{";
 
 bool is_close(int c) { return in_set(c, kClose); }
 bool is_open(int c) { return in_set(c, kOpen); }

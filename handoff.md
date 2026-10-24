@@ -39,6 +39,11 @@
 `js_number_string` (`src/js_math.h`) حالا عین `String(n)` است: نماد علمی برای ≥1e21 و <1e-6 (قبلاً همیشه fixed بود). با Node روی ۳٬۷۰۰ عدد مقایسه شد.
 `tests/test_e2e.cpp` فایل اختیاری `N.opts` (`maxWidth=`، `fontSize=`، `padding=`) را می‌خواند، برای دیاگرام‌هایی که به عرض میزبان واکنش نشان می‌دهند.
 
+## نکات ویندوز / MSVC (CI روی windows-latest)
+
+- **هیچ کاراکتر غیر ASCII در literal های C++ ننویس**؛ از `\uXXXX` استفاده کن (مثل `kClose`/`kOpen` در `src/label.cpp`). MSVC بدون `/utf-8` سورس را با code page سیستم می‌خواند و literal خراب می‌شود (۳۷ مورد `test_label` به همین دلیل روی ویندوز رد می‌شد). `/utf-8` هم در `CMakeLists.txt` برای MSVC اضافه شده. بازتولید روی لینوکس: `-DCMAKE_CXX_FLAGS="-finput-charset=ISO-8859-1 -fexec-charset=UTF-8"`.
+- `.gitattributes` تبدیل پایان خط را برای `tests/data/**` خاموش می‌کند و `test_e2e` یک `\r` انتهای خط manifest را هم نادیده می‌گیرد (داده‌ی واقعی `\r` را escape کرده است).
+
 ## ساخت و تست
 
 ```sh

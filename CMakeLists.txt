@@ -12,7 +12,7 @@ endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   add_compile_options(-ffp-contract=off -Wall -Wextra)
 elseif(MSVC)
-  add_compile_options(/fp:precise /W4)
+  add_compile_options(/fp:precise /W4 /utf-8)
 endif()
 
 add_library(pele
