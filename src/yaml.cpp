@@ -148,12 +148,12 @@ class reader {
  public:
   explicit reader(ustring_view src) {
     ustring unified;
-    for (std::size_t i = 0; i < src.size(); i++) {
-      if (src[i] == '\r') {
+    for (std::size_t pos = 0; pos < src.size(); pos++) {
+      if (src[pos] == '\r') {
         unified += u'\n';
-        if (i + 1 < src.size() && src[i + 1] == '\n') i++;
+        if (pos + 1 < src.size() && src[pos + 1] == '\n') pos++;
       } else {
-        unified += src[i];
+        unified += src[pos];
       }
     }
     std::size_t from = 0;

@@ -39,6 +39,10 @@
 `js_number_string` (`src/js_math.h`) حالا عین `String(n)` است: نماد علمی برای ≥1e21 و <1e-6 (قبلاً همیشه fixed بود). با Node روی ۳٬۷۰۰ عدد مقایسه شد.
 `tests/test_e2e.cpp` فایل اختیاری `N.opts` (`maxWidth=`، `fontSize=`، `padding=`) را می‌خواند، برای دیاگرام‌هایی که به عرض میزبان واکنش نشان می‌دهند.
 
+## نمودار کلاس‌ها (clang-uml)
+
+`cmake -B build -G Ninja -DPELE_ENABLE_UML=ON && cmake --build build --target uml` (پیش‌فرض خاموش است؛ نیاز به `clang-uml` و `plantuml` دارد). ساختار مثل libgsp: `tools/uml/clang-uml.in.yaml` (قالب؛ CMake آن را به `build/.clang-uml` می‌برد)، `tools/uml/uml_tu.cpp` (فقط `#include` ها)، و متغیرهای `PELE_UML_DIAGRAM` (`core_class` | `diagrams_class`)، `PELE_UML_GENERATOR` (`plantuml` | `mermaid` | `json`)، `PELE_UML_FORMAT` (`svg` | `png` | `pdf`). **وقتی دیاگرام یا هدر تازه اضافه می‌کنی، هدرش را به `uml_tu.cpp` اضافه کن** وگرنه در نمودار نمی‌آید، و namespace جدید را در `clang-uml.in.yaml` به یکی از دیاگرام‌ها بده. با generator ـ `mermaid` وقتی کلاس‌دیاگرام Pele پورت شد، می‌شود به‌جای `mmdc` از `pele-cli` استفاده کرد.
+
 ## نکات ویندوز / MSVC (CI روی windows-latest)
 
 - **هیچ کاراکتر غیر ASCII در literal های C++ ننویس**؛ از `\uXXXX` استفاده کن (مثل `kClose`/`kOpen` در `src/label.cpp`). MSVC بدون `/utf-8` سورس را با code page سیستم می‌خواند و literal خراب می‌شود (۳۷ مورد `test_label` به همین دلیل روی ویندوز رد می‌شد). `/utf-8` هم در `CMakeLists.txt` برای MSVC اضافه شده. بازتولید روی لینوکس: `-DCMAKE_CXX_FLAGS="-finput-charset=ISO-8859-1 -fexec-charset=UTF-8"`.

@@ -45,6 +45,7 @@ The other types are listed in `checklist.md`.
 * `include/pele/` is the public API. Everything is in `namespace pele`.
 * `src/` has the shared parts: text and label layout, SVG helpers, shapes, edge routing, and the
   layered and compound layouts (behind the `flat_layout_engine` interface).
+* `tools/uml/` is the clang-uml setup behind the `uml` target (see Class diagrams).
 * `src/flowchart/` is one diagram type. A type is a `pele::diagram` that is added to the
   `diagram_registry`.
 
@@ -53,5 +54,20 @@ The other types are listed in `checklist.md`.
 ```sh
 cmake -S . -B build && cmake --build build && ctest --test-dir build
 ```
+
+## Class diagrams
+
+`uml` draws the classes with [clang-uml](https://clang-uml.github.io/), from the headers listed in
+`tools/uml/uml_tu.cpp` and the diagrams in `tools/uml/clang-uml.in.yaml`. It is off by default,
+because it needs clang-uml (and PlantUML, or `mmdc` for Mermaid) installed.
+
+```sh
+cmake -S . -B build -G Ninja -DPELE_ENABLE_UML=ON      # Ninja or Make: it needs compile_commands.json
+cmake --build build --target uml                         # build/diagrams/core_class.svg
+cmake -S . -B build -DPELE_UML_DIAGRAM=diagrams_class    # the diagram types' own classes
+```
+
+`PELE_UML_GENERATOR` is `plantuml` (default), `mermaid` or `json`; `PELE_UML_FORMAT` is `svg`
+(default), `png` or `pdf`.
 
 MIT licence, like Pele.

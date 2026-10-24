@@ -458,9 +458,9 @@ void flow_db::set_acc_description(const ustring& text) {
 ustring flow_db::add_sub_graph(const std::optional<flow_text>& id_text, const std::vector<doc_item>& list, const std::optional<flow_text>& title_text, bool title_is_id) {
   std::optional<ustring> id;
   if (id_text) id = trim(id_text->text);
-  ustring title = title_text ? title_text->text : ustring();
+  ustring heading = title_text ? title_text->text : ustring();
   bool has_space = false;
-  for (char16_t c : title)
+  for (char16_t c : heading)
     if (is_space(c)) has_space = true;
   if (id_text && title_is_id && has_space) id.reset();
 
@@ -484,7 +484,7 @@ ustring flow_db::add_sub_graph(const std::optional<flow_text>& id_text, const st
 
   flow_subgraph sub;
   sub.id = *id;
-  sub.title = trim(title);
+  sub.title = trim(heading);
   sub.dir = dir;
   sub.label = label_type_of(title_text ? std::optional<label_type>(title_text->type) : std::nullopt);
   // A node belongs to the first subgraph that lists it, and a subgraph never contains itself.
