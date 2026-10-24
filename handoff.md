@@ -1,7 +1,7 @@
 # handoff — pele.cpp
 
 این فایل برای کسی است که کار را از اینجا ادامه می‌دهد (خودت در چت بعدی یا شخص دیگر).
-حالت پروژه: **مراحل ۱ تا ۶ کامل‌اند؛ زیرساخت regex، `common/tokens`، `fit_text`، `literal_label` کامل است؛ `info` و `packet` بایت‌به‌بایت با TS یکسان‌اند.**
+حالت پروژه: **مراحل ۱ تا ۶ کامل‌اند؛ زیرساخت regex، `common/tokens`، `fit_text`، `literal_label` کامل است؛ `info`، `packet` و `kanban` بایت‌به‌بایت با TS یکسان‌اند.**
 
 ## هدف
 
@@ -23,11 +23,14 @@
 | `common/tokens.ts` → `src/common/tokens.h/.cpp` (`token_def`، `token_set`، `tokenize`، `reader`، `common_tokens::*`) | کامل؛ ۵۳٬۰۰۰+ مورد تطابق روی جدول‌های ۶ دیاگرام |
 | **info** | کامل؛ ۳٬۳۰۰ دیاگرام تصادفی بایت‌به‌بایت (SVG و پیام خطا) یکسان |
 | **packet** (parser، مدل با خطاهای semantic، رندر across و down) | کامل؛ ۷٬۹۰۰ دیاگرام تصادفی بایت‌به‌بایت یکسان (۳۳۷ مورد در حالت down) |
+| **kanban** (db، رندر، لینک تیکت، آیکون‌ها، اولویت، تا شدن ستون‌ها با `maxWidth`) | کامل؛ ۱۸٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت یکسان (SVG و پیام خطا، با `icons` و `maxWidth`) |
+| `common/outline` (توکنایزر و parser مشترک kanban و mindmap، هر دو حالت)، `common/icon` | کامل؛ ۷۰٬۰۰۰+ مورد توکن مستقیم، همه‌ی ۱۴ نوع توکن پوشش دارند |
+| `lowercase` (`s !== s.toLowerCase()`، جدول از Node تولید شده) | کامل؛ ۳۸٬۰۰۰ مورد |
 | `common/fit-text`، `common/literal-label` (`literalLabel`) | کامل؛ ۲۷٬۰۰۰ مورد. `breakLabel` و `leftLabelSvg` هنوز پورت نشده‌اند (هر کدام را هنگام نیاز بیاور) |
 | بقیه‌ی `common/` (`outline`، `generics`، `fit`، `icon`، `scan`، `caseless`، …) | **شروع نشده** |
-| بقیه‌ی انواع دیاگرام (۳۰ نوع) | شروع نشده |
+| بقیه‌ی انواع دیاگرام (۲۹ نوع) | شروع نشده؛ **`mindmap` حالا فقط db و رندر مانده** (توکنایزر و parser آماده است) |
 
-آخرین اجرای `ctest`: ۱۹ تست، همه پاس.
+آخرین اجرای `ctest`: ۲۱ تست، همه پاس.
 
 ## نکته‌ی مهم درباره‌ی مرجع TS
 
@@ -37,7 +40,8 @@
 ## تغییر در کد مشترک (مراحل قبل)
 
 `js_number_string` (`src/js_math.h`) حالا عین `String(n)` است: نماد علمی برای ≥1e21 و <1e-6 (قبلاً همیشه fixed بود). با Node روی ۳٬۷۰۰ عدد مقایسه شد.
-`tests/test_e2e.cpp` فایل اختیاری `N.opts` (`maxWidth=`، `fontSize=`، `padding=`) را می‌خواند، برای دیاگرام‌هایی که به عرض میزبان واکنش نشان می‌دهند.
+`src/lowercase.*` با جدول `src/lowercase_data.inc` که `tools/gen_lowercase_table.mjs` از Node می‌سازد (نسخه‌ی یونیکد Node در سرآیند فایل ثبت است؛ اگر Node عوض شد دوباره بساز).
+`tests/test_e2e.cpp` گزینه‌ی `icons=1` را هم می‌شناسد: یعنی میزبان برای هر نامی که شامل `book` یا `home` باشد آیکون دارد (مولد‌های TS همان قاعده را به `pele.js` می‌دهند). فایل اختیاری `N.opts` (`maxWidth=`، `fontSize=`، `padding=`) را می‌خواند، برای دیاگرام‌هایی که به عرض میزبان واکنش نشان می‌دهند.
 
 ## نمودار کلاس‌ها (clang-uml)
 
@@ -120,9 +124,10 @@ include/pele/   API عمومی
 src/            مشترک: ustring/chars/js_math، text_measurer، label، entities، svg، theme، edges، shapes،
                 cluster، title، svg_document، layered، compound، errors، detect، yaml، preprocess، url،
                 regex، fit_width، diagram، core
-src/common/     tokens (tokenizer مشترک دیاگرام‌های Langium)، fit_text، literal_label، code_points
+src/common/     tokens (tokenizer مشترک دیاگرام‌های Langium)، outline (kanban و mindmap)، icon، fit_text، literal_label، code_points
 src/info/       info (parser، مدل، رندر)
 src/packet/     packet (parser، مدل، رندر)
+src/kanban/     kanban (مدل، db، رندر)
 src/flowchart/  tokens، lexer، db، parser، graph، render، shape_names
 tests/          test_*.cpp و tests/data/ (داده‌ی مرجع تولیدشده از TS)
 tools/          gen_*.mjs، extract_regexes.mjs، compare_e2e.sh، svg2png.py، pele_cli.cpp

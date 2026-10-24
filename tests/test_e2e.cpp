@@ -25,6 +25,21 @@ std::string read(const fs::path& p) {
   return ss.str();
 }
 
+// The host icons of `icons=1` in a case's options: a name containing "book" or "home" has one.
+// tools/gen_*_cases.mjs gives pele.js the same.
+std::optional<std::string> test_icons(const std::string& name) {
+  if (name.find("book") != std::string::npos || name.find("home") != std::string::npos) return std::string("<path d=\"M3 3h18v18H3z\"/>");
+  return std::nullopt;
+}
+
+// One option of a case: maxWidth, fontSize, padding, or icons (1 for the host icons above).
+void apply_option(pele::render_options& options, const std::string& key, double value) {
+  if (key == "maxWidth") options.max_width = value;
+  else if (key == "fontSize") options.font_size = value;
+  else if (key == "padding") options.padding = value;
+  else if (key == "icons" && value != 0) options.icons = test_icons;
+}
+
 // The options a case was made with, one `name=number` per line in N.opts (maxWidth, fontSize, padding).
 pele::render_options read_options(const fs::path& src) {
   pele::render_options options;
@@ -38,9 +53,7 @@ pele::render_options read_options(const fs::path& src) {
     if (eq == std::string::npos) continue;
     const std::string key = line.substr(0, eq);
     const double value = std::stod(line.substr(eq + 1));
-    if (key == "maxWidth") options.max_width = value;
-    else if (key == "fontSize") options.font_size = value;
-    else if (key == "padding") options.padding = value;
+    apply_option(options, key, value);
   }
   return options;
 }
@@ -67,9 +80,7 @@ pele::render_options parse_options(const std::string& text) {
     if (eq == std::string::npos) continue;
     const std::string key = part.substr(0, eq);
     const double value = std::stod(part.substr(eq + 1));
-    if (key == "maxWidth") options.max_width = value;
-    else if (key == "fontSize") options.font_size = value;
-    else if (key == "padding") options.padding = value;
+    apply_option(options, key, value);
   }
   return options;
 }

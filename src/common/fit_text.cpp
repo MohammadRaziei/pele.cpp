@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstddef>
 
 #include "common/code_points.h"
 
@@ -21,10 +22,10 @@ std::optional<fitted> fit_text(ustring_view text, double max, double size, doubl
   }
 
   const std::vector<ustring> chars = code_points(text);
-  long low = 0;
-  long high = static_cast<long>(chars.size()) - 1;
+  std::ptrdiff_t low = 0;
+  std::ptrdiff_t high = static_cast<std::ptrdiff_t>(chars.size()) - 1;
   while (low < high) {
-    const long mid = (low + high + 1) >> 1;
+    const std::ptrdiff_t mid = (low + high + 1) >> 1;
     if (measurer.width(trim_end(join_slice(chars, 0, static_cast<std::size_t>(mid))) + u"\u2026", min, style) <= max) low = mid;
     else high = mid - 1;
   }

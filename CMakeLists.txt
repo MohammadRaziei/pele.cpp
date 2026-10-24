@@ -45,6 +45,10 @@ add_library(pele
   src/common/tokens.cpp
   src/common/fit_text.cpp
   src/common/literal_label.cpp
+  src/common/outline.cpp
+  src/common/icon.cpp
+  src/lowercase.cpp
+  src/kanban/kanban.cpp
   src/info/info.cpp
   src/packet/packet.cpp
   src/flowchart/lexer.cpp

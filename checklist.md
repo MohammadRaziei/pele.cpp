@@ -84,9 +84,11 @@
 - [ ] زیرساخت: بقیه‌ی `common/` (`literal-label`، `outline`، `generics`، `fit`، `fit-text`، `icon`، `accDescr`، `scan`، `caseless`)
 - [x] info — ۳٬۳۰۰ دیاگرام تصادفی (SVG و پیام خطا) بایت‌به‌بایت یکسان؛ `tools/gen_info_cases.mjs`، `tests/data/e2e_info.txt`
 - [x] زیرساخت: `fit-text` و `literalLabel` — ۲۷٬۰۰۰ مورد (`tools/gen_text_cases.mjs`)
+- [x] kanban — ۱۸٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت (`tools/gen_kanban_cases.mjs`، `tests/data/e2e_kanban.txt`)
+- [x] زیرساخت: `common/outline` (توکنایزر + parser هر دو حالت)، `common/icon`، `lowercase`
 - [ ] pie، sequence، class، state، er، gantt، gitGraph
 - [ ] mindmap، timeline، journey، xychart، quadrant، requirement
-- [ ] c4، sankey، block، kanban، architecture، radar، treemap
+- [ ] c4، sankey، block، architecture، radar، treemap
 - [ ] سایر انواع (agentflow، usecase، railroad، treeView، venn، cynefin، wardley، swimlane، ishikawa، eventmodeling)
 
 - [x] packet — ۷٬۹۰۰ دیاگرام تصادفی بایت‌به‌بایت (شامل حالت down با `maxWidth`)؛ `tools/gen_packet_cases.mjs`، `tests/data/e2e_packet.txt`

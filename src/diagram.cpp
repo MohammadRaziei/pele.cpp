@@ -4,6 +4,7 @@
 #include "flowchart/parser.h"
 #include "flowchart/render.h"
 #include "info/info.h"
+#include "kanban/kanban.h"
 #include "packet/packet.h"
 
 namespace pele {
@@ -81,6 +82,27 @@ class packet_diagram final : public diagram {
   }
 };
 
+class kanban_diagram_model final : public diagram_model {
+ public:
+  kanban::kanban_model model;
+};
+
+class kanban_diagram final : public diagram {
+ public:
+  diagram_type type() const override { return diagram_type::kanban; }
+
+  std::unique_ptr<diagram_model> parse(const ustring& source, const config& /*settings*/, const std::optional<ustring>& title, int /*line_offset*/,
+                                       const parse_limits& /*limits*/) const override {
+    auto model = std::make_unique<kanban_diagram_model>();
+    model->model = kanban::parse_kanban(source, title);
+    return model;
+  }
+
+  rendered render(const diagram_model& model, const config& settings, const render_options& options) const override {
+    return kanban::render_kanban(static_cast<const kanban_diagram_model&>(model).model, settings, options);
+  }
+};
+
 }  // namespace
 
 void diagram_registry::add(std::unique_ptr<diagram> d) {
@@ -99,6 +121,7 @@ const diagram_registry& diagram_registry::builtin() {
     r.add(std::make_unique<flowchart_diagram>());
     r.add(std::make_unique<info_diagram>());
     r.add(std::make_unique<packet_diagram>());
+    r.add(std::make_unique<kanban_diagram>());
     return r;
   }();
   return registry;
