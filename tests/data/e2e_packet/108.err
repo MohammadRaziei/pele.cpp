@@ -1,0 +1,4 @@
+syntax
+Lexical error on line 5. Unrecognized text.
+  65-129: "😀 e"moji"
+----------------^

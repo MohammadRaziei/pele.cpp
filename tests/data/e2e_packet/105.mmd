@@ -1,0 +1,8 @@
+%%{init: {"packet": {"paddingX":2,"bitOrder":"other"}}}%%
+packet-beta
+0-1: "é"
+	+16: 'Version'
+  +48: "ReallyLongUnbrokenFieldNameThatNeedsBreaking"
+  +4: "IHL"
+  70-129: "Options (if any) and padding"
++16: "a<br/>b"

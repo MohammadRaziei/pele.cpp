@@ -33,7 +33,13 @@ add_library(pele
   src/detect.cpp
   src/yaml.cpp
   src/preprocess.cpp
+  src/regex.cpp
   src/url.cpp
+  src/common/tokens.cpp
+  src/common/fit_text.cpp
+  src/common/literal_label.cpp
+  src/info/info.cpp
+  src/packet/packet.cpp
   src/flowchart/lexer.cpp
   src/flowchart/shape_names.cpp
   src/flowchart/db.cpp

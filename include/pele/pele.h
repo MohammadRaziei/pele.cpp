@@ -7,6 +7,7 @@
 //
 // Errors are thrown as pele::pele_error.
 
+#include <memory>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -31,7 +32,30 @@ struct render_result {
   std::vector<rendered_link> links;
 };
 
-// Draws diagram text (UTF-8) as an SVG document.
+// Diagram text that has been read once, for drawing as often as needed (at several widths, say)
+// without reading it again. Cheap to copy.
+class parsed_diagram {
+ public:
+  // The type as Pele names it ("flowchart") and as Mermaid reports it ("flowchart-v2").
+  const std::string& type() const;
+  const std::string& mermaid_type() const;
+
+  struct impl;
+
+ private:
+  friend parsed_diagram parse(std::string_view text, const render_options& options);
+  friend render_result render(const parsed_diagram& diagram, const render_options& options);
+  std::shared_ptr<const impl> impl_;
+};
+
+// Reads diagram text (UTF-8). Only the options that matter for reading are used: `limit`,
+// `max_edges` and `config`.
+parsed_diagram parse(std::string_view text, const render_options& options = {});
+
+// Draws a diagram as an SVG document.
+render_result render(const parsed_diagram& diagram, const render_options& options = {});
+
+// Reads diagram text (UTF-8) and draws it as an SVG document.
 render_result render(std::string_view text, const render_options& options = {});
 
 // The diagram type of the text, or none when it is not one Pele knows.

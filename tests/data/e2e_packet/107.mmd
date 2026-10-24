@@ -1,0 +1,12 @@
+%%{init: {"packet": {"bitsPerRow":-3,"bitWidth":20}}}%%
+packet-beta
+  accDescr: A packet description
+	+32: 'Flags'
+	32-47: 'Options (if any) and padding'
+48-48: "Version"
++1: "with \"quote\""
++2: "😀 emoji"
+	52-53: "Checksum"
+	54-101: "Protocol"
++16: "é"
+  +8: "Protocol"

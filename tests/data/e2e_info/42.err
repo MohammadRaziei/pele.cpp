@@ -1,0 +1,4 @@
+syntax
+Lexical error on line 7. Unrecognized text.
+title: é ü ñ
+-----^

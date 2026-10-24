@@ -3,6 +3,8 @@
 #include "flowchart/db.h"
 #include "flowchart/parser.h"
 #include "flowchart/render.h"
+#include "info/info.h"
+#include "packet/packet.h"
 
 namespace pele {
 namespace {
@@ -37,6 +39,48 @@ class flowchart_diagram final : public diagram {
   }
 };
 
+class info_diagram_model final : public diagram_model {
+ public:
+  info::info_model model;
+};
+
+class info_diagram final : public diagram {
+ public:
+  diagram_type type() const override { return diagram_type::info; }
+
+  std::unique_ptr<diagram_model> parse(const ustring& source, const config& /*settings*/, const std::optional<ustring>& title, int /*line_offset*/,
+                                       const parse_limits& /*limits*/) const override {
+    auto model = std::make_unique<info_diagram_model>();
+    model->model = info::build_info(info::parse_info(source), title);
+    return model;
+  }
+
+  rendered render(const diagram_model& model, const config& settings, const render_options& options) const override {
+    return info::render_info(static_cast<const info_diagram_model&>(model).model, settings, options);
+  }
+};
+
+class packet_diagram_model final : public diagram_model {
+ public:
+  packet::packet_model model;
+};
+
+class packet_diagram final : public diagram {
+ public:
+  diagram_type type() const override { return diagram_type::packet; }
+
+  std::unique_ptr<diagram_model> parse(const ustring& source, const config& settings, const std::optional<ustring>& title, int /*line_offset*/,
+                                       const parse_limits& /*limits*/) const override {
+    auto model = std::make_unique<packet_diagram_model>();
+    model->model = packet::build_packet(packet::parse_packet(source), settings, title);
+    return model;
+  }
+
+  rendered render(const diagram_model& model, const config& settings, const render_options& options) const override {
+    return packet::render_packet(static_cast<const packet_diagram_model&>(model).model, settings, options);
+  }
+};
+
 }  // namespace
 
 void diagram_registry::add(std::unique_ptr<diagram> d) {
@@ -53,6 +97,8 @@ const diagram_registry& diagram_registry::builtin() {
   static const diagram_registry registry = [] {
     diagram_registry r;
     r.add(std::make_unique<flowchart_diagram>());
+    r.add(std::make_unique<info_diagram>());
+    r.add(std::make_unique<packet_diagram>());
     return r;
   }();
   return registry;

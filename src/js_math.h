@@ -32,14 +32,35 @@ inline double js_hypot(double a, double b) {
   return std::sqrt(sum) * max;
 }
 
-// A number the way String(n) writes it, for the sizes that JavaScript prints in a template string.
+// A number the way String(n) writes it (ECMAScript Number::toString): the shortest digits that read
+// back as the same number, in fixed notation from 1e-6 up to 1e21 and in exponent notation outside.
 inline std::string js_number_string(double v) {
   if (std::isnan(v)) return "NaN";
   if (std::isinf(v)) return v < 0 ? "-Infinity" : "Infinity";
   if (v == 0) return "0";
-  char buf[512];
-  const auto r = std::to_chars(buf, buf + sizeof buf, v, std::chars_format::fixed);
-  return std::string(buf, r.ptr);
+  const bool negative = v < 0;
+  char buf[64];
+  const auto r = std::to_chars(buf, buf + sizeof buf, negative ? -v : v, std::chars_format::scientific);
+  const std::string sci(buf, r.ptr);  // d[.ddd]e[+-]XX
+  const std::size_t e_at = sci.find('e');
+  std::string digits;
+  for (std::size_t i = 0; i < e_at; i++)
+    if (sci[i] != '.') digits += sci[i];
+  const int exponent = std::stoi(sci.substr(e_at + 1));
+  const int k = static_cast<int>(digits.size());
+  const int n = exponent + 1;
+  std::string out;
+  if (k <= n && n <= 21) {
+    out = digits + std::string(static_cast<std::size_t>(n - k), '0');
+  } else if (0 < n && n <= 21) {
+    out = digits.substr(0, static_cast<std::size_t>(n)) + "." + digits.substr(static_cast<std::size_t>(n));
+  } else if (-6 < n && n <= 0) {
+    out = "0." + std::string(static_cast<std::size_t>(-n), '0') + digits;
+  } else {
+    const int e = n - 1;
+    out = digits.substr(0, 1) + (k > 1 ? "." + digits.substr(1) : "") + "e" + (e < 0 ? "-" : "+") + std::to_string(e < 0 ? -e : e);
+  }
+  return negative ? "-" + out : out;
 }
 
 }  // namespace pele

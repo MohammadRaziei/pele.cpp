@@ -20,6 +20,26 @@ std::string read(const fs::path& p) {
   return ss.str();
 }
 
+// The options a case was made with, one `name=number` per line in N.opts (maxWidth, fontSize, padding).
+pele::render_options read_options(const fs::path& src) {
+  pele::render_options options;
+  fs::path path = src;
+  path.replace_extension(".opts");
+  if (!fs::exists(path)) return options;
+  std::istringstream lines(read(path));
+  std::string line;
+  while (std::getline(lines, line)) {
+    const std::size_t eq = line.find('=');
+    if (eq == std::string::npos) continue;
+    const std::string key = line.substr(0, eq);
+    const double value = std::stod(line.substr(eq + 1));
+    if (key == "maxWidth") options.max_width = value;
+    else if (key == "fontSize") options.font_size = value;
+    else if (key == "padding") options.padding = value;
+  }
+  return options;
+}
+
 }  // namespace
 
 int main(int argc, char** argv) {
@@ -36,7 +56,7 @@ int main(int argc, char** argv) {
     const std::string text = read(src);
     std::string why;
     try {
-      const pele::render_result r = pele::render(text);
+      const pele::render_result r = pele::render(text, read_options(src));
       if (!fs::exists(svg)) why = "should have failed";
       else if (r.svg != read(svg)) why = "svg differs";
     } catch (const pele::pele_error& e) {

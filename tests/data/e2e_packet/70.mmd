@@ -1,0 +1,9 @@
+%%{init: {"packet": {"rowHeight":0,"bitWidth":20}}}%%
+packet-beta
+	+8: "TTL"
+8-8: "Source Port"
++16: 'Protocol'
++2: "Checksum"
+	+48: "Checksum"
+	+48: "ReallyLongUnbrokenFieldNameThatNeedsBreaking"
+	123-126: "TTL"

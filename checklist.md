@@ -75,14 +75,21 @@
 - [x] `diagram` (رابط) و `diagram_registry` (Registry)؛ `flowchart_diagram`
 - [x] CLI: `pele-cli in.mmd > out.svg`
 - [x] تست پایان‌به‌پایان `test_e2e` (۱۵۰ دیاگرام ثابت، بدون نیاز به Node)
-- [ ] `parse()` جدا از `render()` (مدل قابل‌استفاده‌ی مجدد)
-- [ ] CI (GitHub Actions)
+- [x] `parse()` جدا از `render()` (مدل قابل‌استفاده‌ی مجدد)
+- [x] CI (GitHub Actions) — نوشته شد، روی CI واقعی اجرا نشده
 
 ## مرحله ۷ — بقیه‌ی انواع دیاگرام (هر کدام یک مرحله)
+- [x] زیرساخت: `js_regex` (موتور regex هم‌معنی با JS، تست‌شده روی ۲۸۰ regex واقعی Pele، بیش از ۷۰۰٬۰۰۰ تطابق)
+- [x] زیرساخت: `common/tokens.ts` → C++ (`token_def`، `token_set`، `tokenize`، `reader`، `keyword()`، `*_value`) — ۵۳٬۰۰۰+ مورد تطابق روی جدول‌های cynefin، git، packet، architecture، treemap، info (جدول‌های دارای `scanner`/`match` سفارشی با دیاگرام خودشان تست می‌شوند)
+- [ ] زیرساخت: بقیه‌ی `common/` (`literal-label`، `outline`، `generics`، `fit`، `fit-text`، `icon`، `accDescr`، `scan`، `caseless`)
+- [x] info — ۳٬۳۰۰ دیاگرام تصادفی (SVG و پیام خطا) بایت‌به‌بایت یکسان؛ `tools/gen_info_cases.mjs`، `tests/data/e2e_info`
+- [x] زیرساخت: `fit-text` و `literalLabel` — ۲۷٬۰۰۰ مورد (`tools/gen_text_cases.mjs`)
 - [ ] pie، sequence، class، state، er، gantt، gitGraph
 - [ ] mindmap، timeline، journey، xychart، quadrant، requirement
-- [ ] c4، sankey، block، packet، kanban، architecture، radar، treemap
-- [ ] سایر انواع (agentflow، usecase، railroad، treeView، venn، cynefin، wardley، swimlane، ishikawa، eventmodeling، info)
+- [ ] c4، sankey، block، kanban، architecture، radar، treemap
+- [ ] سایر انواع (agentflow، usecase، railroad، treeView، venn، cynefin، wardley، swimlane، ishikawa، eventmodeling)
+
+- [x] packet — ۷٬۹۰۰ دیاگرام تصادفی بایت‌به‌بایت (شامل حالت down با `maxWidth`)؛ `tools/gen_packet_cases.mjs`، `tests/data/e2e_packet`
 
 ## یادداشت‌ها
 - Pele چیدمان dagre/ELK ندارد؛ `layered.ts` خودش نوشته شده و حالا در C++ هم عین آن است.

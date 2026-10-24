@@ -1,0 +1,4 @@
+syntax
+Lexical error on line 1. Unrecognized text.
+info showInfo;accDescr: <b>bold</b> & more;title x  y   z
+-----^

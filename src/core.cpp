@@ -35,14 +35,20 @@ std::size_t utf16_length(std::string_view s) {
   return n;
 }
 
-struct parsed {
+}  // namespace
+
+struct parsed_diagram::impl {
   detected found;
+  std::string type;
+  std::string mermaid_type;
   const diagram* handler;
   std::unique_ptr<diagram_model> model;
   config settings;
 };
 
-parsed parse_source(const ustring& text, double limit, double max_edges, const std::optional<yaml_value>& extra) {
+namespace {
+
+std::shared_ptr<const parsed_diagram::impl> parse_source(const ustring& text, double limit, double max_edges, const std::optional<yaml_value>& extra) {
   if (static_cast<double>(text.size()) > limit)
     throw limit_error("Diagram source is longer than the limit of " + std::to_string(static_cast<long long>(limit)) + " characters.");
   preprocessed pre = preprocess(text);
@@ -67,14 +73,31 @@ parsed parse_source(const ustring& text, double limit, double max_edges, const s
     error.tag(to_string(found->type), found->mermaid_type);
     throw;
   }
-  return parsed{*found, handler, std::move(model), std::move(settings)};
+  auto result = std::make_shared<parsed_diagram::impl>();
+  result->found = *found;
+  result->type = to_string(found->type);
+  result->mermaid_type = found->mermaid_type;
+  result->handler = handler;
+  result->model = std::move(model);
+  result->settings = std::move(settings);
+  return result;
 }
 
 }  // namespace
 
-render_result render(std::string_view text, const render_options& options) {
-  const parsed p = parse_source(to_utf16(text), options.limit ? *options.limit : kDefaultLimit, options.max_edges ? *options.max_edges : kDefaultMaxEdges, options.config);
-  const std::string type = to_string(p.found.type);
+const std::string& parsed_diagram::type() const { return impl_->type; }
+
+const std::string& parsed_diagram::mermaid_type() const { return impl_->mermaid_type; }
+
+parsed_diagram parse(std::string_view text, const render_options& options) {
+  parsed_diagram result;
+  result.impl_ = parse_source(to_utf16(text), options.limit ? *options.limit : kDefaultLimit, options.max_edges ? *options.max_edges : kDefaultMaxEdges, options.config);
+  return result;
+}
+
+render_result render(const parsed_diagram& diagram, const render_options& options) {
+  const parsed_diagram::impl& p = *diagram.impl_;
+  const std::string& type = p.type;
   const yaml_value* section = p.settings.find(p.handler->section());
   bool fixed = false;
   if (section != nullptr && section->is_object()) {
@@ -108,6 +131,8 @@ render_result render(std::string_view text, const render_options& options) {
   for (rendered_link& link : result.links) link.id = decode_entities(link.id);
   return result;
 }
+
+render_result render(std::string_view text, const render_options& options) { return render(parse(text, options), options); }
 
 std::optional<std::string> detect_type(std::string_view text) {
   const auto found = diagram_detector::detect_diagram(preprocess(to_utf16(text)).text);

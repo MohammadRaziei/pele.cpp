@@ -1,0 +1,4 @@
+syntax
+Lexical error on line 5. Unrecognized text.
++50: 'Flags';
+------------^

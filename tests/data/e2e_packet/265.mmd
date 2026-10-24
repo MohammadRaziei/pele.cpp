@@ -1,0 +1,13 @@
+---
+title: UDP
+---
+%%{init: {"packet": {"bitsPerRow":1}}}%%
+packet
+  +8: "Two Words"
++1: "日本語"
+	+48: 'Data'
+	57-72: "A";
+  73: "é"
+74-75: "é"
+	+48: 'URG'
+  +8: "IHL"

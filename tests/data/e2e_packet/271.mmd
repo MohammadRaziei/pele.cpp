@@ -1,0 +1,15 @@
+---
+title: TCP Packet
+---
+%%{init: {"packet": {"bitsPerRow":8,"bitWidth":32,"paddingY":0}}}%%
+packet
+
+  +4: "日本語"
+4-11: "IHL"
+  +48: "Two Words"
+	60-75: "Sequence Number"
+76-107: ""
+108: "Options (if any) and padding"
+  +8: "Reserved"
+	+4: 'URG'
+	+16: "Protocol"

@@ -1,0 +1,8 @@
+%%{init: {"packet": {"bitsPerRow":8,"bitWidth":500}}}%%
+packet-beta 
+0-15: 'Data'
+	+32: 'Options (if any) and padding'
++4: "日本語"
+	+32: "Source Port"
++32: "Version"
+	116-163: "Version"
