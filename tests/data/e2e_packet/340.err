@@ -1,5 +1,0 @@
-syntax
-Parse error on line 2:
-	0-7-: "URG"
-----^
-Expecting token of type ':' but found `-`.

@@ -35,7 +35,8 @@ The other types are listed in `checklist.md`.
   coordinates agree to the last bit.
 * Each part has a test that runs the TypeScript original on random input and compares the result
   (`tools/gen_*_cases.mjs`, `tests/`). `tests/test_e2e.cpp` compares whole diagrams and needs only
-  the files in `tests/data/e2e`.
+  the manifests `tests/data/e2e*.txt` (one line per diagram, with the SHA-256 of the SVG Pele's
+  TypeScript gave).
 * Text is measured with a table of Arial widths, the same everywhere. Give `render_options::measurer`
   your own `pele::text_measurer` to use real font metrics.
 

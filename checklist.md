@@ -82,14 +82,14 @@
 - [x] زیرساخت: `js_regex` (موتور regex هم‌معنی با JS، تست‌شده روی ۲۸۰ regex واقعی Pele، بیش از ۷۰۰٬۰۰۰ تطابق)
 - [x] زیرساخت: `common/tokens.ts` → C++ (`token_def`، `token_set`، `tokenize`، `reader`، `keyword()`، `*_value`) — ۵۳٬۰۰۰+ مورد تطابق روی جدول‌های cynefin، git، packet، architecture، treemap، info (جدول‌های دارای `scanner`/`match` سفارشی با دیاگرام خودشان تست می‌شوند)
 - [ ] زیرساخت: بقیه‌ی `common/` (`literal-label`، `outline`، `generics`، `fit`، `fit-text`، `icon`، `accDescr`، `scan`، `caseless`)
-- [x] info — ۳٬۳۰۰ دیاگرام تصادفی (SVG و پیام خطا) بایت‌به‌بایت یکسان؛ `tools/gen_info_cases.mjs`، `tests/data/e2e_info`
+- [x] info — ۳٬۳۰۰ دیاگرام تصادفی (SVG و پیام خطا) بایت‌به‌بایت یکسان؛ `tools/gen_info_cases.mjs`، `tests/data/e2e_info.txt`
 - [x] زیرساخت: `fit-text` و `literalLabel` — ۲۷٬۰۰۰ مورد (`tools/gen_text_cases.mjs`)
 - [ ] pie، sequence، class، state، er، gantt، gitGraph
 - [ ] mindmap، timeline، journey، xychart، quadrant، requirement
 - [ ] c4، sankey، block، kanban، architecture، radar، treemap
 - [ ] سایر انواع (agentflow، usecase، railroad، treeView، venn، cynefin، wardley، swimlane، ishikawa، eventmodeling)
 
-- [x] packet — ۷٬۹۰۰ دیاگرام تصادفی بایت‌به‌بایت (شامل حالت down با `maxWidth`)؛ `tools/gen_packet_cases.mjs`، `tests/data/e2e_packet`
+- [x] packet — ۷٬۹۰۰ دیاگرام تصادفی بایت‌به‌بایت (شامل حالت down با `maxWidth`)؛ `tools/gen_packet_cases.mjs`، `tests/data/e2e_packet.txt`
 
 ## یادداشت‌ها
 - Pele چیدمان dagre/ELK ندارد؛ `layered.ts` خودش نوشته شده و حالا در C++ هم عین آن است.
@@ -99,3 +99,4 @@
 ## ابزارهای تست (بیرون از C++)
 - `tools/gen_*_cases.mjs`: مرجع TS را روی ورودی تصادفی اجرا می‌کنند (نیاز به `/home/claude/pele` و Node)
 - `tools/gen_e2e_cases.mjs` + `tools/compare_e2e.sh`: مقایسه‌ی SVG کامل با `pele.js` روی صدها فلوچارت تصادفی
+- [x] golden های e2e به‌صورت manifest + SHA-256 (`tools/pack_e2e.mjs`)؛ حجم `tests/data/e2e*` از ۱۲٫۳MB به ~۱۸۰KB رسید

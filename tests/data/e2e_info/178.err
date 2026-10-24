@@ -1,5 +1,0 @@
-syntax
-Parse error on line 7:
-showInfo
-^
-Expecting a title or the end of input but found `showInfo`.

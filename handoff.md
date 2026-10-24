@@ -47,7 +47,7 @@ cmake -S . -B build -G Ninja && cmake --build build && ctest --test-dir build
 ```
 
 `ctest` فقط از فایل‌های `tests/data/` می‌خواند و به Node نیاز ندارد.
-تست پایان‌به‌پایان `test_e2e` همه‌ی `tests/data/e2e/N.mmd` را رندر می‌کند و با `N.svg` (خروجی `pele.js`) یا `N.err` (کد و پیام خطا) مقایسه می‌کند.
+در حالت عادی `test_e2e` یک **manifest** (`tests/data/e2e*.txt`) می‌خواند: یک خط برای هر دیاگرام با متن، گزینه‌ها و **SHA-256 خروجی `pele.js`** (یا کد و پیام خطا). خود SVGها ذخیره نمی‌شوند (قبلاً ۱۲ مگابایت بود، حالا ~۱۸۰ کیلوبایت). اگر آرگومان یک پوشه باشد (`N.mmd` + `N.svg`/`N.err` + `N.opts`، خروجی `gen_*_cases.mjs`) همان را مستقیم و با SVG کامل مقایسه می‌کند، که برای دیدن اینکه دقیقاً کجا فرق دارند لازم است.
 
 ## محیط مرجع (برای تولید داده‌ی تست)
 
@@ -65,6 +65,7 @@ cmake -S . -B build -G Ninja && cmake --build build && ctest --test-dir build
 3. یک مولد `tools/gen_<x>_cases.mjs` بنویس که تابع TS را روی ورودی تصادفی اجرا کند و نتیجه را به متن بریزد (رشته‌ها hex)، و `tests/test_<x>.cpp` که همان را از C++ بسنجد.
 4. چند seed امتحان کن؛ پوشش را بشمار (چند مورد خطا، چند مورد موفق، کدام شاخه‌ها).
 5. وقتی کل دیاگرام آماده شد: `tools/gen_e2e_cases.mjs` را الگو بگیر، رندر کامل با `pele.js` بساز، `tools/compare_e2e.sh` را اجرا کن، و حدود ۱۵۰ مورد را به `tests/data/e2e/` اضافه کن (نام فایل‌ها را با پیشوند نوع دیاگرام بساز تا با فلوچارت قاطی نشود).
+   برای نگه‌داشتن یک مجموعه‌ی تازه: `node tools/gen_X_cases.mjs <seed> <n> /tmp/X` سپس `node tools/pack_e2e.mjs /tmp/X tests/data/e2e_X.txt` و یک `add_test` به `tests/CMakeLists.txt`. پوشه‌ی خام را commit نکن.
 
 ## معماری (شی‌گرا، همه‌چیز در `namespace pele`)
 

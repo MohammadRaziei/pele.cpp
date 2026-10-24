@@ -1,5 +1,0 @@
-syntax
-Parse error on line 3:
-  日本(([(a<br/>b))) ----> B
------^
-Expecting 'UNICODE_TEXT', 'TEXT', 'TAGSTART', 'TAGEND', 'STR', 'MD_STR', got 'STADIUMSTART'

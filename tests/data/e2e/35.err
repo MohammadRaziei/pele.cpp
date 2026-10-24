@@ -1,5 +1,0 @@
-syntax
-Parse error on line 4:
-  end(1 --> D
---^
-Expecting 'SEMI', 'NEWLINE', 'SPACE', 'EOF', 'subgraph', 'acc_title', 'acc_descr', 'acc_descr_multiline_value', 'STYLE', 'LINKSTYLE', 'CLASSDEF', 'CLASS', 'CLICK', 'NODE_STRING', got 'end'
