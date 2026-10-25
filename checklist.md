@@ -90,10 +90,11 @@
 - [x] pie — ۱۴٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت (`tools/gen_pie_cases.mjs`، `tests/data/e2e_pie.txt`) و `scanner` عددی روی ۶۴٬۰۰۰ متن (`tools/gen_scanner_cases.mjs`)
 - [x] treemap — ۱۴٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت (`tools/gen_treemap_cases.mjs`، `tests/data/e2e_treemap.txt`)
 - [x] زیرساخت: `js_format` (toFixed/toExponential/toPrecision) و `js_parse_float` — ۲۰۰٬۰۰۰+ عدد (`tools/gen_format_cases.mjs`)
+- [x] cynefin — ۱۳٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت (`tools/gen_cynefin_cases.mjs`، `tests/data/e2e_cynefin.txt`) و مولد seed در سطح بیت (`tools/gen_seed_cases.mjs`)
 - [ ] sequence، class، state، er، gantt، gitGraph
 - [ ] timeline، journey، xychart، quadrant، requirement
 - [ ] c4، sankey، block، architecture، radar
-- [ ] سایر انواع (agentflow، usecase، railroad، treeView، venn، cynefin، wardley، swimlane، ishikawa، eventmodeling)
+- [ ] سایر انواع (agentflow، usecase، railroad، treeView، venn، wardley، swimlane، ishikawa، eventmodeling)
 
 - [x] packet — ۷٬۹۰۰ دیاگرام تصادفی بایت‌به‌بایت (شامل حالت down با `maxWidth`)؛ `tools/gen_packet_cases.mjs`، `tests/data/e2e_packet.txt`
 

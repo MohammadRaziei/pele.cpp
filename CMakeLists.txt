@@ -15,6 +15,9 @@ elseif(MSVC)
   add_compile_options(/fp:precise /W4 /utf-8)
 endif()
 
+# The version, for the library's own use and for `pele-cli --version`.
+configure_file(include/pele/version.h.in "${CMAKE_CURRENT_BINARY_DIR}/generated/pele/version.h" @ONLY)
+
 # `uml` target (clang-uml class diagrams, see the end of this file). It needs compile_commands.json,
 # which has to be requested before the targets are created.
 option(PELE_ENABLE_UML "Add the 'uml' target (class diagrams with clang-uml)" OFF)
@@ -46,12 +49,16 @@ add_library(pele
   src/common/fit_text.cpp
   src/common/literal_label.cpp
   src/common/outline.cpp
+  src/common/generics.cpp
+  src/class/members.cpp
   src/common/icon.cpp
   src/lowercase.cpp
   src/js_format.cpp
   src/kanban/kanban.cpp
   src/mindmap/mindmap.cpp
   src/pie/pie.cpp
+  src/cynefin/boundaries.cpp
+  src/cynefin/cynefin.cpp
   src/treemap/format.cpp
   src/treemap/treemap.cpp
   src/info/info.cpp
@@ -67,7 +74,7 @@ add_library(pele
   src/fit_width.cpp
 )
 add_library(pele::pele ALIAS pele)
-target_include_directories(pele PUBLIC include PRIVATE include/pele src src/flowchart)
+target_include_directories(pele PUBLIC include "${CMAKE_CURRENT_BINARY_DIR}/generated" PRIVATE include/pele src src/flowchart)
 
 option(PELE_BUILD_TESTS "Build tests" ON)
 if(PELE_BUILD_TESTS)

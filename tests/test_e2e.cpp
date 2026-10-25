@@ -32,8 +32,14 @@ std::optional<std::string> test_icons(const std::string& name) {
   return std::nullopt;
 }
 
-// One option of a case: maxWidth, fontSize, padding, or icons (1 for the host icons above).
-void apply_option(pele::render_options& options, const std::string& key, double value) {
+// One option of a case: maxWidth, fontSize, padding, icons (1 for the host icons above), or
+// idPrefix, which is text.
+void apply_option(pele::render_options& options, const std::string& key, const std::string& raw) {
+  if (key == "idPrefix") {
+    options.id_prefix = raw;
+    return;
+  }
+  const double value = std::stod(raw);
   if (key == "maxWidth") options.max_width = value;
   else if (key == "fontSize") options.font_size = value;
   else if (key == "padding") options.padding = value;
@@ -52,8 +58,7 @@ pele::render_options read_options(const fs::path& src) {
     const std::size_t eq = line.find('=');
     if (eq == std::string::npos) continue;
     const std::string key = line.substr(0, eq);
-    const double value = std::stod(line.substr(eq + 1));
-    apply_option(options, key, value);
+    apply_option(options, key, line.substr(eq + 1));
   }
   return options;
 }
@@ -79,8 +84,7 @@ pele::render_options parse_options(const std::string& text) {
     const std::size_t eq = part.find('=');
     if (eq == std::string::npos) continue;
     const std::string key = part.substr(0, eq);
-    const double value = std::stod(part.substr(eq + 1));
-    apply_option(options, key, value);
+    apply_option(options, key, part.substr(eq + 1));
   }
   return options;
 }

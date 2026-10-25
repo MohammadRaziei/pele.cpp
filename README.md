@@ -25,8 +25,12 @@ The SVG draws everything with CSS variables that have fallbacks (`--pele-bg`, `-
 | Diagram | State |
 | --- | --- |
 | flowchart | done: byte-for-byte the SVG that `pele.js` writes |
+| info, packet, pie, kanban, mindmap, treemap, cynefin | done: the same, checked on tens of thousands of random diagrams each, errors included |
+| sequence, class, state, er, gantt, gitGraph | next |
+| the other 19 types | not started |
 
-The other types are listed in `checklist.md`.
+The full list is in `checklist.md`. `pele-cli --version` prints the version of this library and the
+version of Pele whose SVG it matches.
 
 ## How it is built, and how it is checked
 

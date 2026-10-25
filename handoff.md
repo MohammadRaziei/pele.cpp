@@ -1,7 +1,7 @@
 # handoff — pele.cpp
 
 این فایل برای کسی است که کار را از اینجا ادامه می‌دهد (خودت در چت بعدی یا شخص دیگر).
-حالت پروژه: **مراحل ۱ تا ۶ کامل‌اند؛ زیرساخت regex، `common/tokens`، `fit_text`، `literal_label` کامل است؛ `info`، `packet`، `kanban`، `mindmap`، `pie` و `treemap` بایت‌به‌بایت با TS یکسان‌اند.**
+حالت پروژه: **مراحل ۱ تا ۶ کامل‌اند؛ زیرساخت regex، `common/tokens`، `fit_text`، `literal_label` کامل است؛ `info`، `packet`، `kanban`، `mindmap`، `pie`، `treemap` و `cynefin` بایت‌به‌بایت با TS یکسان‌اند.**
 
 ## هدف
 
@@ -24,6 +24,7 @@
 | **info** | کامل؛ ۳٬۳۰۰ دیاگرام تصادفی بایت‌به‌بایت (SVG و پیام خطا) یکسان |
 | **packet** (parser، مدل با خطاهای semantic، رندر across و down) | کامل؛ ۷٬۹۰۰ دیاگرام تصادفی بایت‌به‌بایت یکسان (۳۳۷ مورد در حالت down) |
 | **kanban** (db، رندر، لینک تیکت، آیکون‌ها، اولویت، تا شدن ستون‌ها با `maxWidth`) | کامل؛ ۱۸٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت یکسان (SVG و پیام خطا، با `icons` و `maxWidth`) |
+| **cynefin** (parser، مدل، رندر با مرزهای موجی seeded، پرتگاه S شکل، انتقال‌های خمیده و فلش) | کامل؛ ۱۳٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت یکسان (با `seed` در config و `idPrefix`)؛ `seeded_random`/`hash_string`/`wave` روی ۱۴۷٬۰۰۰ مورد در سطح بیت |
 | **treemap** (parser، مدل با `classDef`، چیدمان squarified، رندر، formatter شبیه d3-format) | کامل؛ ۱۴٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت یکسان (با `valueFormat`، `classDef`، `showValues`، `padding`، `maxWidth`) |
 | `js_format` (`toFixed`/`toExponential`/`toPrecision` دقیق JS)، `js_parse_float` | کامل؛ ۲۰۰٬۰۰۰+ عدد. `printf` روی نیمه‌های دقیق غلط است (در یک فایل ۱۳۵ از ۲۴۲ مورد)، پس از آن استفاده نکن |
 | **pie** (parser با `scanner` سفارشی `NUMBER_PIE`، مدل، رندر با `fit_plot`، دونات، برچسب بیرون از لبه) | کامل؛ ۱۴٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت یکسان؛ scanner عددی روی ۶۴٬۰۰۰ متن هم با TS و هم با regex یکی است |
@@ -32,9 +33,10 @@
 | `lowercase` (`s !== s.toLowerCase()`، جدول از Node تولید شده) | کامل؛ ۳۸٬۰۰۰ مورد |
 | `common/fit-text`، `common/literal-label` (`literalLabel`) | کامل؛ ۲۷٬۰۰۰ مورد. `breakLabel` و `leftLabelSvg` هنوز پورت نشده‌اند (هر کدام را هنگام نیاز بیاور) |
 | بقیه‌ی `common/` (`outline`، `generics`، `fit`، `icon`، `scan`، `caseless`، …) | **شروع نشده** |
-| بقیه‌ی انواع دیاگرام (۲۶ نوع) | شروع نشده؛ `swimlane` فقط ۷۱ خط است ولی به `layout/lanes.ts` (۶۲۹ خط) و `FlowVariant` در رندر فلوچارت نیاز دارد |
+| **class** (در حال انجام) | `common/generics` و `class/members` (ClassMember) کامل و تست‌شده (۲۴۰٬۰۰۰+ مورد). **مانده:** `class/lexer.ts` (473)، `parser.ts` (351)، `db.ts` (289)، `graph.ts` (171)، `markers.ts` (55)، `render.ts` (625)؛ از `layout/compound` (آماده) استفاده می‌کند. `er` هم از `generics` استفاده می‌کند |
+| بقیه‌ی انواع دیاگرام (۲۵ نوع) | شروع نشده؛ `swimlane` فقط ۷۱ خط است ولی به `layout/lanes.ts` (۶۲۹ خط) و `FlowVariant` در رندر فلوچارت نیاز دارد |
 
-آخرین اجرای `ctest`: ۲۶ تست، همه پاس.
+آخرین اجرای `ctest`: ۲۹ تست، همه پاس.
 
 ## نکته‌ی مهم درباره‌ی مرجع TS
 
@@ -45,11 +47,15 @@
 
 `js_number_string` (`src/js_math.h`) حالا عین `String(n)` است: نماد علمی برای ≥1e21 و <1e-6 (قبلاً همیشه fixed بود). با Node روی ۳٬۷۰۰ عدد مقایسه شد.
 `src/lowercase.*` با جدول `src/lowercase_data.inc` که `tools/gen_lowercase_table.mjs` از Node می‌سازد (نسخه‌ی یونیکد Node در سرآیند فایل ثبت است؛ اگر Node عوض شد دوباره بساز).
-`tests/test_e2e.cpp` گزینه‌ی `icons=1` را هم می‌شناسد: یعنی میزبان برای هر نامی که شامل `book` یا `home` باشد آیکون دارد (مولد‌های TS همان قاعده را به `pele.js` می‌دهند). فایل اختیاری `N.opts` (`maxWidth=`، `fontSize=`، `padding=`) را می‌خواند، برای دیاگرام‌هایی که به عرض میزبان واکنش نشان می‌دهند.
+`tests/test_e2e.cpp` گزینه‌ی `icons=1` و گزینه‌ی متنی `idPrefix=` را هم می‌شناسد؛ `icons=1` یعنی میزبان برای هر نامی که شامل `book` یا `home` باشد آیکون دارد (`idPrefix` متن است و seed پیش‌فرض cynefin از آن می‌آید). توضیح `icons=1`: یعنی میزبان برای هر نامی که شامل `book` یا `home` باشد آیکون دارد (مولد‌های TS همان قاعده را به `pele.js` می‌دهند). فایل اختیاری `N.opts` (`maxWidth=`، `fontSize=`، `padding=`) را می‌خواند، برای دیاگرام‌هایی که به عرض میزبان واکنش نشان می‌دهند.
 
 ## نمودار کلاس‌ها (clang-uml)
 
 `cmake -B build -G Ninja -DPELE_ENABLE_UML=ON && cmake --build build --target uml` (پیش‌فرض خاموش است؛ نیاز به `clang-uml` و `plantuml` دارد). ساختار مثل libgsp: `tools/uml/clang-uml.in.yaml` (قالب؛ CMake آن را به `build/.clang-uml` می‌برد)، `tools/uml/uml_tu.cpp` (فقط `#include` ها)، و متغیرهای `PELE_UML_DIAGRAM` (`core_class` | `diagrams_class`)، `PELE_UML_GENERATOR` (`plantuml` | `mermaid` | `json`)، `PELE_UML_FORMAT` (`svg` | `png` | `pdf`). **وقتی دیاگرام یا هدر تازه اضافه می‌کنی، هدرش را به `uml_tu.cpp` اضافه کن** وگرنه در نمودار نمی‌آید، و namespace جدید را در `clang-uml.in.yaml` به یکی از دیاگرام‌ها بده. با generator ـ `mermaid` وقتی کلاس‌دیاگرام Pele پورت شد، می‌شود به‌جای `mmdc` از `pele-cli` استفاده کرد.
+
+## ترتیب کار (پرکاربردها اول) و زمان نسخه
+
+class ← er ← state ← sequence ← gantt ← gitGraph. هر وقت یکی از این مایل‌استون‌ها تمام شد نسخه بزنید: **0.1.0** = flowchart + info/packet/pie/kanban/mindmap/treemap/cynefin (آماده؛ `CHANGELOG.md` و `pele-cli --version` هست)، **0.2.0** = + class و er و state (همه روی `layout/compound`)، **0.3.0** = + sequence و gantt و gitGraph. هنگام نسخه: `PROJECT_VERSION` را در `CMakeLists.txt` بالا ببر، بخش تازه‌ای به `CHANGELOG.md` اضافه کن، جدول README را به‌روز کن، و tag بزن (`git tag -a v0.2.0 -m ... && git push --tags`).
 
 ## حجم داده‌ی تست
 
@@ -140,6 +146,7 @@ src/kanban/     kanban (مدل، db، رندر)
 src/mindmap/    mindmap (مدل، db، رندر)
 src/pie/        pie (parser با scanner عددی، مدل، رندر)
 src/treemap/    treemap (parser، مدل، چیدمان، رندر، format)
+src/cynefin/    cynefin (parser، مدل، رندر، boundaries)
 src/flowchart/  tokens، lexer، db، parser، graph، render، shape_names
 tests/          test_*.cpp و tests/data/ (داده‌ی مرجع تولیدشده از TS)
 tools/          gen_*.mjs، extract_regexes.mjs، compare_e2e.sh، svg2png.py، pele_cli.cpp
