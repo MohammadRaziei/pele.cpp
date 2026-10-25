@@ -5,7 +5,10 @@
 #include "flowchart/render.h"
 #include "info/info.h"
 #include "kanban/kanban.h"
+#include "mindmap/mindmap.h"
 #include "packet/packet.h"
+#include "pie/pie.h"
+#include "treemap/treemap.h"
 
 namespace pele {
 namespace {
@@ -103,6 +106,69 @@ class kanban_diagram final : public diagram {
   }
 };
 
+class mindmap_diagram_model final : public diagram_model {
+ public:
+  mindmap::mindmap_model model;
+};
+
+class mindmap_diagram final : public diagram {
+ public:
+  diagram_type type() const override { return diagram_type::mindmap; }
+
+  std::unique_ptr<diagram_model> parse(const ustring& source, const config& /*settings*/, const std::optional<ustring>& title, int /*line_offset*/,
+                                       const parse_limits& /*limits*/) const override {
+    auto model = std::make_unique<mindmap_diagram_model>();
+    model->model = mindmap::parse_mindmap(source, title);
+    return model;
+  }
+
+  rendered render(const diagram_model& model, const config& settings, const render_options& options) const override {
+    return mindmap::render_mindmap(static_cast<const mindmap_diagram_model&>(model).model, settings, options);
+  }
+};
+
+class pie_diagram_model final : public diagram_model {
+ public:
+  pie::pie_model model;
+};
+
+class pie_diagram final : public diagram {
+ public:
+  diagram_type type() const override { return diagram_type::pie; }
+
+  std::unique_ptr<diagram_model> parse(const ustring& source, const config& /*settings*/, const std::optional<ustring>& title, int /*line_offset*/,
+                                       const parse_limits& /*limits*/) const override {
+    auto model = std::make_unique<pie_diagram_model>();
+    model->model = pie::build_pie(pie::parse_pie(source), title);
+    return model;
+  }
+
+  rendered render(const diagram_model& model, const config& settings, const render_options& options) const override {
+    return pie::render_pie(static_cast<const pie_diagram_model&>(model).model, settings, options);
+  }
+};
+
+class treemap_diagram_model final : public diagram_model {
+ public:
+  treemap::treemap_model model;
+};
+
+class treemap_diagram final : public diagram {
+ public:
+  diagram_type type() const override { return diagram_type::treemap; }
+
+  std::unique_ptr<diagram_model> parse(const ustring& source, const config& /*settings*/, const std::optional<ustring>& title, int /*line_offset*/,
+                                       const parse_limits& /*limits*/) const override {
+    auto model = std::make_unique<treemap_diagram_model>();
+    model->model = treemap::build_treemap(treemap::parse_treemap(source), title);
+    return model;
+  }
+
+  rendered render(const diagram_model& model, const config& settings, const render_options& options) const override {
+    return treemap::render_treemap(static_cast<const treemap_diagram_model&>(model).model, settings, options);
+  }
+};
+
 }  // namespace
 
 void diagram_registry::add(std::unique_ptr<diagram> d) {
@@ -122,6 +188,9 @@ const diagram_registry& diagram_registry::builtin() {
     r.add(std::make_unique<info_diagram>());
     r.add(std::make_unique<packet_diagram>());
     r.add(std::make_unique<kanban_diagram>());
+    r.add(std::make_unique<mindmap_diagram>());
+    r.add(std::make_unique<pie_diagram>());
+    r.add(std::make_unique<treemap_diagram>());
     return r;
   }();
   return registry;

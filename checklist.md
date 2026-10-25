@@ -86,9 +86,13 @@
 - [x] زیرساخت: `fit-text` و `literalLabel` — ۲۷٬۰۰۰ مورد (`tools/gen_text_cases.mjs`)
 - [x] kanban — ۱۸٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت (`tools/gen_kanban_cases.mjs`، `tests/data/e2e_kanban.txt`)
 - [x] زیرساخت: `common/outline` (توکنایزر + parser هر دو حالت)، `common/icon`، `lowercase`
-- [ ] pie، sequence، class، state، er، gantt، gitGraph
-- [ ] mindmap، timeline، journey، xychart، quadrant، requirement
-- [ ] c4، sankey، block، architecture، radar، treemap
+- [x] mindmap — ۱۲٬۵۰۰+ دیاگرام تصادفی بایت‌به‌بایت (`tools/gen_mindmap_cases.mjs`، `tests/data/e2e_mindmap.txt`)
+- [x] pie — ۱۴٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت (`tools/gen_pie_cases.mjs`، `tests/data/e2e_pie.txt`) و `scanner` عددی روی ۶۴٬۰۰۰ متن (`tools/gen_scanner_cases.mjs`)
+- [x] treemap — ۱۴٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت (`tools/gen_treemap_cases.mjs`، `tests/data/e2e_treemap.txt`)
+- [x] زیرساخت: `js_format` (toFixed/toExponential/toPrecision) و `js_parse_float` — ۲۰۰٬۰۰۰+ عدد (`tools/gen_format_cases.mjs`)
+- [ ] sequence، class، state، er، gantt، gitGraph
+- [ ] timeline، journey، xychart، quadrant، requirement
+- [ ] c4، sankey، block، architecture، radar
 - [ ] سایر انواع (agentflow، usecase، railroad، treeView، venn، cynefin، wardley، swimlane، ishikawa، eventmodeling)
 
 - [x] packet — ۷٬۹۰۰ دیاگرام تصادفی بایت‌به‌بایت (شامل حالت down با `maxWidth`)؛ `tools/gen_packet_cases.mjs`، `tests/data/e2e_packet.txt`

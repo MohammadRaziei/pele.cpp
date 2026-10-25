@@ -1,7 +1,7 @@
 # handoff — pele.cpp
 
 این فایل برای کسی است که کار را از اینجا ادامه می‌دهد (خودت در چت بعدی یا شخص دیگر).
-حالت پروژه: **مراحل ۱ تا ۶ کامل‌اند؛ زیرساخت regex، `common/tokens`، `fit_text`، `literal_label` کامل است؛ `info`، `packet` و `kanban` بایت‌به‌بایت با TS یکسان‌اند.**
+حالت پروژه: **مراحل ۱ تا ۶ کامل‌اند؛ زیرساخت regex، `common/tokens`، `fit_text`، `literal_label` کامل است؛ `info`، `packet`، `kanban`، `mindmap`، `pie` و `treemap` بایت‌به‌بایت با TS یکسان‌اند.**
 
 ## هدف
 
@@ -24,13 +24,17 @@
 | **info** | کامل؛ ۳٬۳۰۰ دیاگرام تصادفی بایت‌به‌بایت (SVG و پیام خطا) یکسان |
 | **packet** (parser، مدل با خطاهای semantic، رندر across و down) | کامل؛ ۷٬۹۰۰ دیاگرام تصادفی بایت‌به‌بایت یکسان (۳۳۷ مورد در حالت down) |
 | **kanban** (db، رندر، لینک تیکت، آیکون‌ها، اولویت، تا شدن ستون‌ها با `maxWidth`) | کامل؛ ۱۸٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت یکسان (SVG و پیام خطا، با `icons` و `maxWidth`) |
+| **treemap** (parser، مدل با `classDef`، چیدمان squarified، رندر، formatter شبیه d3-format) | کامل؛ ۱۴٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت یکسان (با `valueFormat`، `classDef`، `showValues`، `padding`، `maxWidth`) |
+| `js_format` (`toFixed`/`toExponential`/`toPrecision` دقیق JS)، `js_parse_float` | کامل؛ ۲۰۰٬۰۰۰+ عدد. `printf` روی نیمه‌های دقیق غلط است (در یک فایل ۱۳۵ از ۲۴۲ مورد)، پس از آن استفاده نکن |
+| **pie** (parser با `scanner` سفارشی `NUMBER_PIE`، مدل، رندر با `fit_plot`، دونات، برچسب بیرون از لبه) | کامل؛ ۱۴٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت یکسان؛ scanner عددی روی ۶۴٬۰۰۰ متن هم با TS و هم با regex یکی است |
+| **mindmap** (db، رندر across و down، ۹ شکل، ۱۱ رنگ بخش، آیکون و کلاس) | کامل؛ ۱۲٬۵۰۰+ دیاگرام تصادفی بایت‌به‌بایت یکسان (۶۷+ چیدمان outline در حالت down، خطای «چند ریشه») |
 | `common/outline` (توکنایزر و parser مشترک kanban و mindmap، هر دو حالت)، `common/icon` | کامل؛ ۷۰٬۰۰۰+ مورد توکن مستقیم، همه‌ی ۱۴ نوع توکن پوشش دارند |
 | `lowercase` (`s !== s.toLowerCase()`، جدول از Node تولید شده) | کامل؛ ۳۸٬۰۰۰ مورد |
 | `common/fit-text`، `common/literal-label` (`literalLabel`) | کامل؛ ۲۷٬۰۰۰ مورد. `breakLabel` و `leftLabelSvg` هنوز پورت نشده‌اند (هر کدام را هنگام نیاز بیاور) |
 | بقیه‌ی `common/` (`outline`، `generics`، `fit`، `icon`، `scan`، `caseless`، …) | **شروع نشده** |
-| بقیه‌ی انواع دیاگرام (۲۹ نوع) | شروع نشده؛ **`mindmap` حالا فقط db و رندر مانده** (توکنایزر و parser آماده است) |
+| بقیه‌ی انواع دیاگرام (۲۶ نوع) | شروع نشده؛ `swimlane` فقط ۷۱ خط است ولی به `layout/lanes.ts` (۶۲۹ خط) و `FlowVariant` در رندر فلوچارت نیاز دارد |
 
-آخرین اجرای `ctest`: ۲۱ تست، همه پاس.
+آخرین اجرای `ctest`: ۲۶ تست، همه پاس.
 
 ## نکته‌ی مهم درباره‌ی مرجع TS
 
@@ -46,6 +50,11 @@
 ## نمودار کلاس‌ها (clang-uml)
 
 `cmake -B build -G Ninja -DPELE_ENABLE_UML=ON && cmake --build build --target uml` (پیش‌فرض خاموش است؛ نیاز به `clang-uml` و `plantuml` دارد). ساختار مثل libgsp: `tools/uml/clang-uml.in.yaml` (قالب؛ CMake آن را به `build/.clang-uml` می‌برد)، `tools/uml/uml_tu.cpp` (فقط `#include` ها)، و متغیرهای `PELE_UML_DIAGRAM` (`core_class` | `diagrams_class`)، `PELE_UML_GENERATOR` (`plantuml` | `mermaid` | `json`)، `PELE_UML_FORMAT` (`svg` | `png` | `pdf`). **وقتی دیاگرام یا هدر تازه اضافه می‌کنی، هدرش را به `uml_tu.cpp` اضافه کن** وگرنه در نمودار نمی‌آید، و namespace جدید را در `clang-uml.in.yaml` به یکی از دیاگرام‌ها بده. با generator ـ `mermaid` وقتی کلاس‌دیاگرام Pele پورت شد، می‌شود به‌جای `mmdc` از `pele-cli` استفاده کرد.
+
+## حجم داده‌ی تست
+
+فایل‌های committed در `tests/data` فقط مجموعه‌ی رگرسیون‌اند (چند صد تا چند هزار مورد با seed=1). برای اطمینان بیشتر هنگام تغییر، همان مولد را با seed و تعداد بزرگ‌تر به `/tmp` بزن و `test_*` را روی آن اجرا کن (مثلاً `node tools/gen_pie_cases.mjs 7 2000 /tmp/x && build/tests/test_e2e /tmp/x`)؛ آن‌ها را commit نکن.
+`fit_width::cap_width` معادل `capWidth` است. `fit_width::fit_plot` معادل `fitWidth` در TS است (قبلاً فقط `turn_to_fit` و `tighten` بود). `js_to_fixed0` معادل `toFixed(0)` است (نیمه‌ها به بالا، برخلاف `%.0f`).
 
 ## نکات ویندوز / MSVC (CI روی windows-latest)
 
@@ -114,7 +123,7 @@ cmake -S . -B build -G Ninja && cmake --build build && ctest --test-dir build
 1. **انجام شد — `common/tokens`** (`src/common/tokens.h/.cpp`). طراحی: `token_def` (سازنده‌ی روان: `token_def::regex(name, source, first)`، `.hidden()`، `.opener()`، `.longer()`، `.scanner()`، `.match()`) یک `token_ptr` (`shared_ptr<const token_type>`) می‌دهد؛ `token_set` جدول را یک‌بار آماده می‌کند (مثل `prepare` در TS)؛ `longer` با **هویت شیء** حل می‌شود (مثل `types.indexOf`)، پس نوع مشترک باید یک‌بار ساخته شود (`common_tokens::newline()` و غیره static هستند). `reader` معادل `Reader`. `scanner` و `match` به‌صورت `std::function` هستند و هنوز با داده تست نشده‌اند (فقط ۵ دیاگرام از آن‌ها استفاده می‌کنند: wardley، railroad، pie، treeview، radar؛ هنگام پورت آن‌ها تستشان کن).
 2. **انجام شد — `info`** (`src/info/info.h/.cpp`، ثبت‌شده در `diagram.cpp`). نسخه‌ی چاپ‌شده «Pele v1.7.0» ثابت است (`kVersion`). الگوی کار برای دیاگرام بعدی: همین فایل‌ها را کپی کن، یک `class xxx_diagram final : public diagram` در `diagram.cpp` اضافه کن، و `tests/data/e2e_<type>` را با مولد مشابه `tools/gen_info_cases.mjs` بساز.
 3. بقیه‌ی `common/` به‌اندازه‌ی نیاز هر دیاگرام (`literal-label`، `outline`، `generics`، `fit`، `fit-text`، `icon`، `accDescr`، `scan`، `caseless`).
-4. به ترتیب اندازه، تقریبی از سورس TS (**تذکر:** `pie`، `treeview`، `radar` و `wardley` از `scanner`/`match` سفارشی استفاده می‌کنند؛ `gen_tokens_cases.mjs` جدولشان را رد می‌کند): `pie` (~۳۶۰ خط)، `packet` (~۳۶۰)، `kanban` (~۳۸۰)، `mindmap` (~۴۰۰)، سپس بقیه‌ی کوچک‌ها، و در آخر بزرگ‌ترین‌ها مثل `sequence` (~۲٬۷۰۰ خط)، `class`، `state`، `er`، `gantt`. (اندازه‌ها را قبل از شروع دوباره بشمار: `wc -l /home/claude/pele/src/diagrams/<type>/*.ts`.)
+4. به ترتیب اندازه، تقریبی از سورس TS (**تذکر:** `treeview` و `radar` از `match` سفارشی استفاده می‌کنند و `gen_tokens_cases.mjs` جدولشان را رد می‌کند؛ جدول‌هایی که فقط `scanner` دارند (pie، wardley، railroad) با regex خودشان در آن تست می‌شوند، چون scanner باید دقیقاً مثل pattern جواب بدهد): `pie` (~۳۶۰ خط)، `packet` (~۳۶۰)، `kanban` (~۳۸۰)، `mindmap` (~۴۰۰)، سپس بقیه‌ی کوچک‌ها، و در آخر بزرگ‌ترین‌ها مثل `sequence` (~۲٬۷۰۰ خط)، `class`، `state`، `er`، `gantt`. (اندازه‌ها را قبل از شروع دوباره بشمار: `wc -l /home/claude/pele/src/diagrams/<type>/*.ts`.)
 5. موارد باز: `swimlane`/`FlowVariant`، اجرای CI روی GitHub، بازبینی README.
 
 ## نقشه‌ی فایل‌ها
@@ -128,6 +137,9 @@ src/common/     tokens (tokenizer مشترک دیاگرام‌های Langium)، 
 src/info/       info (parser، مدل، رندر)
 src/packet/     packet (parser، مدل، رندر)
 src/kanban/     kanban (مدل، db، رندر)
+src/mindmap/    mindmap (مدل، db، رندر)
+src/pie/        pie (parser با scanner عددی، مدل، رندر)
+src/treemap/    treemap (parser، مدل، چیدمان، رندر، format)
 src/flowchart/  tokens، lexer، db، parser، graph، render، shape_names
 tests/          test_*.cpp و tests/data/ (داده‌ی مرجع تولیدشده از TS)
 tools/          gen_*.mjs، extract_regexes.mjs، compare_e2e.sh، svg2png.py، pele_cli.cpp

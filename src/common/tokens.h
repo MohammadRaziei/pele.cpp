@@ -128,6 +128,8 @@ class reader {
 
   // The kind of the current token, or -1 at the end.
   int kind() const { return i < tokens_.kinds.size() ? tokens_.kinds[i] : -1; }
+  // The kind of the token at `index`, or -1 past the end, as `kinds[index]` in the tokenizer's own terms.
+  int kind_at(std::size_t index) const { return index < tokens_.kinds.size() ? tokens_.kinds[index] : -1; }
   ustring text(std::size_t index) const;
   ustring text() const { return text(i); }
   ustring take() { return text(i++); }

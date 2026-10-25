@@ -48,7 +48,12 @@ add_library(pele
   src/common/outline.cpp
   src/common/icon.cpp
   src/lowercase.cpp
+  src/js_format.cpp
   src/kanban/kanban.cpp
+  src/mindmap/mindmap.cpp
+  src/pie/pie.cpp
+  src/treemap/format.cpp
+  src/treemap/treemap.cpp
   src/info/info.cpp
   src/packet/packet.cpp
   src/flowchart/lexer.cpp

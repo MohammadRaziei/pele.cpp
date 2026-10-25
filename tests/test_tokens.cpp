@@ -9,6 +9,7 @@
 
 #include "common/tokens.h"
 #include "errors.h"
+#include "pie/pie.h"
 
 using namespace pele;
 
@@ -35,7 +36,10 @@ struct spec {
 struct table {
   std::string name;
   std::vector<spec> specs;
+  // Built from the patterns alone, as a scanner has to answer as its pattern does.
   std::unique_ptr<token_set> set;
+  // The table as the library has it, with its scanners, when a test has it.
+  const token_set* library = nullptr;
 };
 
 // Makes the types in the order their `longer` lists need, so that each is the one object the lists name.
@@ -92,7 +96,10 @@ int main(int argc, char** argv) {
         tables[current].specs.push_back(sp);
       }
     }
-    for (auto& entry : tables) entry.second.set = build(entry.second.specs);
+    for (auto& entry : tables) {
+      entry.second.set = build(entry.second.specs);
+      if (entry.second.name == "pie") entry.second.library = &pie::pie_tokens();
+    }
   }
 
   std::ifstream in(argv[2]);
@@ -112,19 +119,25 @@ int main(int argc, char** argv) {
       if (!rest.empty() && rest[0] == ' ') rest.erase(0, 1);
       source = unhex16(src);
       const table& tb = tables.at(t);
-      std::string got;
-      try {
-        const tokens tk = tokenize(source, *tb.set, tb.name);
-        got = "ok";
-        std::string sep = " ";
-        for (std::size_t i = 0; i < tk.kinds.size(); i++, sep = ",") got += sep + std::to_string(tk.kinds[i]) + ":" + std::to_string(tk.starts[i]) + ":" + std::to_string(tk.ends[i]);
-      } catch (const pele_error& e) {
-        got = "err x";
-        static const char* digits = "0123456789abcdef";
-        for (unsigned char c : std::string(e.what())) got += std::string(1, digits[c >> 4]) + digits[c & 15];
-      }
+      const auto run = [&](const token_set& set) {
+        std::string got;
+        try {
+          const tokens tk = tokenize(source, set, tb.name);
+          got = "ok";
+          std::string sep = " ";
+          for (std::size_t i = 0; i < tk.kinds.size(); i++, sep = ",") got += sep + std::to_string(tk.kinds[i]) + ":" + std::to_string(tk.starts[i]) + ":" + std::to_string(tk.ends[i]);
+        } catch (const pele_error& e) {
+          got = "err x";
+          static const char* digits = "0123456789abcdef";
+          for (unsigned char c : std::string(e.what())) got += std::string(1, digits[c >> 4]) + digits[c & 15];
+        }
+        return got;
+      };
+      std::string got = run(*tb.set);
+      const std::string library = tb.library != nullptr ? run(*tb.library) : got;
       const std::string want = kind + (rest.empty() ? "" : " " + rest);
-      if (got != want) why = tb.name + ": " + got.substr(0, 120) + "\n  want " + want.substr(0, 120);
+      if (got != want) why = tb.name + " (patterns): " + got.substr(0, 120) + "\n  want " + want.substr(0, 120);
+      else if (library != want) why = tb.name + " (library scanner): " + library.substr(0, 120) + "\n  want " + want.substr(0, 120);
     } else if (tag == "v") {
       std::string kind, src, ok, hex;
       s >> kind >> src >> ok >> hex;

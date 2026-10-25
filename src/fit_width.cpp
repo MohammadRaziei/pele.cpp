@@ -21,6 +21,26 @@ rendered fit_width::turn_to_fit(const render_options& options, const std::functi
 
 bool fit_width::runs_across(const std::optional<std::string>& direction) { return direction && (*direction == "LR" || *direction == "RL"); }
 
+rendered fit_width::fit_plot(const render_options& options, double natural, double least, const std::function<rendered(double, bool)>& draw) {
+  rendered result = draw(natural, false);
+  const auto& available = options.max_width;
+  if (!available || !(*available > 0) || result.width <= *available) return result;
+  const double floor = std::min(least, natural);
+  double plot = natural;
+  result = draw(plot, true);
+  for (int round = 0; round < 3 && result.width > *available && plot > floor; round++) {
+    plot = std::max(floor, plot - (result.width - *available));
+    result = draw(plot, true);
+  }
+  return result;
+}
+
+double fit_width::cap_width(const render_options& options, double natural, double least, double around) {
+  const auto& available = options.max_width;
+  if (!available || !(*available > 0)) return natural;
+  return std::max(std::min(least, natural), std::min(natural, *available - around));
+}
+
 rendered fit_width::tighten(const render_options& options, const std::function<rendered(bool)>& draw) {
   rendered loose = draw(false);
   const auto& available = options.max_width;

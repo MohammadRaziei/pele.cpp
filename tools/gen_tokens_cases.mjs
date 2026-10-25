@@ -1,6 +1,8 @@
 // Runs Pele's tokenizer (src/diagrams/common/tokens.ts) on random text with the token tables of
-// every diagram whose tables are plain data (no custom `scanner` or `match`), and writes the
-// tables and what came out, for tests/test_tokens.cpp.
+// every diagram whose tables can be written as data, and writes the tables and what came out, for
+// tests/test_tokens.cpp. A type with a custom `scanner` is written with its pattern: the scanner
+// only has to answer as the pattern does, and the C++ test holds it to that. A table with a custom
+// `match` is skipped.
 //   node tools/gen_tokens_cases.mjs [seed] [casesPerTable] [tables.txt] [cases.txt]
 import { build } from '/home/claude/pele/node_modules/esbuild/lib/main.js';
 import fs from 'fs';
@@ -24,7 +26,7 @@ const pick = (xs) => xs[ri(0, xs.length - 1)];
 const hex8 = (s) => 'x' + Buffer.from(s, 'utf8').toString('hex');
 const hex16 = (s) => 'x' + Array.from({ length: s.length }, (_, i) => s.charCodeAt(i).toString(16).padStart(4, '0')).join('');
 
-const BASE = [' ', ' ', '\t', '\n', '\r\n', 'a', 'b', 'x', 'A', 'Z', '0', '1', '9', '-', '_', '.', ',', ':', ';', '"', "'", '(', ')', '[', ']', '{', '}', '%', '%%', '#', '<', '>', '=', '/', '\\', '*', '+', '?', '|', '&', '!', '@', '$', '^', '~', '`', 'é', '日', '\u00a0', '\u2028', '😀', '---', '%%{', '}%%', 'title', 'accTitle', 'accDescr', 'accTitle: t', 'accDescr: d', 'accDescr {\n d\n}', 'title T', 'true', 'false', '10', '3.5', '-1'];
+const BASE = [' ', ' ', '\t', '\n', '\r\n', 'a', 'b', 'x', 'A', 'Z', '0', '1', '9', '-', '_', '.', ',', ':', ';', '"', "'", '(', ')', '[', ']', '{', '}', '%', '%%', '#', '<', '>', '=', '/', '\\', '*', '+', '?', '|', '&', '!', '@', '$', '^', '~', '`', 'é', '日', '\u00a0', '\u2028', '😀', '---', '%%{', '}%%', '00', '0.5', '007', '1.2.3', '12.', '-0', '-0.0', '1.', '.5', '123456789', '0.', '5.50', '1.2.', '..', '-1.5', '100', '0.0.0', '-', '--1', 'title', 'accTitle', 'accDescr', 'accTitle: t', 'accDescr: d', 'accDescr {\n d\n}', 'title T', 'true', 'false', '10', '3.5', '-1'];
 
 const tableLines = [];
 const caseLines = [];
@@ -33,7 +35,7 @@ let id = 0;
 const used = [];
 for (const key of Object.keys(SOURCES)) {
   const types = M[key];
-  if (types.some((t) => t.scanner || t.match)) { console.log('skip (custom scanners):', key); continue; }
+  if (types.some((t) => t.match)) { console.log('skip (custom match):', key); continue; }
   const t = id++;
   used.push(key);
   tableLines.push(`table ${t} ${types.length} ${key}`);

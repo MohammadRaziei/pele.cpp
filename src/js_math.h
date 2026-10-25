@@ -63,4 +63,13 @@ inline std::string js_number_string(double v) {
   return negative ? "-" + out : out;
 }
 
+// `x.toFixed(0)` for a number that is not negative. A value halfway between two integers goes up,
+// where printf's "%.0f" would go to the even one.
+inline std::string js_to_fixed0(double x) {
+  if (std::isnan(x)) return "NaN";
+  if (x >= 1e21) return js_number_string(x);
+  const double whole = std::floor(x);
+  return js_number_string(x - whole >= 0.5 ? whole + 1 : whole);
+}
+
 }  // namespace pele
