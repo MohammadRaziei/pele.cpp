@@ -4,48 +4,10 @@
 #include <cstdlib>
 
 #include "chars.h"
+#include "unicode_letter.h"
 
 namespace pele::flowchart {
 namespace {
-
-#include "unicode_letter_data.inc"
-
-bool is_unicode_letter(int code) {
-  static const std::vector<unsigned> table = [] {
-    std::vector<unsigned> out;
-    const std::string packed(kPackedLetters);
-    unsigned prev = 0;
-    std::size_t i = 0;
-    bool is_start = true;
-    unsigned start = 0;
-    while (i <= packed.size()) {
-      const std::size_t sp = packed.find(' ', i);
-      const std::string part = packed.substr(i, sp == std::string::npos ? std::string::npos : sp - i);
-      const unsigned value = static_cast<unsigned>(std::strtoul(part.c_str(), nullptr, 36));
-      if (is_start) {
-        start = prev + value;
-        out.push_back(start);
-      } else {
-        prev = start + value;
-        out.push_back(prev);
-      }
-      is_start = !is_start;
-      if (sp == std::string::npos) break;
-      i = sp + 1;
-    }
-    return out;
-  }();
-  if (code < 0xaa || code > 0xffdc) return false;
-  long lo = 0;
-  long hi = static_cast<long>(table.size() >> 1) - 1;
-  while (lo <= hi) {
-    const long mid = (lo + hi) >> 1;
-    if (static_cast<unsigned>(code) < table[mid * 2]) hi = mid - 1;
-    else if (static_cast<unsigned>(code) > table[mid * 2 + 1]) lo = mid + 1;
-    else return true;
-  }
-  return false;
-}
 
 enum state : int {
   S_INITIAL, S_string, S_md_string, S_acc_title, S_acc_descr, S_acc_descr_multiline, S_dir, S_text, S_ellipseText, S_trapText, S_edgeText, S_thickEdgeText,

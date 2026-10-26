@@ -33,10 +33,10 @@
 | `lowercase` (`s !== s.toLowerCase()`، جدول از Node تولید شده) | کامل؛ ۳۸٬۰۰۰ مورد |
 | `common/fit-text`، `common/literal-label` (`literalLabel`) | کامل؛ ۲۷٬۰۰۰ مورد. `breakLabel` و `leftLabelSvg` هنوز پورت نشده‌اند (هر کدام را هنگام نیاز بیاور) |
 | بقیه‌ی `common/` (`outline`، `generics`، `fit`، `icon`، `scan`، `caseless`، …) | **شروع نشده** |
-| **class** (در حال انجام) | `common/generics` و `class/members` (ClassMember) کامل و تست‌شده (۲۴۰٬۰۰۰+ مورد). **مانده:** `class/lexer.ts` (473)، `parser.ts` (351)، `db.ts` (289)، `graph.ts` (171)، `markers.ts` (55)، `render.ts` (625)؛ از `layout/compound` (آماده) استفاده می‌کند. `er` هم از `generics` استفاده می‌کند |
+| **class** (در حال انجام) | **انجام شده و تست‌شده:** `common/generics`، `class/members`، `class/lexer` (همه‌ی ۶۱ توکن؛ ۱۰۰٬۰۰۰+ مورد)، `class/parser` + `class/db` + `class/types` (۲۴٬۰۰۰+ مدل تصادفی با سریالایز یکسان؛ `tools/gen_class_model_cases.mjs`). **مانده:** `graph.ts` (171) و `render.ts` (625) و `markers.ts` (55). رندر به `compound_layout`، `end_side`، `route_path`، `edge_label_svg`، `cluster title`/`mark_crossings`/`struck_title`، `with_title`، `linked`، `runs_across`، `tighten`، `turn_to_fit` نیاز دارد؛ همه‌شان در C++ هستند یا باید از روی رندر فلوچارت پیدا شوند. گراف را با اندیس (نه اشاره‌گر) نگه دار؛ مدل از قبل با اندیس است |
 | بقیه‌ی انواع دیاگرام (۲۵ نوع) | شروع نشده؛ `swimlane` فقط ۷۱ خط است ولی به `layout/lanes.ts` (۶۲۹ خط) و `FlowVariant` در رندر فلوچارت نیاز دارد |
 
-آخرین اجرای `ctest`: ۲۹ تست، همه پاس.
+آخرین اجرای `ctest`: ۳۱ تست، همه پاس.
 
 ## نکته‌ی مهم درباره‌ی مرجع TS
 
@@ -147,6 +147,8 @@ src/mindmap/    mindmap (مدل، db، رندر)
 src/pie/        pie (parser با scanner عددی، مدل، رندر)
 src/treemap/    treemap (parser، مدل، چیدمان، رندر، format)
 src/cynefin/    cynefin (parser، مدل، رندر، boundaries)
+src/class/      class (members، lexer، db، parser؛ graph و render مانده)
+src/unicode_letter.*  is_unicode_letter مشترک (قبلاً داخل lexer فلوچارت بود)
 src/flowchart/  tokens، lexer، db، parser، graph، render، shape_names
 tests/          test_*.cpp و tests/data/ (داده‌ی مرجع تولیدشده از TS)
 tools/          gen_*.mjs، extract_regexes.mjs، compare_e2e.sh، svg2png.py، pele_cli.cpp

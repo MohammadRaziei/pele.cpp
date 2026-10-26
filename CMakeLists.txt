@@ -51,8 +51,12 @@ add_library(pele
   src/common/outline.cpp
   src/common/generics.cpp
   src/class/members.cpp
+  src/class/lexer.cpp
+  src/class/db.cpp
+  src/class/parser.cpp
   src/common/icon.cpp
   src/lowercase.cpp
+  src/unicode_letter.cpp
   src/js_format.cpp
   src/kanban/kanban.cpp
   src/mindmap/mindmap.cpp
