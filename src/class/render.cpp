@@ -18,6 +18,7 @@
 #include "entities.h"
 #include "fit_width.h"
 #include "js_math.h"
+#include "regex.h"
 #include "label.h"
 #include "shapes.h"
 #include "svg.h"
@@ -196,11 +197,11 @@ class class_renderer {
     return theme::resolve_style(decls);
   }
 
-  line_view member_line(const class_member& member, const text_measurer& measurer, double size) const {
+  line_view member_line(const class_member& member, const text_measurer& measurer, double size, bool mono) const {
     line_view line;
     line.text = trim(decode_entities(member.display_details().text));
     line.classifier = member.classifier;
-    line.width = measurer.width(line.text, size, member.classifier == u"*" ? text_style::italic : 0);
+    line.width = measurer.width(line.text, size, (member.classifier == u"*" ? text_style::italic : 0) | (mono ? text_style::mono : 0));
     return line;
   }
 
@@ -225,6 +226,10 @@ rendered class_renderer::draw(bool turned, bool tight) {
     if (e != nullptr && e->is_boolean() && e->as_boolean()) hide_empty = true;
   }
   const class_graph graph = build_class_graph(db_, hierarchical);
+  const bool monospaced = std::find(options_.monospace.begin(), options_.monospace.end(), "members") != options_.monospace.end();
+  // Explicit class fonts override monospace.
+  static const js_regex font_family_style(R"([";]font-family:)");
+  auto mono = [&](const theme::resolved_style& style) { return monospaced && !font_family_style.search(to_utf16(style.text)); };
   const double size = options_.font_size ? *options_.font_size : 16;
   const double small = js_round(size * 0.875);
   const double tiny = js_round(size * 0.8);
@@ -288,8 +293,8 @@ rendered class_renderer::draw(bool turned, bool tight) {
     v.text = l;
     v.font_size = font_size;
     for (const ustring& a : cls.annotations) v.annotations.push_back(u"«" + trim(decode_entities(a)) + u"»");
-    for (const class_member& m : cls.members) v.attributes.push_back(member_line(m, measurer, member_size));
-    for (const class_member& m : cls.methods) v.methods.push_back(member_line(m, measurer, member_size));
+    for (const class_member& m : cls.members) v.attributes.push_back(member_line(m, measurer, member_size, mono(style)));
+    for (const class_member& m : cls.methods) v.methods.push_back(member_line(m, measurer, member_size, mono(style)));
     double inner = l.width;
     double annotations_h = 0;
     for (const ustring& a : v.annotations) {
@@ -611,6 +616,7 @@ rendered class_renderer::draw(bool turned, bool tight) {
     for (const compound_edge& e : cedges) crossings.mark(e.route);
 
   auto class_svg = [&](const view& v, const class_node& cls, const std::string& id, const std::string& at) {
+    const bool class_mono = mono(v.style);
     const double w = v.w;
     const double h = v.h;
     const theme::resolved_style& style = v.style;
@@ -651,7 +657,7 @@ rendered class_renderer::draw(bool turned, bool tight) {
       return out;
     };
     if (!v.attributes.empty() || !v.methods.empty())
-      body += "<g class=\"pele-members\" font-size=\"" + n(member_size) + "\">" + lines(v.attributes, "attribute", first) + lines(v.methods, "method", second) + "</g>";
+      body += "<g class=\"pele-members\" font-size=\"" + n(member_size) + "\"" + (class_mono ? " font-family=\"var(--_fm)\"" : "") + ">" + lines(v.attributes, "attribute", first) + lines(v.methods, "method", second) + "</g>";
     if (cls.tooltip && !cls.tooltip->empty()) body = "<title>" + esc_text(*cls.tooltip) + "</title>" + body;
     if (cls.link && !cls.link->empty()) {
       const bool target = cls.link_target && !cls.link_target->empty() && is_target(*cls.link_target);

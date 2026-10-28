@@ -81,10 +81,11 @@ tokens tokenize(ustring_view src, const token_set& types, const std::string& dia
     const std::size_t ki = static_cast<std::size_t>(k);
     if (dead[ki]) return -1;
     const token_type& type = types[ki];
-    if (type.match) return type.match(src, p);
+    const int previous = out.kinds.empty() ? -1 : out.kinds.back();
+    if (type.match) return type.match(src, p, previous);
     if (type.scanner) {
       if (!scanners[ki]) scanners[ki] = type.scanner();
-      return scanners[ki](src, p);
+      return scanners[ki](src, p, previous);
     }
     if (type.pattern == nullptr) {
       if (src.compare(p, type.literal.size(), type.literal) == 0 && p + type.literal.size() <= n) return static_cast<std::ptrdiff_t>(p + type.literal.size());
@@ -163,6 +164,11 @@ token_ptr acc_descr() {
 token_ptr acc_title() {
   static const token_ptr t = once(token_def::regex("ACC_TITLE", R"([\t ]*accTitle[\t ]*:(?:[^\n\r]*?(?=%%)|[^\n\r]*))", "\t a"));
   return t;
+}
+
+token_ptr title_before(const std::string& rest) {
+  const std::string pattern = std::string("[\\t ]*title(?:[\\t ][^\\n\\r]*?(?=%%)|[\\t ][^\\n\\r]*|(?!") + rest + "))";
+  return once(token_def::regex("TITLE", pattern, "\t t"));
 }
 
 token_ptr title() {
@@ -272,9 +278,15 @@ ustring reader::expect(int k) {
 }
 
 void reader::fail(const std::string& expected) const {
-  const std::size_t at = std::min(i, tokens_.kinds.size() - 1);
+  std::size_t k = std::min(i, tokens_.kinds.size() - 1);
   const ustring found = kind() == -1 ? ustring(u"end of input") : u"`" + text() + u"`";
-  throw syntax_error(diagram_, tokens_.src, tokens_.starts[at], to_utf16("Expecting " + expected + " but found ") + found + u".");
+  std::size_t at = tokens_.starts[k];
+  if (kind() == -1) {
+    // Locate EOF errors after the last token, before trailing line breaks and hidden comments.
+    while (k > 0 && trim(ustring_view(tokens_.src).substr(tokens_.starts[k - 1], tokens_.ends[k - 1] - tokens_.starts[k - 1])).empty()) k--;
+    if (k > 0) at = tokens_.ends[k - 1];
+  }
+  throw syntax_error(diagram_, tokens_.src, at, to_utf16("Expecting " + expected + " but found ") + found + u".");
 }
 
 }  // namespace pele

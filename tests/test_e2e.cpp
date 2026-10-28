@@ -39,6 +39,12 @@ void apply_option(pele::render_options& options, const std::string& key, const s
     options.id_prefix = raw;
     return;
   }
+  if (key == "monospace") {
+    std::istringstream parts(raw);
+    std::string part;
+    while (std::getline(parts, part, ',')) options.monospace.push_back(part);
+    return;
+  }
   const double value = std::stod(raw);
   if (key == "maxWidth") options.max_width = value;
   else if (key == "fontSize") options.font_size = value;

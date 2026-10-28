@@ -6,4 +6,4 @@
 #define PELE_CPP_VERSION_MINOR @PROJECT_VERSION_MINOR@
 #define PELE_CPP_VERSION_PATCH @PROJECT_VERSION_PATCH@
 // The version of Pele (the TypeScript library) whose SVG this one matches byte for byte.
-#define PELE_CPP_REFERENCE_VERSION "1.10.0"
+#define PELE_CPP_REFERENCE_VERSION "1.11.0"

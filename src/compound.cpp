@@ -5,6 +5,7 @@
 #include <limits>
 #include <memory>
 #include <array>
+#include <set>
 #include <cstring>
 #include <functional>
 #include <unordered_map>
@@ -18,6 +19,25 @@ flow_dir parse_direction(std::string_view dir) {
   if (dir == "LR") return flow_dir::lr;
   if (dir == "RL") return flow_dir::rl;
   return flow_dir::tb;
+}
+
+void compound_layouter::inherit_crossed_directions(std::vector<compound_node>& nodes, const std::vector<std::pair<int, int>>& ends) {
+  auto ancestors = [&](int i) {
+    std::set<int> set;
+    for (int p = nodes[i].parent; p >= 0 && !set.count(p); p = nodes[p].parent) set.insert(p);
+    return set;
+  };
+  for (const auto& end : ends) {
+    const int src = end.first;
+    const int dst = end.second;
+    if (src < 0 || dst < 0 || src == dst) continue;
+    const std::set<int> a = ancestors(src);
+    const std::set<int> b = ancestors(dst);
+    for (int g : a)
+      if (!b.count(g)) nodes[g].has_dir = false;
+    for (int g : b)
+      if (!a.count(g)) nodes[g].has_dir = false;
+  }
 }
 
 void compound_layouter::shift(std::vector<compound_node>& nodes, std::vector<compound_edge>& edges, double ox, double oy) {

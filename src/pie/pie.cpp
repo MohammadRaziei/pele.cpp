@@ -35,7 +35,7 @@ scanner_fn number_scanner() {
   std::ptrdiff_t from = 0;
   std::ptrdiff_t end = 0;
   std::ptrdiff_t fraction = -1;
-  return [from, end, fraction](ustring_view src, std::size_t p) mutable -> std::ptrdiff_t {
+  return [from, end, fraction](ustring_view src, std::size_t p, int /*previous*/) mutable -> std::ptrdiff_t {
     const std::ptrdiff_t at = code_at(src, static_cast<std::ptrdiff_t>(p)) == 45 ? static_cast<std::ptrdiff_t>(p) + 1 : static_cast<std::ptrdiff_t>(p);
     if (at < from || at >= end) {
       from = at;

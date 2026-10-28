@@ -17,7 +17,8 @@ namespace pele {
 // in order and the first match wins, as in Chevrotain.
 
 // Answers as a token's pattern does: the end of the match at `at`, or -1.
-using scanner_fn = std::function<std::ptrdiff_t(ustring_view src, std::size_t at)>;
+// `previous` is the last visible token's type index, or -1 at the start.
+using scanner_fn = std::function<std::ptrdiff_t(ustring_view src, std::size_t at, int previous)>;
 
 struct token_type;
 using token_ptr = std::shared_ptr<const token_type>;
@@ -102,6 +103,8 @@ namespace common_tokens {
 token_ptr acc_descr();
 token_ptr acc_title();
 token_ptr title();
+// A title that does not split a longer name: `rest` matches a name suffix.
+token_ptr title_before(const std::string& rest);
 token_ptr string();
 token_ptr newline();
 token_ptr whitespace();

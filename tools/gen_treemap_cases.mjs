@@ -14,7 +14,7 @@ const NAMES = ['Category A', 'Category B', 'Item A1', 'Item A2', 'Item B1', 'Alp
 const SAFE = ['10', '20', '30', '5', '100', '1', '0', '7', '15', '40', '60', '2', '1000', '12.5', '0.5', '3.14159', '250', '9', '33', '1,000', '1,234,567', '0.001', '99999', '123456.789'];
 const ODD = ['1_000', '.5', '1.2.3', '..5', ',,', '1e3', '007', '5.', '99999999999999999999999', '0.0000001', '-5', '-0'];
 const SPECS = [',', '$0,0', '$,', ',.0f', '.2f', '.1%', '.0%', 'd', ',d', '.3e', '.2~f', '~', '$.2f', '+', '+,.1f', '(,.2f', ' ,', '.4', '.1', '.12', '.20f', '.25f', '08.2f', '*>10,.2f', '<10', '^,', 'x', 'garbage', '', '.f', '$', ',.2~f', 's', '.0e', '.3~e'];
-const STYLES = ['fill:#ff0000', 'fill:#00f,stroke:#000', 'stroke:red;stroke-width:3', 'color:#fff', 'font-weight:bold,fill:#ccc', 'fill:red;', 'a\\,b:c', '', 'fill:blue,,color:white'];
+const STYLES = ['fill:#ff0000', 'fill:#00f,stroke:#000', 'stroke:red;stroke-width:3', 'color:#fff', 'font-weight:bold,fill:#ccc', 'fill:red;', 'a\\,b:c', '', 'fill:blue,,color:white', 'font-size:12px', 'font-size:20px;fill:#ccc', 'font-size:8px,font-style:italic', 'font-style:italic', 'font-weight:bold'];
 const CLASSES = ['hot', 'cold', 'big', 'x_y', 'a1'];
 
 function node(indent, forceLeaf) {
@@ -28,7 +28,23 @@ function node(indent, forceLeaf) {
   return ' '.repeat(indent) + name + cls;
 }
 
+// Many small nested sections: headerless and short-headed boxes, small corners.
+function dense() {
+  const lines = [];
+  for (let r = ri(2, 5); r > 0; r--) {
+    lines.push(`  "${pick(NAMES).replace(/"/g, '')}"${rnd() < 0.2 ? ':::' + pick(CLASSES) : ''}`);
+    for (let g = ri(1, 4); g > 0; g--) {
+      lines.push(`    "${pick(NAMES).replace(/"/g, '')}"${rnd() < 0.2 ? ':::' + pick(CLASSES) : ''}`);
+      for (let l = ri(2, 9); l > 0; l--) lines.push(`      "${pick(NAMES).replace(/"/g, '')}": ${pick(SAFE)}${rnd() < 0.2 ? ':::' + pick(CLASSES) : ''}`);
+    }
+    for (let l = ri(0, 4); l > 0; l--) lines.push(`    "${pick(NAMES).replace(/"/g, '')}": ${pick(SAFE)}`);
+  }
+  if (rnd() < 0.6) for (const c of CLASSES.slice(0, ri(1, 4))) lines.push(`  classDef ${c} ${pick(STYLES)}`);
+  return lines;
+}
+
 function body() {
+  if (rnd() < 0.3) return dense();
   const lines = [];
   const base = pick([0, 0, 2, 4]);
   const roots = ri(0, 4);

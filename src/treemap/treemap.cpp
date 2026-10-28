@@ -186,6 +186,9 @@ struct box {
   // A leaf's own value, or the sum of the leaves under a section.
   double value = 0;
   std::vector<int> children;
+  // Small sections give their header space to their children.
+  bool headed = false;
+  double header = 0;
   double x = 0, y = 0, w = 0, h = 0;
 };
 
@@ -193,6 +196,7 @@ struct insets {
   double gap;
   // Space a section keeps for its header, and around its children on the other three sides.
   double header;
+  double short_header;
   double side;
 };
 
@@ -235,12 +239,15 @@ void squarify(std::vector<box>& all, const std::vector<int>& boxes, double total
       const double length = i == to - 1 ? side - offset : (b.value * scale) / thickness;
       const double bx = w >= h ? x : x + offset;
       const double by = w >= h ? y + offset : y;
-      const double x0 = js_round(bx + gap / 2);
-      const double y0 = js_round(by + gap / 2);
-      b.x = x0;
-      b.y = y0;
-      b.w = js_round(bx + (w >= h ? thickness : length) - gap / 2) - x0;
-      b.h = js_round(by + (w >= h ? length : thickness) - gap / 2) - y0;
+      const double bw = w >= h ? thickness : length;
+      const double bh = w >= h ? length : thickness;
+      // Omit the gap if it would erase the box.
+      const double gx = js_round(bx + bw - gap / 2) > js_round(bx + gap / 2) ? gap / 2 : 0;
+      const double gy = js_round(by + bh - gap / 2) > js_round(by + gap / 2) ? gap / 2 : 0;
+      b.x = js_round(bx + gx);
+      b.y = js_round(by + gy);
+      b.w = js_round(bx + bw - gx) - b.x;
+      b.h = js_round(by + bh - gy) - b.y;
       offset += length;
       rest -= b.value;
     }
@@ -257,7 +264,7 @@ void squarify(std::vector<box>& all, const std::vector<int>& boxes, double total
 
 struct layout_result {
   std::vector<box> all;
-  // The boxes that got a size, parents before their children.
+  // Boxes with positive values, including zero-size boxes, parents before their children.
   std::vector<int> placed;
 };
 
@@ -282,8 +289,8 @@ layout_result layout_treemap(const treemap_model& model, double width, double he
     if (all[i].parent >= 0) all[static_cast<std::size_t>(all[i].parent)].value += all[i].value;
 
   const double gap = in.gap;
+  const auto clamp = [](double v, double low, double high) { return v >= low ? std::min(v, high) : low; };
   const auto place = [&](const std::vector<int>& children, double x, double y, double w, double h) {
-    if (w <= 0 || h <= 0) return;
     std::vector<int> shown;
     for (int c : children)
       if (all[static_cast<std::size_t>(c)].value > 0) shown.push_back(c);
@@ -291,22 +298,51 @@ layout_result layout_treemap(const treemap_model& model, double width, double he
     double total = 0;
     for (int c : shown) total += all[static_cast<std::size_t>(c)].value;
     if (shown.empty() || !std::isfinite(total)) return;
-    squarify(all, shown, total, x - gap / 2, y - gap / 2, w + gap, h + gap, gap);
-    for (int c : shown)
-      if (all[static_cast<std::size_t>(c)].w > 0 && all[static_cast<std::size_t>(c)].h > 0) out.placed.push_back(c);
+    w = std::max(0.0, w);
+    h = std::max(0.0, h);
+    if (w > 0 && h > 0) squarify(all, shown, total, x - gap / 2, y - gap / 2, w + gap, h + gap, gap);
+    for (int c : shown) {
+      box& b = all[static_cast<std::size_t>(c)];
+      const double x0 = clamp(b.x, x, x + w);
+      const double y0 = clamp(b.y, y, y + h);
+      b.w = clamp(b.x + b.w, x0, x + w) - x0;
+      b.h = clamp(b.y + b.h, y0, y + h) - y0;
+      b.x = x0;
+      b.y = y0;
+      out.placed.push_back(c);
+    }
   };
 
   place(top, 0, 0, width, height);
   for (std::size_t i = 0; i < out.placed.size(); i++) {
-    const box b = all[static_cast<std::size_t>(out.placed[i])];
-    if (!b.children.empty()) place(b.children, b.x + in.side, b.y + in.header, b.w - 2 * in.side, b.h - in.header - in.side);
+    box& b = all[static_cast<std::size_t>(out.placed[i])];
+    if (b.children.empty()) continue;
+    const double head = b.h - in.header - in.side >= 12 ? in.header : in.short_header;
+    b.headed = b.w > std::max(24.0, 2 * in.side) && b.h - head - in.side >= 8;
+    b.header = b.headed ? head : 0;
+    if (b.headed) place(b.children, b.x + in.side, b.y + head, b.w - 2 * in.side, b.h - head - in.side);
+    else place(b.children, b.x, b.y, b.w, b.h);
   }
   return out;
 }
 
 constexpr double kHeader = 28;
+constexpr double kShortHeader = 18;
 constexpr double kSide = 6;
 constexpr double kLine = 1.25;
+
+std::string title_part(const ustring& raw) { return to_utf8(trim(to_utf16(svg::esc(decode_entities(raw))))); }
+
+// Caps corners at a quarter of a small box's shorter side; 4px is the default radius.
+std::string corners(const std::string& attrs, const box& b) {
+  const double cap = std::min(b.w, b.h) / 4;
+  std::string out = theme::rounded(attrs);
+  if (cap < 4) {
+    const std::size_t at = out.find("rx:var(--_r)");
+    if (at != std::string::npos) out.replace(at, 12, "rx:min(var(--_r)," + svg::num(cap) + "px)");
+  }
+  return out;
+}
 
 double option(const config& settings, const char* key, double fallback, double min, double max) {
   const yaml_value* section = settings.find("treemap");
@@ -336,7 +372,17 @@ rendered render_treemap(const treemap_model& model, const config& settings, cons
   const bool show_values = !(show != nullptr && show->is_boolean() && !show->as_boolean());
   const yaml_value* spec = conf != nullptr ? conf->find("valueFormat") : nullptr;
   const value_formatter format(spec != nullptr && spec->is_string() ? ustring_view(spec->as_string()) : ustring_view(u","));
-  const layout_result laid = layout_treemap(model, width, height, {option(settings, "padding", 4, 0, 200), kHeader, kSide});
+  // Reduce gaps and insets as average leaf area shrinks.
+  int leaves_count = 0;
+  std::vector<int> pending(model.roots.begin(), model.roots.end());
+  while (!pending.empty()) {
+    const treemap_node& n = model.nodes[static_cast<std::size_t>(pending.back())];
+    pending.pop_back();
+    if (n.section) pending.insert(pending.end(), n.children.begin(), n.children.end());
+    else if (n.value && std::isfinite(*n.value) && *n.value > 0) leaves_count++;
+  }
+  const double crowd = std::min(1.0, std::max(0.0, std::log10((width * height) / std::max(1.0, static_cast<double>(leaves_count)) / 800)));
+  const layout_result laid = layout_treemap(model, width, height, {option(settings, "padding", js_round(2 + 2 * crowd), 0, 200), kHeader, kShortHeader, js_round(3 + 3 * crowd)});
 
   const label title = layouter.layout(model.title ? ustring_view(*model.title) : ustring_view(), false, size, fit_width::title_room(options), text_style::bold);
   const double title_height = title.height > 0 ? title.height + 8 : 0;
@@ -360,37 +406,65 @@ rendered render_treemap(const treemap_model& model, const config& settings, cons
                              " fill=\"" + color + "\"";
     const std::string classes = theme::class_names(node.class_selector ? ustring_view(*node.class_selector) : ustring_view());
 
+    // Include headerless ancestors in tooltips because their children cover them.
+    const std::string own = title_part(node.name);
+    std::vector<std::string> path;
+    if (!own.empty()) path.push_back(own);
+    for (int p = b.parent; p >= 0 && !laid.all[static_cast<std::size_t>(p)].headed; p = laid.all[static_cast<std::size_t>(p)].parent) {
+      const std::string section = title_part(model.nodes[static_cast<std::size_t>(laid.all[static_cast<std::size_t>(p)].node)].name);
+      if (!section.empty()) path.insert(path.begin(), section);
+    }
+    std::string full;
+    for (std::size_t k = 0; k < path.size(); k++) full += (k > 0 ? " \xE2\x80\xBA " : "") + path[k];
+    const auto tooltip = [&](const std::optional<ustring>& drawn_text) {
+      return full.empty() || (drawn_text && *drawn_text == name && full == own) ? std::string() : "<title>" + full + "</title>";
+    };
+    // Inline font sizes override SVG attributes, so truncate instead of shrinking.
+    const std::optional<double>& fixed = style.font_size;
+    const int text_flags = (style.bold ? text_style::bold : 0) | (style.italic ? text_style::italic : 0);
+
     if (node.section) {
       std::string text;
-      if (b.h >= kHeader) {
+      std::optional<ustring> drawn;
+      if (b.headed) {
+        const bool short_header = b.header < kHeader;
+        const double label_size = fixed ? *fixed : (short_header ? tiny : small);
+        const double value_size = fixed ? *fixed : tiny;
         const double room = b.w - 2 * kSide - 4;
-        const double value_width = !value.empty() ? measurer.width(to_utf16(value), tiny, 0) : 0;
-        const bool with_value = value_width > 0 && room - value_width - 12 >= 3 * small;
-        const auto fitted_label = fit_text(name, with_value ? room - value_width - 12 : room, small, small, measurer, text_style::bold);
-        const double baseline = y + kHeader / 2 + 1;
+        const double value_width = !value.empty() ? measurer.width(to_utf16(value), value_size, text_flags) : 0;
+        const bool with_value = !short_header && value_width > 0 && room - value_width - 12 >= 3 * label_size;
+        std::optional<fitted> fitted_label;
+        if (label_size * kLine < b.header) fitted_label = fit_text(name, with_value ? room - value_width - 12 : room, label_size, label_size, measurer, text_flags | text_style::bold);
+        const double baseline = y + b.header / 2 + 1;
+        if (fitted_label) drawn = fitted_label->text;
         if (fitted_label)
-          text += "<text x=\"" + svg::num(x + kSide + 2) + "\" y=\"" + svg::num(baseline + small * 0.35) + "\" font-weight=\"var(--_hw)\"" + style.text + ">" + svg::esc(fitted_label->text) + "</text>";
-        if (with_value)
-          text += "<text class=\"pele-value\" x=\"" + svg::num(x + b.w - kSide - 2) + "\" y=\"" + svg::num(baseline + tiny * 0.35) + "\" font-size=\"" + js_number_string(tiny) +
+          text += "<text x=\"" + svg::num(x + kSide + 2) + "\" y=\"" + svg::num(baseline + label_size * 0.35) + "\" font-weight=\"var(--_hw)\"" +
+                  (short_header ? " font-size=\"" + js_number_string(label_size) + "\"" : std::string()) + style.text + ">" + svg::esc(fitted_label->text) + "</text>";
+        if (with_value && value_size * kLine <= kHeader)
+          text += "<text class=\"pele-value\" x=\"" + svg::num(x + b.w - kSide - 2) + "\" y=\"" + svg::num(baseline + value_size * 0.35) + "\" font-size=\"" + js_number_string(tiny) +
                   "\" text-anchor=\"end\" fill=\"var(--_m)\"" + style.text + ">" + svg::esc(to_utf16(value)) + "</text>";
       }
-      // A section is a tint of its color, unless a class gives it a fill of its own.
+      // A section is a tint of its color, unless a class gives it a fill of its own. Headerless
+      // sections draw no box, so their children blend into the grid.
       const std::string tint = fill_style.search(to_utf16(style.shape)) ? std::string() : " fill-opacity=\"0.12\"";
-      sections += "<g class=\"pele-node pele-section" + classes + "\" " + group + rect + theme::rounded(tint + " stroke=\"" + color + "\"" + style.shape) + "/>" + text + "</g>";
+      const std::string shape = b.headed ? rect + corners(tint + " stroke=\"" + color + "\"" + style.shape, b) + "/>"
+                                         : "<rect x=\"" + svg::num(x) + "\" y=\"" + svg::num(y) + "\" width=\"" + svg::num(b.w) + "\" height=\"" + svg::num(b.h) + "\" fill=\"none\"/>";
+      sections += "<g class=\"pele-node pele-section" + classes + "\" " + group + tooltip(drawn) + shape + text + "</g>";
       continue;
     }
 
     std::string text;
     const double room = b.w - 8;
-    const double tallest = std::min(size, std::floor((b.h - 4) / kLine));
+    const double smallest = fixed ? *fixed : least;
+    const double tallest = !fixed ? std::min(size, std::floor((b.h - 4) / kLine)) : (*fixed * kLine <= b.h - 4 ? *fixed : 0);
     std::optional<fitted> label;
-    if (tallest >= least) label = fit_text(name, room, tallest, least, measurer);
+    if (tallest >= smallest) label = fit_text(name, room, tallest, smallest, measurer, text_flags);
     if (label) {
       const std::string cx = svg::num(x + b.w / 2);
       const double cy = y + b.h / 2;
-      const double value_size = std::max(least, js_round(label->size * 0.8));
+      const double value_size = fixed ? *fixed : std::max(least, js_round(label->size * 0.8));
       const double lines = (label->size + value_size) * kLine;
-      if (!value.empty() && lines <= b.h - 4 && measurer.width(to_utf16(value), value_size, 0) <= room) {
+      if (!value.empty() && lines <= b.h - 4 && measurer.width(to_utf16(value), value_size, text_flags) <= room) {
         const double first = cy - lines / 2 + (label->size * kLine) / 2;
         const double second = cy + lines / 2 - (value_size * kLine) / 2;
         text = "<text x=\"" + cx + "\" y=\"" + svg::num(first + label->size * 0.35) + "\" font-size=\"" + svg::num(label->size) + "\"" + style.text + ">" + svg::esc(label->text) + "</text>" +
@@ -400,7 +474,9 @@ rendered render_treemap(const treemap_model& model, const config& settings, cons
         text = "<text x=\"" + cx + "\" y=\"" + svg::num(cy + label->size * 0.35) + "\" font-size=\"" + svg::num(label->size) + "\"" + style.text + ">" + svg::esc(label->text) + "</text>";
       }
     }
-    leaves += "<g class=\"pele-node pele-leaf" + classes + "\" " + group + rect + theme::rounded(style.shape) + "/>" + text + "</g>";
+    std::optional<ustring> label_text;
+    if (label) label_text = label->text;
+    leaves += "<g class=\"pele-node pele-leaf" + classes + "\" " + group + tooltip(label_text) + rect + corners(style.shape, b) + "/>" + text + "</g>";
   }
 
   const double total_width = std::ceil(std::max(width, title.width) + 2 * pad);

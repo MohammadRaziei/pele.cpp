@@ -53,7 +53,15 @@ std::pair<ustring, long long> written(ustring_view src, long long offset) {
 }
 
 source_location locate(ustring_view original, std::size_t original_offset) {
-  const auto mapped = written(original, static_cast<long long>(original_offset));
+  // Keep EOF errors on the last content line.
+  const std::size_t end = trim_end(original).size();
+  std::pair<ustring, long long> mapped;
+  if (end > 0 && original_offset >= end) {
+    mapped = written(original, static_cast<long long>(end) - 1);
+    mapped.second++;
+  } else {
+    mapped = written(original, static_cast<long long>(original_offset));
+  }
   const ustring& src = mapped.first;
   const std::size_t offset = static_cast<std::size_t>(mapped.second);
   int line = 1;

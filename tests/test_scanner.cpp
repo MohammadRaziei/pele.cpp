@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
     std::string why;
     for (std::size_t i = 0; why.empty() && i < positions.size(); i++) {
       const std::size_t p = static_cast<std::size_t>(positions[i]);
-      const long long got = scan(text, p);
+      const long long got = scan(text, p, -1);
       const auto m = pattern.match_at(text, p);
       const long long by_pattern = m ? static_cast<long long>(m->end) : -1;
       if (got != answers[i]) why = "at " + std::to_string(p) + ": scanner " + std::to_string(got) + ", TypeScript " + std::to_string(answers[i]);

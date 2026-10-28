@@ -15,7 +15,7 @@ const pick = (xs) => xs[ri(0, xs.length - 1)];
 const NAMES = ['Animal', 'Dog', 'Duck', 'Fish', 'Zebra', 'Shape', 'A', 'B', 'C', 'D', 'E', 'Order', 'Customer', 'Item', 'Node', 'x_1', 'é', '日本', 'Cat', 'Bird', 'LongClassNameThatIsWide', 'Repository'];
 const MEMBERS = ['+int age', '-String name', '#double w', '~bool ok', '+swim()', '-run(int a) int', '+abstractM()*', '+staticM()$', 'List~int~ items', '+get(a, b) List~int~', 'plain', '+String id', 'x()', '+very long member declaration that makes the box wide(int a, int b) String', 'H<sub>2</sub>O', '+日本語 name', 'a &amp; b'];
 const REL = ['<|--', '--|>', '*--', '--*', 'o--', '--o', '<--', '-->', '..>', '<..', '..|>', '<|..', '--', '..', '()--', '--()'];
-const STYLES = ['fill:#f9f', 'stroke:#333,stroke-width:2px', 'color:#fff', 'font-style:italic', 'fill:red;stroke:blue', 'font-size:20px', 'font-weight:bold', 'stroke-dasharray: 5 5', 'rx:8'];
+const STYLES = ['font-family:serif', 'font-family:"Fira Code"', 'fill:#f9f', 'stroke:#333,stroke-width:2px', 'color:#fff', 'font-style:italic', 'fill:red;stroke:blue', 'font-size:20px', 'font-weight:bold', 'stroke-dasharray: 5 5', 'rx:8'];
 const CARD = ['1', '*', '0..1', 'many', 'n', '1..*', '&lt;x&gt;', 'a long cardinality'];
 const LABELS = ['uses', 'owns', 'has a', 'a longer relation label here', '日本', 'x<br/>y', ''];
 const NOTES = ['a note', 'two\\nlines', 'x', 'a much longer note text that has to wrap around the note box width'];
@@ -76,11 +76,12 @@ for (let c = 0; c < count; c++) {
   if (rnd() < 0.2) options.maxWidth = pick([200, 320, 480, 640, 1000]);
   if (rnd() < 0.1) options.fontSize = pick([10, 12, 14, 18]);
   if (rnd() < 0.1) options.padding = pick([0, 4, 12]);
+  if (rnd() < 0.2) options.monospace = pick([['members'], ['members', 'attributes'], ['messages']]);
   if (rnd() < 0.2) options.idPrefix = pick(['a', 'mermaid-1', 'é日本']);
   fs.writeFileSync(path.join(dir, `${c}.mmd`), src);
   const optPath = path.join(dir, `${c}.opts`);
   if (fs.existsSync(optPath)) fs.unlinkSync(optPath);
-  if (Object.keys(options).length) { fs.writeFileSync(optPath, Object.entries(options).map(([k, v]) => `${k}=${v}`).join('\n') + '\n'); withOpts++; }
+  if (Object.keys(options).length) { fs.writeFileSync(optPath, Object.entries(options).map(([k, v]) => `${k}=${Array.isArray(v) ? v.join(',') : v}`).join('\n') + '\n'); withOpts++; }
   try { fs.writeFileSync(path.join(dir, `${c}.svg`), render(src, options).svg); ok++; }
   catch (e) { fs.writeFileSync(path.join(dir, `${c}.err`), `${e.code}\n${e.message}`); err++; }
 }

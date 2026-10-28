@@ -3,6 +3,27 @@
 The version of this library follows its own numbering. Which version of Pele (the TypeScript
 library) its SVG matches byte for byte is in `PELE_CPP_REFERENCE_VERSION` (`pele/version.h`).
 
+## 0.3.0
+
+Matches Pele 1.11.0 (was 1.10.0). Pele 1.12.0 exists and is not followed yet.
+
+Changed to match Pele
+- Error positions: an error at the end of the text is reported on the last line with content, and a
+  token error at the end is placed after the last visible token.
+- Scanners get the type of the previous token (`token_type::match`/`scanner`); `title_before` is a
+  TITLE token that does not split a longer name (treemap uses it).
+- Flowchart: a subgraph an edge crosses into or out of takes its parent's direction, as in Mermaid.
+- Treemap: the gap is dropped when it would erase a box; boxes are clamped to their parent; small
+  sections give up their header (shorter header, or none, with the children filling the box and the
+  tooltip showing the path); gaps and insets shrink as leaves get smaller; corners are capped on
+  small boxes; a class `font-size`, bold or italic is honored by the labels.
+- Class: `render_options::monospace` containing "members" draws members in the monospace font
+  unless a class sets its own `font-family`.
+
+Tests
+- The treemap generator makes dense trees and `font-size` classes; the class generator uses
+  `monospace` and `font-family` styles. Checked on 5,400 further random diagrams of the ported types.
+
 ## 0.2.0
 
 Matches Pele 1.10.0 (was 1.7.0). Adds the class diagram. Newer Pele versions exist (1.10.1, 1.11.0); not yet followed.

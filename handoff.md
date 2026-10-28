@@ -1,4 +1,8 @@
-# UPDATE (latest session): moved to Pele 1.10.0
+# UPDATE (latest session): moved to Pele 1.11.0 (version 0.3.0)
+
+(The section below describes the 1.10.0 step; 1.11.0 changes are in CHANGELOG.md. Pele 1.12.0 exists.)
+
+# UPDATE: moved to Pele 1.10.0
 
 State: version 0.2.0, matches Pele 1.10.0, 31/31 ctest, `tools/regen_all.sh --check` shows 0 files
 differing. See CHANGELOG.md for what was ported. Everything below this section describes the

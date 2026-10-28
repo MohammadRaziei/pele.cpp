@@ -278,6 +278,13 @@ class flowchart_renderer {
         f.cnodes[i].parent = -1;
       }
     }
+    std::vector<std::pair<int, int>> ends;
+    for (const graph_edge& edge : f.graph.edges) {
+      const auto a = index.find(edge.start);
+      const auto b = index.find(edge.end);
+      ends.push_back({a != index.end() ? a->second : -1, b != index.end() ? b->second : -1});
+    }
+    compound_layouter::inherit_crossed_directions(f.cnodes, ends);
     index_ = std::move(index);
   }
 

@@ -19,6 +19,8 @@ struct render_options {
   std::optional<std::string> font_family;
   std::optional<std::string> font_family_mono;
   std::optional<double> font_size;
+  // Parts of a diagram drawn in the monospace font: "members" (class), "attributes", "files", "messages".
+  std::vector<std::string> monospace;
   std::optional<std::string> id_prefix;
   // Whether the SVG scales down with its container. Unset, it follows `useMaxWidth` in the diagram's config.
   std::optional<bool> responsive;

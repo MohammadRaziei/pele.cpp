@@ -64,6 +64,9 @@ class compound_layouter {
 
   compound_result layout(std::vector<compound_node>& nodes, std::vector<compound_edge>& edges, flow_dir root_dir) const;
 
+  // Match Mermaid: groups crossed by edges inherit their parent's direction. `ends` are pairs of node indexes.
+  static void inherit_crossed_directions(std::vector<compound_node>& nodes, const std::vector<std::pair<int, int>>& ends);
+
   // Moves a finished layout, its edges and labels included.
   static void shift(std::vector<compound_node>& nodes, std::vector<compound_edge>& edges, double ox, double oy);
 
