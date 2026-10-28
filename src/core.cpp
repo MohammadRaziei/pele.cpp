@@ -35,6 +35,13 @@ std::size_t utf16_length(std::string_view s) {
   return n;
 }
 
+// Shows entity codes in an error the way they were written.
+void show_written_codes(pele_error& error) {
+  const std::string message = to_utf8(written_codes(to_utf16(error.what())));
+  const std::string snippet = to_utf8(written_codes(to_utf16(error.snippet())));
+  if (message != error.what() || snippet != error.snippet()) error.rewrite(message, snippet);
+}
+
 }  // namespace
 
 struct parsed_diagram::impl {
@@ -63,14 +70,30 @@ std::shared_ptr<const parsed_diagram::impl> parse_source(const ustring& text, do
   if (extra && extra->is_object())
     for (const ustring& key : extra->keys()) settings.set(key, *extra->find(key));
   for (const ustring& key : pre.settings.keys()) settings.set(key, *pre.settings.find(key));
-  const ustring& source = handler->keep_comments() ? pre.with_comments : pre.text;
+  const bool keep_comments = handler->keep_comments();
+  const ustring parsed = encode_entities(keep_comments ? pre.with_comments : pre.text) + u"\n";
   parse_limits limits;
   limits.max_edges = max_edges;
   std::unique_ptr<diagram_model> model;
+  // Record the preprocessing edits only when a source position is needed.
+  edit_steps steps;
+  bool recorded = false;
+  ustring original;
+  locating_scope scope(parsed, [&](long long at) {
+    if (!recorded) {
+      recorded = true;
+      const preprocessed again = preprocess(text, &steps);
+      encode_entities(keep_comments ? again.with_comments : cleanup_comments(again.with_comments, &steps), &steps);
+      // Match the line break appended for parsing.
+      original = normalize_line_breaks(text) + u"\n";
+    }
+    return std::make_pair(original, input_offset(steps, at));
+  });
   try {
-    model = handler->parse(encode_entities(source) + u"\n", settings, pre.title, pre.line_offset, limits);
+    model = handler->parse(parsed, settings, pre.title, pre.line_offset, limits);
   } catch (pele_error& error) {
     error.tag(to_string(found->type), found->mermaid_type);
+    show_written_codes(error);
     throw;
   }
   auto result = std::make_shared<parsed_diagram::impl>();
@@ -116,6 +139,7 @@ render_result render(const parsed_diagram& diagram, const render_options& option
     drawn = p.handler->render(*p.model, p.settings, effective);
   } catch (pele_error& error) {
     error.tag(type, p.found.mermaid_type);
+    show_written_codes(error);
     throw;
   }
   const double output_limit = options.output_limit ? *options.output_limit : kDefaultOutputLimit;

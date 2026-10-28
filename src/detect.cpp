@@ -36,11 +36,6 @@ bool starts_then(ustring_view s, const char* word, bool colon) {
   return end >= s.size() || is_space(s[end]) || (colon && s[end] == ':');
 }
 
-bool contains(ustring_view s, const char* word) {
-  const ustring w = ascii(word);
-  return s.find(w) != ustring_view::npos;
-}
-
 struct detector {
   diagram_type type;
   const char* mermaid_type;
@@ -53,10 +48,9 @@ const std::vector<detector>& detectors() {
       {diagram_type::mindmap, "mindmap", [](ustring_view s) { return starts(s, "mindmap"); }},
       {diagram_type::architecture, "architecture", [](ustring_view s) { return starts(s, "architecture"); }},
       {diagram_type::agentflow, "agentflow", [](ustring_view s) { return starts_bounded(s, "agentflow-beta"); }},
-      // Mermaid's pattern is /^\s*C4Context|C4Container|C4Component|C4Dynamic|C4Deployment/: only the first is anchored.
       {diagram_type::c4, "c4",
        [](ustring_view s) {
-         return starts(s, "C4Context") || contains(s, "C4Container") || contains(s, "C4Component") || contains(s, "C4Dynamic") || contains(s, "C4Deployment");
+         return starts(s, "C4Context") || starts(s, "C4Container") || starts(s, "C4Component") || starts(s, "C4Dynamic") || starts(s, "C4Deployment");
        }},
       {diagram_type::kanban, "kanban", [](ustring_view s) { return starts(s, "kanban"); }},
       {diagram_type::class_diagram, "classDiagram", [](ustring_view s) { return starts(s, "classDiagram"); }},

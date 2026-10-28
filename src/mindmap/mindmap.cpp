@@ -95,17 +95,9 @@ constexpr double kRowGap = 10;
 std::string left_label(const label& l, double left, double cy, const icon_set& icons) {
   if (l.lines.size() < 2) return svg::label_svg(l, left + l.width / 2, cy, " class=\"pele-label\"", &icons);
   std::string out;
-  for (std::size_t k = 0; k < l.lines.size(); k++) {
-    const double width = l.widths[k];
-    label line;
-    line.lines = {l.lines[k]};
-    line.widths = {width};
-    line.width = width;
-    line.height = l.line_height;
-    line.size = l.size;
-    line.line_height = l.line_height;
-    out += svg::label_svg(line, left + width / 2, cy + (static_cast<double>(k) - (static_cast<double>(l.lines.size()) - 1) / 2) * l.line_height, " class=\"pele-label\"", &icons);
-  }
+  const double top = cy - l.height / 2;
+  for (std::size_t k = 0; k < l.lines.size(); k++)
+    out += svg::label_svg(label_line(l, k), left + l.widths[k] / 2, top + line_middle(l, k), " class=\"pele-label\"", &icons);
   return out;
 }
 

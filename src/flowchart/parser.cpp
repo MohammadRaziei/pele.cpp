@@ -45,7 +45,7 @@ const char* const kStatementStart =
 const char* const kDirections[5] = {"TB", "BT", "RL", "LR", "TD"};
 
 // Mermaid trims whitespace between a closing brace and the end of its line before parsing: `}\s*\n` is `}\n`.
-ustring trim_brace_trail(const ustring& source) {
+ustring trim_brace_trail(const ustring& source, std::vector<edit>* edits = nullptr) {
   if (source.find(u'}') == ustring::npos) return source;
   ustring out;
   for (std::size_t i = 0; i < source.size();) {
@@ -62,6 +62,7 @@ ustring trim_brace_trail(const ustring& source) {
         break;
       }
     if (last_nl != ustring::npos) {
+      if (edits != nullptr) edits->push_back({static_cast<long long>(i), static_cast<long long>(last_nl) + 1, 2});
       out += u"}\n";
       i = last_nl + 1;
     } else {
@@ -82,7 +83,7 @@ struct frame {
 
 class parser {
  public:
-  parser(const ustring& source, flow_db& db) : src_(trim_brace_trail(source)), db_(db) {
+  parser(const ustring& source, flow_db& db) : source_(source), src_(trim_brace_trail(source)), db_(db) {
     token_list tokens = tokenize(src_);
     types_ = std::move(tokens.types);
     texts_ = std::move(tokens.texts);
@@ -118,10 +119,16 @@ class parser {
 
   [[noreturn]] void fail(const std::string& expected) {
     const int t = ty();
-    const std::size_t at = i_ < starts_.size() ? starts_[i_] : src_.size();
-    if (t == T_ERROR) throw syntax_error("flowchart", src_, at, u"", true);
+    std::size_t at = i_ < starts_.size() ? starts_[i_] : src_.size();
+    // Positions are in the source as written, before whitespace after a brace was trimmed.
+    if (src_ != source_) {
+      std::vector<edit> edits;
+      trim_brace_trail(source_, &edits);
+      at = static_cast<std::size_t>(input_offset({edits}, static_cast<long long>(at)));
+    }
+    if (t == T_ERROR) throw syntax_error("flowchart", source_, at, u"", true);
     const std::string name = t >= 0 && t < kTokenCount ? kTokenNames[t] : "undefined";
-    throw syntax_error("flowchart", src_, at, ascii("Expecting " + expected + ", got '" + name + "'"));
+    throw syntax_error("flowchart", source_, at, ascii("Expecting " + expected + ", got '" + name + "'"));
   }
 
   ustring expect(int type, const std::string& also = "") {
@@ -655,6 +662,7 @@ class parser {
     if (!open.empty()) fail("'end'");
   }
 
+  ustring source_;
   ustring src_;
   flow_db& db_;
   std::vector<int> types_;

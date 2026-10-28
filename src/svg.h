@@ -13,6 +13,10 @@ namespace pele::svg {
 std::string esc(std::string_view utf8);
 std::string esc(ustring_view text);
 
+// Whether the text has a character that esc() would drop: invalid XML characters and DEL.
+// A value that was checked must not be one that esc() changes.
+bool has_invalid_xml(ustring_view text);
+
 // Escapes text that is only ever read as text: a tooltip, an accessible name, a `data-id`. Entity
 // codes are turned into their characters first. A value that was checked before it is written,
 // such as a style, a colour or a URL, must go through esc() instead, so that what was checked is

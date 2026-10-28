@@ -3,6 +3,8 @@
 #include "flowchart/db.h"
 #include "flowchart/parser.h"
 #include "flowchart/render.h"
+#include "class/parser.h"
+#include "class/render.h"
 #include "cynefin/cynefin.h"
 #include "info/info.h"
 #include "kanban/kanban.h"
@@ -191,6 +193,30 @@ class cynefin_diagram final : public diagram {
   }
 };
 
+class class_diagram_model final : public diagram_model {
+ public:
+  classdiagram::class_model model;
+};
+
+class class_diagram final : public diagram {
+ public:
+  diagram_type type() const override { return diagram_type::class_diagram; }
+
+  std::unique_ptr<diagram_model> parse(const ustring& source, const config& /*settings*/, const std::optional<ustring>& title, int /*line_offset*/,
+                                       const parse_limits& /*limits*/) const override {
+    classdiagram::class_db db;
+    if (title && !title->empty()) db.model.title = *title;
+    classdiagram::parse_class_diagram(source, db);
+    auto model = std::make_unique<class_diagram_model>();
+    model->model = std::move(db.model);
+    return model;
+  }
+
+  rendered render(const diagram_model& model, const config& settings, const render_options& options) const override {
+    return classdiagram::render_class(static_cast<const class_diagram_model&>(model).model, settings, options);
+  }
+};
+
 }  // namespace
 
 void diagram_registry::add(std::unique_ptr<diagram> d) {
@@ -214,6 +240,7 @@ const diagram_registry& diagram_registry::builtin() {
     r.add(std::make_unique<pie_diagram>());
     r.add(std::make_unique<treemap_diagram>());
     r.add(std::make_unique<cynefin_diagram>());
+    r.add(std::make_unique<class_diagram>());
     return r;
   }();
   return registry;

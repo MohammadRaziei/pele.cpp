@@ -340,8 +340,8 @@ rendered render_cynefin(const cynefin_model& model, const config& settings, cons
     for (const badge& item : b.badges) {
       y += kItemGap;
       out += std::string("<g class=\"pele-node") + (item.overflow ? " pele-cynefin-overflow" : "") + "\"" + (item.overflow ? std::string() : " data-id=\"" + svg::esc_text(item.text) + "\"") + ">" +
-             "<rect x=\"" + svg::num(b.cx - item.w / 2) + "\" y=\"" + svg::num(y) + "\" width=\"" + svg::num(item.w) + "\" height=\"" + svg::num(item.h) + "\" rx=\"" + theme::kRadius +
-             "\" fill=\"var(--_bg)\" stroke=\"var(--_b)\"" + (item.overflow ? " stroke-dasharray=\"3 2\"" : "") + "/>" +
+             "<rect x=\"" + svg::num(b.cx - item.w / 2) + "\" y=\"" + svg::num(y) + "\" width=\"" + svg::num(item.w) + "\" height=\"" + svg::num(item.h) + "\"" +
+             " fill=\"var(--_bg)\" stroke=\"var(--_b)\"" + (item.overflow ? " stroke-dasharray=\"3 2\"" : "") + theme::kRounded + "/>" +
              svg::label_svg(item.lab, b.cx, y + item.h / 2, " class=\"pele-label\" font-size=\"" + js_number_string(item_size) + "\"" + (item.overflow ? " fill=\"var(--_m)\"" : ""), &icons) + "</g>";
       y += item.h;
     }

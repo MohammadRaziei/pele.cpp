@@ -13,7 +13,7 @@ const pick = (xs) => xs[ri(0, xs.length - 1)];
 // Icons the host has: a name with "book" or "home" (the same rule as tests/test_e2e.cpp).
 const icons = (name) => (/book|home/.test(name) ? '<path d="M3 3h18v18H3z"/>' : undefined);
 
-const WORDS = ['Origins', 'Long history', 'Popularisation', 'Research', 'On effectiveness<br/>and features', 'Tools', 'A much longer node text that has to wrap onto several lines to fit', 'ReallyLongUnbrokenWordWithoutAnySpacesAtAll', '日本語', 'é ü ñ', 'Fix <b>bold</b> &amp; more', 'fa:fa-book Read', 'T', 'Two words', "it's", '😀 emoji', 'x'.repeat(40), 'Automatic creation', 'Mind map'];
+const WORDS = ['Origins', 'Long history', 'Popularisation', 'Research', 'On effectiveness<br/>and features', 'Tools', 'A much longer node text that has to wrap onto several lines to fit', 'ReallyLongUnbrokenWordWithoutAnySpacesAtAll', '日本語', 'é ü ñ', 'Fix <b>bold</b> &amp; more', 'fa:fa-book Read', 'T', 'Two words', "it's", '😀 emoji', 'x'.repeat(40), 'Automatic creation', 'Mind map', 'H<sub>2</sub>O and x<sup>2</sup>', '<u>under</u> and <code>mono code</code>', 'long\u00adword\u00adwith\u00adhints that wraps', 'path\u200bto\u200bfile and more text here', 'List<T> & <foo>', '<kbd>Ctrl</kbd>+<sub>x</sub>'];
 const MD = ['`**bold** and *italic*`', '`plain markdown`', '`a longer markdown text that goes on for a while`'];
 const ICONS = ['fa fa-book', 'mdi mdi-home', 'fa fa-star', 'book', 'nothing'];
 const CLASSES = ['important', 'a b', 'x<y', 'urgent big'];

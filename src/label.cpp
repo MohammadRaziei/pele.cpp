@@ -28,10 +28,49 @@ bool in_set(int c, const char16_t* set) {
 const char16_t* const kClose = u"\u3001\u3002\uFF0C\uFF0E\uFF1A\uFF1B\uFF01\uFF1F\uFF09\uFF3D\uFF5D\u300D\u300F\u3011\u3015\u3009\u300B\u3019\u3017\u30FC\u2026\u2025\u30FB\u309D\u309E\u3041\u3043\u3045\u3047\u3049\u3063\u3083\u3085\u3087\u308E\u30A1\u30A3\u30A5\u30A7\u30A9\u30C3\u30E3\u30E5\u30E7\u30EE,.:;!?)]}";
 const char16_t* const kOpen = u"\uFF08\uFF3B\uFF5B\u300C\u300E\u3010\u3014\u3008\u300A\u3018\u3016([{";
 
+// Break hints: a zero-width space, and a soft hyphen, which shows as '-' where a line breaks.
+bool is_hint(int c) { return c == 0x200b || c == 0xad; }
+
 bool is_close(int c) { return in_set(c, kClose); }
 bool is_open(int c) { return in_set(c, kOpen); }
 
 bool contains(ustring_view s, ustring_view part) { return s.find(part) != ustring_view::npos; }
+
+bool has_hint(ustring_view s) {
+  for (char16_t c : s)
+    if (is_hint(c)) return true;
+  return false;
+}
+
+// The style a tag sets (b, i, code, sub...), or 0.
+int tag_style(const std::string& tag) {
+  if (tag == "b" || tag == "strong") return text_style::bold;
+  if (tag == "i" || tag == "em" || tag == "cite" || tag == "dfn" || tag == "var") return text_style::italic;
+  if (tag == "code" || tag == "kbd" || tag == "samp" || tag == "tt") return text_style::mono;
+  if (tag == "sub") return text_style::sub;
+  if (tag == "sup") return text_style::sup;
+  if (tag == "u" || tag == "ins") return text_style::underline;
+  return 0;
+}
+
+constexpr int kShift = text_style::sub | text_style::sup;
+
+// The HTML tags that are dropped and their text kept.
+bool is_html_tag(const std::string& tag) {
+  static const char* const kTags[] = {
+      "a",        "abbr",   "address",  "article", "aside",    "audio",    "b",        "bdi",      "bdo",     "big",      "blockquote", "body",    "br",
+      "button",   "caption", "center",  "cite",    "code",     "col",      "colgroup", "data",     "dd",      "del",      "details",    "dfn",     "dialog",
+      "div",      "dl",     "dt",       "em",      "embed",    "fieldset", "figcaption", "figure", "font",    "footer",   "form",       "h1",      "h2",
+      "h3",       "h4",     "h5",       "h6",      "head",     "header",   "hr",       "html",     "i",       "iframe",   "img",        "input",   "ins",
+      "kbd",      "label",  "legend",   "li",      "link",     "main",     "map",      "mark",     "meta",    "meter",    "nav",        "noscript", "object",
+      "ol",       "optgroup", "option", "output",  "p",        "picture",  "pre",      "progress", "q",       "rp",       "rt",         "ruby",    "s",
+      "samp",     "script", "section",  "select",  "small",    "source",   "span",     "strike",   "strong",  "style",    "sub",        "summary", "sup",
+      "table",    "tbody",  "td",       "template", "textarea", "tfoot",   "th",       "thead",    "time",    "title",    "tr",         "track",   "tt",
+      "u",        "ul",     "var",      "video",   "wbr"};
+  for (const char* t : kTags)
+    if (tag == t) return true;
+  return false;
+}
 
 bool contains_cjk(ustring_view s) {
   for (char16_t c : s)
@@ -144,7 +183,8 @@ std::vector<ustring> split_breaks(const ustring& source) {
   return parts;
 }
 
-// The pieces a line may break between: `\s*(?:[OPEN]*[CJK][CLOSE]*|[^\sCJK]+[CLOSE]*)\s*|\s+`.
+// The pieces a line may break between:
+// `\s*(?:[OPEN]*[CJK][CLOSE]*|[^\sCJK HINT]+[HINT]*[CLOSE]*|[HINT]+)\s*|\s+`.
 std::vector<ustring> split_pieces(const ustring& s) {
   std::vector<ustring> pieces;
   const std::size_t n = s.size();
@@ -153,22 +193,32 @@ std::vector<ustring> split_pieces(const ustring& s) {
     std::size_t q = p;
     while (q < n && is_space(s[q])) q++;
     std::size_t end = ustring::npos;
+    bool closes = false;
     // [OPEN]* then one CJK character: take as many openers as leave a CJK character after them.
     std::size_t run = 0;
     while (q + run < n && is_open(s[q + run])) run++;
     for (std::size_t j = run + 1; j-- > 0;) {
       if (q + j < n && is_cjk(s[q + j])) {
         end = q + j + 1;
+        closes = true;
         break;
       }
     }
     if (end == ustring::npos) {
       std::size_t k = q;
-      while (k < n && !is_space(s[k]) && !is_cjk(s[k])) k++;
-      if (k > q) end = k;
+      while (k < n && !is_space(s[k]) && !is_cjk(s[k]) && !is_hint(s[k])) k++;
+      if (k > q) {
+        end = k;
+        while (end < n && is_hint(s[end])) end++;
+        closes = true;
+      } else if (k < n && is_hint(s[k])) {
+        end = k;
+        while (end < n && is_hint(s[end])) end++;
+      }
     }
     if (end != ustring::npos) {
-      while (end < n && is_close(s[end])) end++;
+      if (closes)
+        while (end < n && is_close(s[end])) end++;
       while (end < n && is_space(s[end])) end++;
     } else if (q > p) {
       end = q;  // whitespace only
@@ -235,14 +285,14 @@ void label_layouter::push_icons(std::vector<span>& line, ustring_view text, int 
 }
 
 // Splits inline HTML and, for markdown labels, emphasis markers into styled spans.
-void label_layouter::inline_markup(std::vector<span>& line, ustring_view source, bool markdown, int base) const {
-  int style = base;
+void label_layouter::inline_markup(std::vector<span>& line, ustring_view source, bool markdown, int base, open_state& open) const {
+  int style = open.style;
   int marked = 0;
   ustring text;
   std::size_t i = 0;
   const std::size_t n = source.size();
   auto flush = [&]() {
-    push_icons(line, text, style);
+    push_icons(line, text, style | (open.shifts.empty() ? 0 : open.shifts.back()));
     text.clear();
   };
   while (i < n) {
@@ -254,24 +304,41 @@ void label_layouter::inline_markup(std::vector<span>& line, ustring_view source,
         std::string tag = to_utf8(name);
         for (char& c : tag) c = static_cast<char>(c >= 'A' && c <= 'Z' ? c + 32 : c);
         const bool closing = i + 1 < n && source[i + 1] == '/';
-        const int bit = tag == "b" || tag == "strong" ? text_style::bold : tag == "i" || tag == "em" ? text_style::italic : 0;
-        if (bit) {
+        const int bit = tag_style(tag);
+        if (bit & kShift) {
           flush();
+          if (!closing) {
+            open.shifts.push_back(bit);
+          } else {
+            for (std::size_t k = open.shifts.size(); k-- > 0;) {
+              if (open.shifts[k] == bit) {
+                open.shifts.erase(open.shifts.begin() + static_cast<std::ptrdiff_t>(k));
+                break;
+              }
+            }
+          }
+        } else if (bit) {
+          flush();
+          open.style = closing ? (open.style & ~bit) | (base & bit) : open.style | bit;
           style = closing ? (style & ~bit) | (base & bit) : style | bit;
         }
-        i = end;
-        continue;
+        // Other HTML tags are dropped and their text kept. Anything else shaped like a tag, such as
+        // the type in List<T>, is text.
+        if (bit || is_html_tag(tag)) {
+          i = end;
+          continue;
+        }
       }
     } else if (markdown && (ch == '*' || ch == '_')) {
       const bool dbl = i + 1 < n && source[i + 1] == ch;
       const int bit = dbl ? text_style::bold : text_style::italic;
       const std::size_t len = dbl ? 2 : 1;
-      const bool open = (marked & bit) == 0;
+      const bool is_open = (marked & bit) == 0;
       const int prev = i > 0 ? source[i - 1] : ' ';
       const int next = i + len < n ? source[i + len] : ' ';
       const ustring needle = dbl ? ustring{ch, ch} : ustring{ch};
-      const bool can_open = open && !is_space(next) && source.find(needle, i + len) != ustring_view::npos;
-      const bool can_close = !open && !is_space(prev);
+      const bool can_open = is_open && !is_space(next) && source.find(needle, i + len) != ustring_view::npos;
+      const bool can_close = !is_open && !is_space(prev);
       const bool wordy = ch == '_' && is_word(prev) && is_word(next);
       if ((can_open || can_close) && !wordy) {
         flush();
@@ -300,10 +367,14 @@ void label_layouter::wrap(const std::vector<span>& line, double size, double max
                           std::vector<double>& widths) const {
   std::vector<span> current;
   double width = 0;
-  auto commit = [&]() {
+  auto commit = [&](bool hyphen = false) {
     if (!current.empty() && !current.back().has_icon) {
       span& last = current.back();
-      const ustring trimmed = trim_end(last.text);
+      ustring trimmed = trim_end(last.text);
+      if (hyphen && !last.text.empty() && last.text.back() == 0xad) {
+        trimmed.pop_back();
+        trimmed += u'-';
+      }
       if (trimmed != last.text) {
         last.text = trimmed;
         const double w = measurer_.width(trimmed, size, last.style);
@@ -326,18 +397,49 @@ void label_layouter::wrap(const std::vector<span>& line, double size, double max
       width += w;
       continue;
     }
-    for (const ustring& piece : split_pieces(sp.text)) {
-      ustring part = piece;
-      if (width > 0 && width + measurer_.width(trim_end(part), size, sp.style) > max) {
-        commit();
+    const std::vector<ustring> pieces = split_pieces(sp.text);
+    // A piece ending in a soft hyphen fits if its '-' does, or if the rest of the word does, which
+    // hides the hyphen. The line only grows along a word, so no later hyphen in it fits either, and
+    // the remaining width of each word makes this one check.
+    const bool soft = sp.text.find(char16_t(0xad)) != ustring::npos;
+    const std::size_t n = soft ? pieces.size() : 0;
+    std::vector<double> own(n);
+    std::vector<double> rest(n + 1, 0.0);
+    for (std::size_t q = n; q-- > 0;) {
+      // A soft hyphen before a space is no break of its own: the space is.
+      const bool shy = !pieces[q].empty() && pieces[q].back() == 0xad;
+      const ustring end = trim_end(pieces[q]);
+      own[q] = measurer_.width(shy ? end.substr(0, end.size() - 1) : end, size, sp.style);
+      // Word width beyond this span is unknown.
+      if (!shy) rest[q] = own[q];
+      else if (q == n - 1) rest[q] = (&sp == &line.back()) ? own[q] : std::numeric_limits<double>::infinity();
+      else rest[q] = own[q] + rest[q + 1];
+    }
+    for (std::size_t pi = 0; pi < pieces.size(); pi++) {
+      ustring part = pieces[pi];
+      const double part_width = soft ? own[pi] : measurer_.width(trim_end(part), size, sp.style);
+      bool fits;
+      if (!soft || part.empty() || part.back() != 0xad) {
+        fits = width + part_width <= max;
+      } else {
+        ustring hyphenated = part.substr(0, part.size() - 1);
+        hyphenated += u'-';
+        fits = width + measurer_.width(hyphenated, size, sp.style) <= max || width + rest[pi] <= max;
+      }
+      if (width > 0 && !fits) {
+        // Breaking at whitespace leaves a preceding soft hyphen hidden.
+        commit(trim_start(part) == part);
         part = trim_start(part);
       }
       if (!current.empty() && current.back().style == sp.style && !current.back().has_icon) {
         span& last = current.back();
         last.text += part;
-        last.width = measurer_.width(last.text, size, last.style);
-        width = 0;
-        for (const span& s : current) width += s.width;
+        // Remeasuring for each zero-width piece would take quadratic time.
+        if (part_width > 0 || trim_end(part) != part) {
+          const double before = last.width;
+          last.width = measurer_.width(last.text, size, last.style);
+          width += last.width - before;
+        }
       } else {
         span s;
         s.text = part;
@@ -363,7 +465,7 @@ label label_layouter::layout(ustring_view raw, bool markdown, double size, doubl
     s.text = text;
     s.style = base;
     s.width = width;
-    if (width <= max_width || !(text.find(u' ') != ustring::npos || contains_cjk(text))) {
+    if (width <= max_width || !(text.find(u' ') != ustring::npos || contains_cjk(text) || has_hint(text))) {
       result.lines = {{s}};
       result.widths = {width};
       result.width = width;
@@ -376,13 +478,18 @@ label label_layouter::layout(ustring_view raw, bool markdown, double size, doubl
     double widest = 0;
     for (double w : result.widths)
       if (w > widest) widest = w;
+    const double snug = result.lines.size() > 1 ? js_round(size * kWrappedLineHeight) : line_height;
     result.width = widest;
-    result.height = static_cast<double>(result.lines.size()) * line_height;
+    result.height = static_cast<double>(result.lines.size()) * snug;
     result.size = size;
-    result.line_height = line_height;
+    result.line_height = snug;
     return result;
   }
+  return layout_lines(raw, markdown, size, max_width, base, line_height);
+}
 
+label label_layouter::layout_lines(ustring_view raw, bool markdown, double size, double max_width, int base, double) const {
+  label result;
   ustring source;
   if (markdown) {
     ustring unified;
@@ -398,9 +505,12 @@ label label_layouter::layout(ustring_view raw, bool markdown, double size, doubl
   } else {
     source = trim(raw);
   }
+  // HTML tags can span explicit breaks; Markdown emphasis stays local to each line.
+  open_state open;
+  open.style = base;
   for (const ustring& part : split_breaks(source)) {
     std::vector<span> line;
-    inline_markup(line, trim(part), markdown, base);
+    inline_markup(line, trim(part), markdown, base, open);
     const double w = measure_spans(line, size);
     if (w > max_width) {
       wrap(line, size, max_width, result.lines, result.widths);
@@ -412,11 +522,41 @@ label label_layouter::layout(ustring_view raw, bool markdown, double size, doubl
   double width = 0;
   for (double w : result.widths)
     if (w > width) width = w;
+  const double snug = result.lines.size() > 1 ? js_round(size * kWrappedLineHeight) : js_round(size * kLineHeight);
   result.width = width;
-  result.height = static_cast<double>(result.lines.size()) * line_height;
+  result.height = static_cast<double>(result.lines.size()) * snug;
   result.size = size;
-  result.line_height = line_height;
+  result.line_height = snug;
   return result;
+}
+
+label with_heights(label l) {
+  // Without math no line is taller than the rest.
+  if (l.heights.empty()) return l;
+  l.heights.clear();
+  l.height = static_cast<double>(l.lines.size()) * l.line_height;
+  return l;
+}
+
+double line_middle(const label& l, std::size_t i) {
+  if (l.heights.empty()) return (static_cast<double>(i) + 0.5) * l.line_height;
+  double top = 0;
+  for (std::size_t k = 0; k < i; k++) top += l.heights[k];
+  return top + l.heights[i] / 2;
+}
+
+label label_line(const label& l, std::size_t i) {
+  label line;
+  const double width = l.widths[i];
+  const double height = l.heights.empty() ? l.line_height : l.heights[i];
+  line.lines = {l.lines[i]};
+  line.widths = {width};
+  line.width = width;
+  line.height = height;
+  line.size = l.size;
+  line.line_height = l.line_height;
+  if (height != l.line_height) line.heights = {height};
+  return line;
 }
 
 }  // namespace pele

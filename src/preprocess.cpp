@@ -157,7 +157,7 @@ bool match_directive(const ustring& t, std::size_t i, directive& out) {
   return true;
 }
 
-ustring directives(const ustring& text, yaml_value& settings) {
+ustring directives(const ustring& text, yaml_value& settings, edit_steps* steps) {
   if (text.find(u"%%{") == ustring::npos) return text;
   ustring normalized = trim(text);
   for (char16_t& c : normalized)
@@ -179,13 +179,16 @@ ustring directives(const ustring& text, yaml_value& settings) {
   }
   ustring out;
   std::size_t last = 0;
+  std::vector<edit> edits;
   for (std::size_t i = text.find(u"%%{"); i != ustring::npos; i = text.find(u"%%{", i + 1)) {
     directive d;
     if (!match_directive(text, i, d)) continue;
+    edits.push_back({static_cast<long long>(i), static_cast<long long>(d.end), 0});
     out += text.substr(last, i - last);
     last = d.end;
     i = d.end > i ? d.end - 1 : i;
   }
+  if (steps != nullptr) steps->push_back(std::move(edits));
   return out + text.substr(last);
 }
 
@@ -232,51 +235,61 @@ ustring to_js_string(const yaml_value& v) { return v.to_js_string(); }
 
 }  // namespace
 
-ustring cleanup_comments(const ustring& text) {
-  if (text.find(u"%%") == ustring::npos) return trim_start(text);
-  // /^\s*%%(?!{)[^\n]+\n?/gm
-  auto line_start = [&](std::size_t i) { return i == 0 || is_line_end(text[i - 1]); };
-  ustring out;
-  std::size_t last = 0;
-  std::size_t i = 0;
-  while (i < text.size()) {
-    if (!line_start(i)) {
-      i++;
-      continue;
-    }
-    const std::size_t q = skip_space(text, i);
-    bool matched = false;
-    if (starts_with_at(text, u"%%", q) && at(text, q + 2) != '{') {
-      std::size_t k = q + 2;
-      while (k < text.size() && text[k] != '\n') k++;
-      if (k > q + 2) {
-        if (k < text.size()) k++;
-        out += text.substr(last, i - last);
-        last = k;
-        i = k;
-        matched = true;
+ustring cleanup_comments(const ustring& input, edit_steps* steps) {
+  ustring text = input;
+  if (text.find(u"%%") != ustring::npos) {
+    // /^\s*%%(?!{)[^\n]+\n?/gm
+    auto line_start = [&](std::size_t i) { return i == 0 || is_line_end(text[i - 1]); };
+    ustring out;
+    std::vector<edit> edits;
+    std::size_t last = 0;
+    std::size_t i = 0;
+    while (i < text.size()) {
+      if (!line_start(i)) {
+        i++;
+        continue;
       }
+      const std::size_t q = skip_space(text, i);
+      bool matched = false;
+      if (starts_with_at(text, u"%%", q) && at(text, q + 2) != '{') {
+        std::size_t k = q + 2;
+        while (k < text.size() && text[k] != '\n') k++;
+        if (k > q + 2) {
+          if (k < text.size()) k++;
+          edits.push_back({static_cast<long long>(i), static_cast<long long>(k), 0});
+          out += text.substr(last, i - last);
+          last = k;
+          i = k;
+          matched = true;
+        }
+      }
+      // Other line starts inside the same run of whitespace would reach the same place.
+      if (!matched) i = q > i ? q : i + 1;
     }
-    // Other line starts inside the same run of whitespace would reach the same place.
-    if (!matched) i = q > i ? q : i + 1;
+    if (steps != nullptr) steps->push_back(std::move(edits));
+    text = out + text.substr(last);
   }
-  return trim_start(out + text.substr(last));
+  const ustring trimmed = trim_start(text);
+  if (steps != nullptr) steps->push_back({{0, static_cast<long long>(text.size() - trimmed.size()), 0}});
+  return trimmed;
 }
 
-preprocessed preprocess(ustring_view source) {
+ustring normalize_line_breaks(ustring_view source) {
+  if (source.find(u'\r') == ustring_view::npos) return ustring(source);
   ustring text;
-  if (source.find(u'\r') != ustring_view::npos) {
-    for (std::size_t i = 0; i < source.size(); i++) {
-      if (source[i] == '\r') {
-        text += u'\n';
-        if (i + 1 < source.size() && source[i + 1] == '\n') i++;
-      } else {
-        text += source[i];
-      }
+  for (std::size_t i = 0; i < source.size(); i++) {
+    if (source[i] == '\r') {
+      text += u'\n';
+      if (i + 1 < source.size() && source[i + 1] == '\n') i++;
+    } else {
+      text += source[i];
     }
-  } else {
-    text = ustring(source);
   }
+  return text;
+}
+
+preprocessed preprocess(ustring_view source, edit_steps* steps) {
+  ustring text = normalize_line_breaks(source);
   // A tag needs a closing bracket, so nothing after the last one can match.
   text = rewrite_tags(text);
 
@@ -323,10 +336,11 @@ preprocessed preprocess(ustring_view source) {
       }
     }
     for (std::size_t i = text.find(u'\n'); i != ustring::npos && i < front->length; i = text.find(u'\n', i + 1)) line_offset++;
+    if (steps != nullptr) steps->push_back({{0, static_cast<long long>(front->length), 0}});
     text = text.substr(front->length);
   }
 
-  text = directives(text, result.settings);
+  text = directives(text, result.settings, steps);
   result.text = cleanup_comments(text);
   result.with_comments = text;
   result.line_offset = line_offset;
@@ -348,7 +362,12 @@ bool is_hash_entity_int(ustring_view inner) {
 // Does what Mermaid's `text.replace(/keyword.*:\S*#.*;/g, drop the last character)` does: on a
 // line where the keyword is followed by a colon, a colour-like `#`, and later a semicolon, the
 // last semicolon goes. Mermaid's regex backtracks without bound; this is one pass.
-ustring drop_color_semicolons(const ustring& text, const ustring& keyword) {
+ustring drop_color_semicolons(const ustring& text, const ustring& keyword, edit_steps* steps) {
+  std::vector<edit>* edits = nullptr;
+  if (steps != nullptr) {
+    steps->emplace_back();
+    edits = &steps->back();
+  }
   std::size_t from = text.find(keyword);
   if (from == ustring::npos) return text;
   ustring out;
@@ -375,6 +394,7 @@ ustring drop_color_semicolons(const ustring& text, const ustring& keyword) {
     if (hash != -1 && line_end > 0) {
       const std::size_t semi = text.rfind(u';', line_end - 1);
       if (semi != ustring::npos && static_cast<long long>(semi) > hash) {
+        if (edits != nullptr) edits->push_back({static_cast<long long>(semi), static_cast<long long>(semi) + 1, 0});
         out += text.substr(last, semi - last);
         last = semi + 1;
         any = true;
@@ -387,18 +407,25 @@ ustring drop_color_semicolons(const ustring& text, const ustring& keyword) {
 
 }  // namespace
 
-ustring encode_entities(const ustring& text) {
+ustring encode_entities(const ustring& text, edit_steps* steps) {
   if (text.find(u'#') == ustring::npos) return text;
-  const ustring dropped = drop_color_semicolons(drop_color_semicolons(text, u"style"), u"classDef");
+  const ustring dropped = drop_color_semicolons(drop_color_semicolons(text, u"style", steps), u"classDef", steps);
+  std::vector<edit>* edits = nullptr;
+  if (steps != nullptr) {
+    steps->emplace_back();
+    edits = &steps->back();
+  }
   ustring out;
   for (std::size_t i = 0; i < dropped.size();) {
     if (dropped[i] == '#') {
       const std::size_t end = skip_word(dropped, i + 1);
       if (end > i + 1 && at(dropped, end) == ';') {
         const ustring inner = dropped.substr(i + 1, end - i - 1);
+        const std::size_t before = out.size();
         out += is_hash_entity_int(inner) ? ustring{0xFB02, 0x00B0, 0x00B0} : ustring{0xFB02, 0x00B0};
         out += inner;
         out += ustring{0x00B6, 0x00DF};
+        if (edits != nullptr) edits->push_back({static_cast<long long>(i), static_cast<long long>(end) + 1, static_cast<long long>(out.size() - before)});
         i = end + 1;
         continue;
       }

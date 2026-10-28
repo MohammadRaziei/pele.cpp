@@ -18,7 +18,6 @@ using span_fn = std::function<double(double, double, bool)>;
 
 constexpr double kCorner = 12;  // kept clear at each end of a straight side, for the corner
 
-const std::string kRounded = std::string(" rx=\"") + theme::kRadius + "\"";
 
 // A shape given by functions, one for each thing a shape does.
 class table_shape final : public shape {
@@ -109,7 +108,7 @@ shape_registry::shape_registry() {
   const double PX = kPadX;
   const double PY = kPadY;
 
-  add("rect", box, [](double w, double h, const std::string& a, const std::string&) { return rect(w, h, a, kRounded); }, nullptr, flat);
+  add("rect", box, [](double w, double h, const std::string& a, const std::string&) { return rect(w, h, theme::rounded(a)); }, nullptr, flat);
   add("rounded", box, [](double w, double h, const std::string& a, const std::string&) { return rect(w, h, a, " rx=\"" + num(std::min(12.0, h / 2)) + "\""); }, nullptr, flat);
   add("stadium",
       [=](double tw, double th) {
@@ -122,7 +121,7 @@ shape_registry::shape_registry() {
   add("fr-rect", [=](double tw, double th) { return shape_size{tw + 2 * PX + 16, th + 2 * PY, 0}; },
       [](double w, double h, const std::string& a, const std::string& line) {
         const double x = w / 2 - 8;
-        return rect(w, h, a, kRounded) + "<path d=\"M" + num(-x) + "," + num(-h / 2) + "V" + num(h / 2) + "M" + num(x) + "," + num(-h / 2) + "V" + num(h / 2) + "\" fill=\"none\"" + line + "/>";
+        return rect(w, h, theme::rounded(a)) + "<path d=\"M" + num(-x) + "," + num(-h / 2) + "V" + num(h / 2) + "M" + num(x) + "," + num(-h / 2) + "V" + num(h / 2) + "\" fill=\"none\"" + line + "/>";
       },
       nullptr, flat);
   add("cyl",
@@ -236,17 +235,17 @@ shape_registry::shape_registry() {
       nullptr, flat);
   add("lin-rect", [=](double tw, double th) { return shape_size{tw + 2 * PX + 8, th + 2 * PY, 0}; },
       [](double w, double h, const std::string& a, const std::string& line) {
-        return rect(w, h, a, kRounded) + "<path d=\"M" + num(-w / 2 + 8) + "," + num(-h / 2) + "V" + num(h / 2) + "\" fill=\"none\"" + line + "/>";
+        return rect(w, h, theme::rounded(a)) + "<path d=\"M" + num(-w / 2 + 8) + "," + num(-h / 2) + "V" + num(h / 2) + "\" fill=\"none\"" + line + "/>";
       },
       nullptr, flat);
   add("div-rect", [=](double tw, double th) { return shape_size{tw + 2 * PX, th + 2 * PY + 8, 4}; },
       [](double w, double h, const std::string& a, const std::string& line) {
-        return rect(w, h, a, kRounded) + "<path d=\"M" + num(-w / 2) + "," + num(-h / 2 + 8) + "H" + num(w / 2) + "\" fill=\"none\"" + line + "/>";
+        return rect(w, h, theme::rounded(a)) + "<path d=\"M" + num(-w / 2) + "," + num(-h / 2 + 8) + "H" + num(w / 2) + "\" fill=\"none\"" + line + "/>";
       },
       nullptr, flat);
   add("win-pane", [=](double tw, double th) { return shape_size{tw + 2 * PX + 8, th + 2 * PY + 8, 4}; },
       [](double w, double h, const std::string& a, const std::string& line) {
-        return rect(w, h, a, kRounded) + "<path d=\"M" + num(-w / 2 + 8) + "," + num(-h / 2) + "V" + num(h / 2) + "M" + num(-w / 2) + "," + num(-h / 2 + 8) + "H" + num(w / 2) +
+        return rect(w, h, theme::rounded(a)) + "<path d=\"M" + num(-w / 2 + 8) + "," + num(-h / 2) + "V" + num(h / 2) + "M" + num(-w / 2) + "," + num(-h / 2 + 8) + "H" + num(w / 2) +
                "\" fill=\"none\"" + line + "/>";
       },
       nullptr, flat);
@@ -307,7 +306,7 @@ shape_registry::shape_registry() {
         for (int i = 0; i < 3; i++) {
           const double x = -w / 2 + (2 - i) * 4;
           const double y = -h / 2 + i * 4;
-          out += "<rect x=\"" + num(x) + "\" y=\"" + num(y) + "\" width=\"" + num(bw) + "\" height=\"" + num(bh) + "\"" + kRounded + a + "/>";
+          out += "<rect x=\"" + num(x) + "\" y=\"" + num(y) + "\" width=\"" + num(bw) + "\" height=\"" + num(bh) + "\"" + theme::rounded(a) + "/>";
         }
         return out;
       },
@@ -352,7 +351,7 @@ shape_registry::shape_registry() {
       [](double, double h, int side, double) { return (side & 1) ? h / 12 : 0; });
   add("console", [=](double tw, double th) { return shape_size{std::max(tw + 2 * PX, 72.0), th + 2 * PY + 12, 6}; },
       [](double w, double h, const std::string& a, const std::string& line) {
-        return rect(w, h, a, kRounded) + "<path d=\"M" + num(-w / 2) + "," + num(-h / 2 + 12) + "H" + num(w / 2) + "M" + num(-w / 2 + 7) + "," + num(-h / 2 + 4) + "l3,2.5l-3,2.5M" +
+        return rect(w, h, theme::rounded(a)) + "<path d=\"M" + num(-w / 2) + "," + num(-h / 2 + 12) + "H" + num(w / 2) + "M" + num(-w / 2 + 7) + "," + num(-h / 2 + 4) + "l3,2.5l-3,2.5M" +
                num(-w / 2 + 13) + "," + num(-h / 2 + 9) + "h4\" fill=\"none\"" + line + "/>";
       },
       nullptr, flat);
@@ -360,7 +359,7 @@ shape_registry::shape_registry() {
       [](double w, double h, const std::string& a, const std::string& line) {
         std::string dots;
         for (int i = 0; i < 3; i++) dots += "<circle cx=\"" + num(-w / 2 + 8 + i * 7) + "\" cy=\"" + num(-h / 2 + 6) + "\" r=\"1.5\" fill=\"none\"" + line + "/>";
-        return rect(w, h, a, kRounded) + "<path d=\"M" + num(-w / 2) + "," + num(-h / 2 + 12) + "H" + num(w / 2) + "\" fill=\"none\"" + line + "/>" + dots;
+        return rect(w, h, theme::rounded(a)) + "<path d=\"M" + num(-w / 2) + "," + num(-h / 2 + 12) + "H" + num(w / 2) + "\" fill=\"none\"" + line + "/>" + dots;
       },
       nullptr, flat);
   add("person", [=](double tw, double th) { return shape_size{std::max(tw + 2 * PX, 56.0), th + 2 * PY + 26, 13}; },
@@ -459,7 +458,7 @@ shape_registry::shape_registry() {
       [](double, double h, int side, double) { return side == 1 ? h * 0.2 : 0; });
   add("tag-rect", box,
       [](double w, double h, const std::string& a, const std::string& line) {
-        return rect(w, h, a, kRounded) + "<path d=\"M" + num(w / 2 - 12) + "," + num(h / 2) + "L" + num(w / 2) + "," + num(h / 2 - 12) + "\" fill=\"none\"" + line + "/>";
+        return rect(w, h, theme::rounded(a)) + "<path d=\"M" + num(w / 2 - 12) + "," + num(h / 2) + "L" + num(w / 2) + "," + num(h / 2 - 12) + "\" fill=\"none\"" + line + "/>";
       },
       nullptr, flat);
   add("tag-doc", [=](double tw, double th) { return shape_size{tw + 2 * PX, th + 2 * PY + 10, -5}; },
@@ -474,8 +473,8 @@ shape_registry::shape_registry() {
       [](double, double, int side, double) { return side == 2 ? 10 : 0; });
   add("collapsedGroup", [=](double tw, double th) { return shape_size{tw + 2 * PX + 8, th + 2 * PY + 8, -2}; },
       [](double w, double h, const std::string& a, const std::string&) {
-        return "<rect x=\"" + num(-w / 2 + 6) + "\" y=\"" + num(-h / 2 + 8) + "\" width=\"" + num(w - 12) + "\" height=\"" + num(h - 8) + "\"" + kRounded + a + "/>" + "<rect x=\"" +
-               num(-w / 2) + "\" y=\"" + num(-h / 2) + "\" width=\"" + num(w) + "\" height=\"" + num(h - 4) + "\"" + kRounded + a + "/>";
+        return "<rect x=\"" + num(-w / 2 + 6) + "\" y=\"" + num(-h / 2 + 8) + "\" width=\"" + num(w - 12) + "\" height=\"" + num(h - 8) + "\"" + theme::rounded(a) + "/>" + "<rect x=\"" +
+               num(-w / 2) + "\" y=\"" + num(-h / 2) + "\" width=\"" + num(w) + "\" height=\"" + num(h - 4) + "\"" + theme::rounded(a) + "/>";
       });
 
   fallback_ = shapes_.at("rect").get();

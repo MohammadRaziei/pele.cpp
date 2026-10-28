@@ -32,7 +32,7 @@ const token_set& info_tokens() {
 }
 
 // Pele's version, which the diagram prints.
-constexpr const char16_t* kVersion = u"1.7.0";
+constexpr const char16_t* kVersion = u"1.10.0";
 
 }  // namespace
 

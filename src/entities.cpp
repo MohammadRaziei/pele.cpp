@@ -56,8 +56,9 @@ double number(ustring_view digits, int base) {
   return v;
 }
 
-// Mermaid's placeholders run from `ﬂ°` to `¶ß`, with a second `°` marking a numeric code.
-ustring decode_placeholders(const ustring& text) {
+// Mermaid's placeholders run from `ﬂ°` to `¶ß`, with a second `°` marking a numeric code. Like Mermaid,
+// turn them back into entities, so that each code is decoded once.
+ustring restore_placeholders(const ustring& text) {
   ustring out;
   std::size_t last = 0;
   std::size_t from = text.find(kOpen);
@@ -68,20 +69,10 @@ ustring decode_placeholders(const ustring& text) {
       const bool numeric = text[from + 2] == 0x00B0;
       const std::size_t body_at = from + (numeric ? 3 : 2);
       const ustring body = body_at <= stop ? text.substr(body_at, stop - body_at) : ustring();
-      const ustring raw = text.substr(from, stop + 2 - from);
       out += text.substr(last, from - last);
-      if (numeric) {
-        // Number(body): digits give their value; anything else is not a code.
-        const ustring t = trim(body);
-        bool digits = !t.empty();
-        for (char16_t c : t)
-          if (!is_digit(c)) digits = false;
-        out += digits ? code_point(number(t, 10), raw) : (t.empty() ? code_point(0, raw) : raw);
-      } else {
-        ustring found;
-        if (lookup(body, found)) out += found;
-        else out += u"&" + body + u";";
-      }
+      out += numeric ? u"&#" : u"&";
+      out += body;
+      out += u';';
       last = stop + 2;
     }
     from = text.find(kOpen, stop + 1);
@@ -92,7 +83,7 @@ ustring decode_placeholders(const ustring& text) {
 }  // namespace
 
 ustring decode_entities(ustring text) {
-  if (text.find(kClose) != ustring::npos) text = decode_placeholders(text);
+  if (text.find(kClose) != ustring::npos) text = restore_placeholders(text);
   if (text.find(char16_t('&')) == ustring::npos) return text;
   ustring out;
   const std::size_t n = text.size();
@@ -133,6 +124,31 @@ ustring decode_entities(ustring text) {
       }
     }
     if (!done) out += text[i++];
+  }
+  return out;
+}
+
+ustring written_codes(ustring_view text) {
+  if (text.find(kClose) == ustring_view::npos) return ustring(text);
+  // /\uFB02\u00B0\u00B0?(\w+)\u00B6\u00DF/g -> '#$1;'
+  ustring out;
+  const std::size_t n = text.size();
+  std::size_t i = 0;
+  while (i < n) {
+    if (text[i] == kOpen[0] && i + 1 < n && text[i + 1] == kOpen[1]) {
+      std::size_t k = i + 2;
+      if (k < n && text[k] == 0x00B0) k++;
+      const std::size_t word = k;
+      while (k < n && is_word(text[k])) k++;
+      if (k > word && k + 1 < n && text[k] == kClose[0] && text[k + 1] == kClose[1]) {
+        out += u'#';
+        out += text.substr(word, k - word);
+        out += u';';
+        i = k + 2;
+        continue;
+      }
+    }
+    out += text[i++];
   }
   return out;
 }

@@ -10,7 +10,7 @@ const ri = (a, b) => a + Math.floor(rnd() * (b - a + 1));
 const pick = (xs) => xs[ri(0, xs.length - 1)];
 
 const IDS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'node1', 'start', 'end1', 'é', '日本'];
-const TEXTS = ['text', 'Two words', '"quoted"', '"Long label that will need to wrap across several lines of text"', '"`**bold** and *it*`"', 'a<br/>b', 'x&amp;y', '日本語', 'Yes', 'No', 'Hello World', '<b>b</b> i', 'fa:fa-car Car'];
+const TEXTS = ['text', 'Two words', '"quoted"', '"Long label that will need to wrap across several lines of text"', '"`**bold** and *it*`"', 'a<br/>b', 'x&amp;y', '日本語', 'Yes', 'No', 'Hello World', '<b>b</b> i', 'fa:fa-car Car', 'H<sub>2</sub>O', 'x<sup>2</sup> <u>u</u>', '<code>mono</code> text', '"long\u00adword\u00adhere and more words to wrap"'];
 const SHAPES = [(t) => `[${t}]`, (t) => `[${t}]`, (t) => `(${t})`, (t) => `(${t})`, (t) => `((${t}))`, (t) => `(((${t})))`, (t) => `{${t}}`, (t) => `{{${t}}}`, (t) => `[[${t}]]`, (t) => `[(${t})]`, (t) => `([${t}])`, (t) => `>${t}]`, (t) => `[/${t}/]`, (t) => `[\\${t}\\]`, (t) => `[/${t}\\]`, (t) => `[\\${t}/]`, (t) => `(-${t}-)`];
 const LINKS = ['-->', '-->', '-->', '---', '-.->', '-.-', '==>', '===', '~~~', '--x', '--o', 'x--x', 'o--o', '<-->', '--->', '---->', '-..->'];
 const METAS = ['@{ shape: rect }', '@{ shape: cyl, label: "db" }', '@{ shape: doc }', '@{ shape: hex }', '@{ shape: diam }', '@{ shape: circle }', '@{ shape: fork }', '@{ shape: bolt }', '@{ shape: stadium, label: "pill" }', '@{ shape: lean-r }', '@{ shape: trap-b }', '@{ shape: tri }', '@{ shape: cloud }', '@{ shape: bang }', '@{ shape: sl-rect }', '@{ shape: h-cyl }', '@{ shape: st-rect }'];

@@ -356,8 +356,8 @@ rendered render_treemap(const treemap_model& model, const config& settings, cons
     const ustring name = trim(decode_entities(node.name));
     const std::string value = show_values ? format(b.value) : std::string();
     const std::string group = "data-id=\"" + svg::esc_text(node.name) + "\">";
-    const std::string rect = "<rect x=\"" + svg::num(x) + "\" y=\"" + svg::num(y) + "\" width=\"" + svg::num(b.w) + "\" height=\"" + svg::num(b.h) + "\" rx=\"" + theme::kRadius +
-                             "\" fill=\"" + color + "\"";
+    const std::string rect = "<rect x=\"" + svg::num(x) + "\" y=\"" + svg::num(y) + "\" width=\"" + svg::num(b.w) + "\" height=\"" + svg::num(b.h) + "\"" +
+                             " fill=\"" + color + "\"";
     const std::string classes = theme::class_names(node.class_selector ? ustring_view(*node.class_selector) : ustring_view());
 
     if (node.section) {
@@ -376,7 +376,7 @@ rendered render_treemap(const treemap_model& model, const config& settings, cons
       }
       // A section is a tint of its color, unless a class gives it a fill of its own.
       const std::string tint = fill_style.search(to_utf16(style.shape)) ? std::string() : " fill-opacity=\"0.12\"";
-      sections += "<g class=\"pele-node pele-section" + classes + "\" " + group + rect + tint + " stroke=\"" + color + "\"" + style.shape + "/>" + text + "</g>";
+      sections += "<g class=\"pele-node pele-section" + classes + "\" " + group + rect + theme::rounded(tint + " stroke=\"" + color + "\"" + style.shape) + "/>" + text + "</g>";
       continue;
     }
 
@@ -400,7 +400,7 @@ rendered render_treemap(const treemap_model& model, const config& settings, cons
         text = "<text x=\"" + cx + "\" y=\"" + svg::num(cy + label->size * 0.35) + "\" font-size=\"" + svg::num(label->size) + "\"" + style.text + ">" + svg::esc(label->text) + "</text>";
       }
     }
-    leaves += "<g class=\"pele-node pele-leaf" + classes + "\" " + group + rect + style.shape + "/>" + text + "</g>";
+    leaves += "<g class=\"pele-node pele-leaf" + classes + "\" " + group + rect + theme::rounded(style.shape) + "/>" + text + "</g>";
   }
 
   const double total_width = std::ceil(std::max(width, title.width) + 2 * pad);

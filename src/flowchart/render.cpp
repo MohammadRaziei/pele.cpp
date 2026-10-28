@@ -331,8 +331,8 @@ class flowchart_renderer {
         const bool struck = crossings.crossed(c, view.text.width, title_x);
         if (struck) struck_titles += struck_title(view.text, title_x, title_y, title_attrs, id, f.cnodes, i, &icons_);
         clusters += "<g class=\"pele-cluster" + classes + "\" data-id=\"" + id + "\"><rect x=\"" + svg::num(x - c.w / 2) + "\" y=\"" + svg::num(y - c.h / 2) + "\" width=\"" +
-                    svg::num(c.w) + "\" height=\"" + svg::num(c.h) + "\" rx=\"" + theme::kRadius + "\" fill=\"var(--_a)\" fill-opacity=\"0.5\" stroke=\"var(--_b)\"" +
-                    view.style.shape + "/>" + (struck ? "" : svg::label_svg(view.text, title_x, title_y, title_attrs, &icons_)) + "</g>";
+                    svg::num(c.w) + "\" height=\"" + svg::num(c.h) + "\" fill=\"var(--_a)\" fill-opacity=\"0.5\" stroke=\"var(--_b)\"" +
+                    theme::rounded(view.style.shape) + "/>" + (struck ? "" : svg::label_svg(view.text, title_x, title_y, title_attrs, &icons_)) + "</g>";
         continue;
       }
 

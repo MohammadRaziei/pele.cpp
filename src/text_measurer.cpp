@@ -32,13 +32,15 @@ bool is_wide(unsigned c) {
 }
 
 bool is_zero_width(unsigned c) {
-  return (c >= 0x300 && c <= 0x36f) || (c >= 0x200b && c <= 0x200f) || (c >= 0xdc00 && c <= 0xdfff) || (c >= 0xfe00 && c <= 0xfe0f) || c == 0xfeff;
+  return c == 0xad || (c >= 0x300 && c <= 0x36f) || (c >= 0x200b && c <= 0x200f) || (c >= 0xdc00 && c <= 0xdfff) || (c >= 0xfe00 && c <= 0xfe0f) || c == 0xfeff;
 }
 
 }  // namespace
 
 double metrics_measurer::width(ustring_view text, double size, int style) const {
   const bool mono = (style & text_style::mono) != 0;
+  // Approximate divisor for CSS font-size="smaller".
+  const double eff = (style & (text_style::sub | text_style::sup)) ? size / 1.2 : size;
   const table& t = (style & text_style::bold) ? bold_table() : regular_table();
   long units = 0;
   for (char16_t ch : text) {
@@ -49,7 +51,7 @@ double metrics_measurer::width(ustring_view text, double size, int style) const 
     else if (is_wide(c)) units += mono ? 1200 : 1000;
     else units += mono ? 600 : 580;
   }
-  return (static_cast<double>(units) * size) / 1000;
+  return (static_cast<double>(units) * eff) / 1000;
 }
 
 }  // namespace pele

@@ -1,6 +1,8 @@
 #pragma once
 
+#include <cmath>
 #include <cstdint>
+#include <optional>
 #include <vector>
 
 namespace pele {
@@ -19,6 +21,10 @@ struct layered_node {
   double h = 0;
   node_kind kind = node_kind::node;
   int pin = 0;
+  // Port's cross-flow destination; NaN if unknown. Fully hinted port ranks keep this order.
+  double hint = std::nan("");
+  // Initial cross-flow position; NaN if unknown. Used only when every node in a rank has one.
+  double key = std::nan("");
   // How much of the side that edges meet may be shared out between them; 0 keeps them all at its middle.
   double span = 0;
   double x = 0;
@@ -60,11 +66,23 @@ struct layered_options {
   bool apart = false;
   // The room that the marker at the head of an edge takes.
   double head_room = 0;
+  // Keep each group contiguous within ranks. `of` maps nodes to groups; `parent` maps groups to
+  // parents. Both use -1 for none.
+  struct group_map {
+    std::vector<int> of;
+    std::vector<int> parent;
+  };
+  std::optional<group_map> groups;
+  // Compute cross-flow positions in `x` without full routing.
+  bool order_only = false;
 };
 
 struct layered_result {
   double width = 0;
   double height = 0;
+  // With `order_only`: final crossings and crossings before grouping or reordering.
+  long long crossings = 0;
+  long long declared = 0;
 };
 
 // A layout of one flat graph. Strategy: callers that lay out nested graphs depend on this
@@ -78,6 +96,9 @@ class flat_layout_engine {
 
   // Only decides which way each edge runs and which rank each node is in (node.rank, edge.reversed).
   virtual void rank_nodes(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges) const = 0;
+
+  // What the engine was set up with.
+  virtual const layered_options& options() const = 0;
 };
 
 class layered_layouter final : public flat_layout_engine {
@@ -87,7 +108,7 @@ class layered_layouter final : public flat_layout_engine {
   layered_result layout(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges) const override;
   void rank_nodes(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges) const override;
 
-  const layered_options& options() const { return options_; }
+  const layered_options& options() const override { return options_; }
 
   // Reverses the edges that close a cycle, found by depth-first search in declaration order.
   static void orient(std::vector<layered_node>& nodes, std::vector<layered_edge>& edges);

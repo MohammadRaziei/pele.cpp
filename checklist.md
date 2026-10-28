@@ -1,3 +1,5 @@
+- [ ] **اول:** آپدیت مرجع Pele از 1.7.0 به 1.10.0 (جزئیات و مراحل: `handoff.md` بخش ۱)؛ بعد نسخه‌ی 0.2.0
+- [ ] **tag:** `v0.1.0` (مطابق Pele 1.7.0) را کاربر بزند
 # چک‌لیست pele.cpp
 
 بازنویسی کامل C++ (بدون وابستگی، C++17) از Pele (`github.com/obsidianmd/pele`، نسخه‌ی 1.7.0).
@@ -91,7 +93,8 @@
 - [x] treemap — ۱۴٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت (`tools/gen_treemap_cases.mjs`، `tests/data/e2e_treemap.txt`)
 - [x] زیرساخت: `js_format` (toFixed/toExponential/toPrecision) و `js_parse_float` — ۲۰۰٬۰۰۰+ عدد (`tools/gen_format_cases.mjs`)
 - [x] cynefin — ۱۳٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت (`tools/gen_cynefin_cases.mjs`، `tests/data/e2e_cynefin.txt`) و مولد seed در سطح بیت (`tools/gen_seed_cases.mjs`)
-- [ ] sequence، class، state، er، gantt، gitGraph
+- [x] class — ۶٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت (`tools/gen_class_cases.mjs`، `tests/data/e2e_class.txt`)؛ حدود ۴۰٪ هر مجموعه خطای نحوی است که پیامش هم مقایسه می‌شود؛ شامل namespace، cardinality، حلقه‌ی خودی، عنوان خط‌خورده و `maxWidth` (شکستن بخش‌های جدا)
+- [ ] sequence، state، er، gantt، gitGraph
 - [ ] timeline، journey، xychart، quadrant، requirement
 - [ ] c4، sankey، block، architecture، radar
 - [ ] سایر انواع (agentflow، usecase، railroad، treeView، venn، wardley، swimlane، ishikawa، eventmodeling)

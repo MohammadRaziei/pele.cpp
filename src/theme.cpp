@@ -192,7 +192,7 @@ resolved_style resolve_style(const std::vector<ustring>& declarations) {
     std::string prop;
     for (char16_t c : trim(ustring_view(decl).substr(0, at))) prop += lower(c);
     const ustring value = trim(strip_important(ustring_view(decl).substr(at + 1)));
-    if (value.empty() || is_unsafe(value)) continue;
+    if (value.empty() || is_unsafe(value) || svg::has_invalid_xml(value)) continue;
     if (in_list(kShapeProps, prop)) shape.set(prop, value);
     if (in_list(kTextProps, prop)) text.set(prop == "color" ? "fill" : prop, value);
   }
@@ -248,6 +248,12 @@ std::string series_color(int index) {
   static const char* const kSeries[] = {"#4c78a8", "#f58518", "#54a24b", "#e45756", "#72b7b2", "#eeca3b", "#b279a2", "#9d755d"};
   const int k = ((index % 8) + 8) % 8;
   return "var(--pele-series-" + std::to_string(k + 1) + "," + kSeries[k] + ")";
+}
+
+std::string rounded(const std::string& attrs) {
+  const std::size_t at = attrs.find(" style=\"");
+  if (at == std::string::npos) return attrs + kRounded;
+  return attrs.substr(0, at + 8) + "rx:var(--_r);" + attrs.substr(at + 8);
 }
 
 }  // namespace pele::theme

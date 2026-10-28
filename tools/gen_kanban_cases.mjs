@@ -13,7 +13,7 @@ const pick = (xs) => xs[ri(0, xs.length - 1)];
 // Icons the host has: a name with "book" or "home" (the same rule as tests/test_e2e.cpp).
 const icons = (name) => (/book|home/.test(name) ? '<path d="M3 3h18v18H3z"/>' : undefined);
 
-const WORDS = ['Todo', 'In progress', 'Done', 'Review', 'Backlog', 'Ship it', 'A much longer column title that has to wrap around', 'ReallyLongUnbrokenWordThatCannotFitInACard', '日本語のタスク', 'é ü ñ', 'Fix <b>bold</b> &amp; more', 'fa:fa-book Read docs', 'x'.repeat(50), 'T', 'Two words', "it's", '😀 emoji card'];
+const WORDS = ['Todo', 'In progress', 'Done', 'Review', 'Backlog', 'Ship it', 'A much longer column title that has to wrap around', 'ReallyLongUnbrokenWordThatCannotFitInACard', '日本語のタスク', 'é ü ñ', 'Fix <b>bold</b> &amp; more', 'fa:fa-book Read docs', 'x'.repeat(50), 'T', 'Two words', "it's", '😀 emoji card', 'H<sub>2</sub>O and x<sup>2</sup>', '<u>under</u> and <code>mono code</code>', 'long\u00adword\u00adwith\u00adhints that wraps', 'path\u200bto\u200bfile and more text here', 'List<T> & <foo>', '<kbd>Ctrl</kbd>+<sub>x</sub>'];
 const MD = ['`**bold** and *italic*`', '`plain markdown`', '`a long markdown text that goes on and on for a while`'];
 const PEOPLE = ['Kim', 'Alex Johnson', 'A very long assignee name here', '日本', 'x'];
 const TICKETS = ['MC-1', 'ABC-1234', 'T', 'a&b', 'x<y', '$&', 'MC-2 extra'];

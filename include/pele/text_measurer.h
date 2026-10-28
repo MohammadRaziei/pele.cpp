@@ -11,6 +11,9 @@ struct text_style {
   static constexpr int bold = 1;
   static constexpr int italic = 2;
   static constexpr int mono = 4;
+  static constexpr int sub = 8;
+  static constexpr int sup = 16;
+  static constexpr int underline = 32;
 };
 
 // How wide text is drawn. Strategy: layout depends only on this interface, so a host with real

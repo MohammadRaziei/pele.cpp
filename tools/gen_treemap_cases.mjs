@@ -10,7 +10,7 @@ const rnd = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
 const ri = (a, b) => a + Math.floor(rnd() * (b - a + 1));
 const pick = (xs) => xs[ri(0, xs.length - 1)];
 
-const NAMES = ['Category A', 'Category B', 'Item A1', 'Item A2', 'Item B1', 'Alpha', 'Beta', 'Gamma', 'Delta', 'A much longer name that will not fit its box', '日本語', 'é ü ñ', 'Fix <b>bold</b> &amp; more', 'x', 'Two words', "it's", '😀 emoji', 'Revenue', 'Cost', 'Profit'];
+const NAMES = ['Category A', 'Category B', 'Item A1', 'Item A2', 'Item B1', 'Alpha', 'Beta', 'Gamma', 'Delta', 'A much longer name that will not fit its box', '日本語', 'é ü ñ', 'Fix <b>bold</b> &amp; more', 'x', 'Two words', "it's", '😀 emoji', 'Revenue', 'Cost', 'Profit', 'H<sub>2</sub>O and x<sup>2</sup>', '<u>under</u> and <code>mono code</code>', 'long\u00adword\u00adwith\u00adhints that wraps', 'List<T> & <foo>'];
 const SAFE = ['10', '20', '30', '5', '100', '1', '0', '7', '15', '40', '60', '2', '1000', '12.5', '0.5', '3.14159', '250', '9', '33', '1,000', '1,234,567', '0.001', '99999', '123456.789'];
 const ODD = ['1_000', '.5', '1.2.3', '..5', ',,', '1e3', '007', '5.', '99999999999999999999999', '0.0000001', '-5', '-0'];
 const SPECS = [',', '$0,0', '$,', ',.0f', '.2f', '.1%', '.0%', 'd', ',d', '.3e', '.2~f', '~', '$.2f', '+', '+,.1f', '(,.2f', ' ,', '.4', '.1', '.12', '.20f', '.25f', '08.2f', '*>10,.2f', '<10', '^,', 'x', 'garbage', '', '.f', '$', ',.2~f', 's', '.0e', '.3~e'];

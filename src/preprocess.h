@@ -2,6 +2,7 @@
 
 #include <optional>
 
+#include "errors.h"
 #include "ustring.h"
 #include "yaml.h"
 
@@ -21,12 +22,16 @@ struct preprocessed {
 
 // Reads the front matter and directives off the source and removes comments, as Mermaid does
 // before it looks for the diagram type.
-preprocessed preprocess(ustring_view source);
+// `steps` collects the edits that turn the normalized source into `with_comments`.
+preprocessed preprocess(ustring_view source, edit_steps* steps = nullptr);
+
+// Line breaks as `\n`.
+ustring normalize_line_breaks(ustring_view text);
 
 // Removes comment lines (`%% ...`) and leading whitespace.
-ustring cleanup_comments(const ustring& text);
+ustring cleanup_comments(const ustring& text, edit_steps* steps = nullptr);
 
 // Mermaid hides `#name;` entity codes behind placeholder characters so `#` and `;` survive parsing.
-ustring encode_entities(const ustring& text);
+ustring encode_entities(const ustring& text, edit_steps* steps = nullptr);
 
 }  // namespace pele

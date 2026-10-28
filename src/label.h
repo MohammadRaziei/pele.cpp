@@ -26,9 +26,20 @@ struct label {
   double height = 0;
   double size = 0;
   double line_height = 0;
+  // Present only when math needs extra line height (math is not supported here, so never set).
+  std::vector<double> heights;
 };
 
 inline constexpr double kLineHeight = 1.5;
+// Lines of one wrapped label sit closer, so the label reads as one block.
+inline constexpr double kWrappedLineHeight = 1.3;
+
+// Heights of the lines when math makes some taller; without math, the label itself.
+label with_heights(label l);
+// The vertical middle of line i, measured from the top of the label.
+double line_middle(const label& l, std::size_t i);
+// Line i as a label of its own.
+label label_line(const label& l, std::size_t i);
 
 // Breaks the text of a label into lines, styles and icons, and measures it. Mermaid's markup is
 // read: <br>, <b>, <i>, entities, Font Awesome icons and, for markdown labels, emphasis.
@@ -42,7 +53,13 @@ class label_layouter {
  private:
   void push_text(std::vector<span>& line, ustring_view text, int style) const;
   void push_icons(std::vector<span>& line, ustring_view text, int style) const;
-  void inline_markup(std::vector<span>& line, ustring_view source, bool markdown, int base) const;
+  struct open_state {
+    int style = 0;
+    // Sub/sup stack; only the innermost tag shifts text.
+    std::vector<int> shifts;
+  };
+  void inline_markup(std::vector<span>& line, ustring_view source, bool markdown, int base, open_state& open) const;
+  label layout_lines(ustring_view raw, bool markdown, double size, double max_width, int base, double line_height) const;
   double measure_spans(std::vector<span>& line, double size) const;
   void wrap(const std::vector<span>& line, double size, double max, std::vector<std::vector<span>>& out, std::vector<double>& widths) const;
 

@@ -203,18 +203,13 @@ std::string text_block(const label& l, double x, double y, const std::string& at
   std::string out;
   for (std::size_t i = 0; i < l.lines.size(); i++) {
     const auto& line = l.lines[i];
-    const double cy = y + (static_cast<double>(i) + 0.5) * l.line_height;
-    if (line.size() == 1 && !line[0].has_icon) {
+    const double cy = y + line_middle(l, i);
+    if (line.size() == 1 && !line[0].has_icon && (line[0].style & (text_style::sub | text_style::sup | text_style::underline)) == 0) {
       out += "<text" + svg::apply_shared_style(attrs, line[0].style) + " x=\"" + svg::num(x) + "\" y=\"" + svg::num(cy + l.size * 0.35) + "\"" +
              (end ? " text-anchor=\"end\"" : "") + ">" + svg::esc(line[0].text) + "</text>";
     } else {
       const double width = l.widths[i];
-      label one = l;
-      one.lines = {line};
-      one.widths = {width};
-      one.width = width;
-      one.height = l.line_height;
-      out += svg::label_svg(one, x + (end ? -width : width) / 2, cy, attrs, &icons);
+      out += svg::label_svg(label_line(l, i), x + (end ? -width : width) / 2, cy, attrs, &icons);
     }
   }
   return out;
@@ -327,7 +322,7 @@ rendered render_kanban(const kanban_model& model, const config& settings, const 
   for (std::size_t index = 0; index < sections.size(); index++) {
     const kanban_section& section = sections[index];
     const std::size_t row = index / columns;
-    std::string body = "<rect width=\"" + js_number_string(column_width) + "\" height=\"" + svg::num(row_heights[row]) + "\" rx=\"" + theme::kRadius + "\" fill=\"var(--_s)\"/>" +
+    std::string body = "<rect width=\"" + js_number_string(column_width) + "\" height=\"" + svg::num(row_heights[row]) + "\" fill=\"var(--_s)\"" + theme::kRounded + "/>" +
                        text_block(titles[index], kColumnPad + 4, kColumnPad, " class=\"pele-cluster-label\" font-weight=\"var(--_hw)\"", icons) +
                        "<text class=\"pele-count\" x=\"" + js_number_string(edge) + "\" y=\"" + svg::num(kColumnPad + line / 2 + small * 0.35) +
                        "\" text-anchor=\"end\" font-size=\"" + js_number_string(small) + "\" fill=\"var(--_m)\">" + js_number_string(static_cast<double>(section.items.size())) + "</text>";
@@ -338,7 +333,7 @@ rendered render_kanban(const kanban_model& model, const config& settings, const 
       const kanban_node& item = *c.item;
       const ustring priority = ascii_lower(trim(item.priority ? ustring_view(*item.priority) : ustring_view()));
       const std::optional<std::string> color = priority_stroke(priority);
-      std::string inner = "<rect width=\"" + js_number_string(card_width) + "\" height=\"" + svg::num(c.height) + "\" rx=\"" + theme::kRadius + "\" fill=\"var(--_bg)\" stroke=\"var(--_b)\"/>";
+      std::string inner = "<rect width=\"" + js_number_string(card_width) + "\" height=\"" + svg::num(c.height) + "\" fill=\"var(--_bg)\" stroke=\"var(--_b)\"" + theme::kRounded + "/>";
       if (color) inner += "<path class=\"pele-priority\" d=\"M2.5,5V" + svg::num(c.height - 5) + "\" fill=\"none\" " + *color + " stroke-width=\"3\" stroke-linecap=\"round\"/>";
       inner += text_block(c.text, kCardPad, kCardPad, " class=\"pele-label\"", icons);
       if (has(item.icon)) inner += icon_svg(*item.icon, card_width - kCardPad - glyph, kCardPad + (small_line - glyph) / 2, glyph, icons);

@@ -312,7 +312,7 @@ rendered draw(const packet_model& model, const config& settings, const render_op
                   (text->size == label_size ? std::string() : " font-size=\"" + svg::num(text->size) + "\"") + ">" + svg::esc(text->text) + "</text>";
       }
       fields += "<g class=\"pele-node\" data-id=\"" + js_number_string(block.start) + "-" + js_number_string(block.end) + "\">" + "<rect x=\"" + svg::num(x) + "\" y=\"" +
-                svg::num(y) + "\" width=\"" + svg::num(w) + "\" height=\"" + svg::num(row_height) + "\" rx=\"" + theme::kRadius + "\" fill=\"var(--_s)\" stroke=\"var(--_b)\"/>" +
+                svg::num(y) + "\" width=\"" + svg::num(w) + "\" height=\"" + svg::num(row_height) + "\" fill=\"var(--_s)\" stroke=\"var(--_b)\"" + theme::kRounded + "/>" +
                 inner + "</g>";
       if (!show_bits) continue;
       const double leading = descending ? block.end : block.start;

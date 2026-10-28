@@ -300,7 +300,7 @@ void flow_db::add_single_link(const ustring& start, const ustring& end, const st
   }
 
   if (options_.max_edges && static_cast<double>(edges.size()) >= *options_.max_edges) {
-    throw flow_error("Edge limit exceeded. " + std::to_string(edges.size()) + " edges found, but the limit is " + js_number_string(*options_.max_edges) + ".",
+    throw flow_error("Edge limit exceeded. The limit is " + js_number_string(*options_.max_edges) + ".",
                      error_code::limit);
   }
   edges.push_back(edge);

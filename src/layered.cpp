@@ -5,8 +5,10 @@
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
+#include <functional>
 #include <limits>
 #include <map>
+#include <tuple>
 #include <unordered_set>
 #include <utility>
 
@@ -105,6 +107,12 @@ struct graph {
   i32s order;
   i32s pos;
   bool offsets = false;
+  // Ranks whose order must remain fixed.
+  u8s fixed;
+  // The group of each node, and the parent of each group; empty without groups.
+  i32s grp;
+  i32s group_parent;
+  bool grouped = false;
 };
 
 // Half the room a node, bend or port takes across the flow, with its share of the gap beside it.
@@ -849,7 +857,8 @@ void past_labels(const graph& g, f64s& xs, const i32s& first_dummy, const i32s& 
   }
 }
 
-void reduce_crossings(graph& g, const std::vector<layered_node>& nodes) {
+// Returns {final crossings, crossings before grouping or reordering}.
+std::pair<long long, long long> reduce_crossings(graph& g, const std::vector<layered_node>& nodes) {
   const int n = g.n;
   const int real = g.real;
   const int max_rank = g.max_rank;
@@ -859,6 +868,7 @@ void reduce_crossings(graph& g, const std::vector<layered_node>& nodes) {
   const std::size_t segments = g.ef.size();
   int widest = 0;
   for (int r = 0; r <= max_rank; r++) widest = std::max(widest, layer_start[r + 1] - layer_start[r]);
+  if (widest < 2) return {0, 0};
   // With offsets, edges that reach one node at different offsets take separate places along it.
   i32s place;
   if (g.offsets) place.assign(segments, 0);
@@ -947,11 +957,81 @@ void reduce_crossings(graph& g, const std::vector<layered_node>& nodes) {
     return total;
   };
 
-  long long best = count();
-  if (best == 0) return;
-  i32s best_order = order;
+  const long long declared = count();
   f64s bary(n, 0);
   i32s moving(widest, 0);
+
+  // Keep groups contiguous, ordering each by its mean key.
+  const int groups = static_cast<int>(g.group_parent.size());
+  i32s depth(groups, 0);
+  for (int gr = 0; gr < groups; gr++)
+    for (int p = gr; p >= 0; p = g.group_parent[p]) depth[gr]++;
+  f64s group_sum(groups, 0);
+  i32s group_count(groups, 0);
+  i32s group_first(groups, 0);
+  const i32s& grp = g.grp;
+  const i32s& group_parent = g.group_parent;
+  auto arrange = [&](int r, const f64s& key) {
+    const int s = layer_start[r];
+    const int e = layer_start[r + 1];
+    for (int i = s; i < e; i++) {
+      for (int gr = grp[order[i]]; gr >= 0; gr = group_parent[gr]) {
+        group_sum[gr] = 0;
+        group_count[gr] = 0;
+      }
+    }
+    for (int i = s; i < e; i++) {
+      const int v = order[i];
+      for (int gr = grp[v]; gr >= 0; gr = group_parent[gr]) {
+        if (group_count[gr] == 0) group_first[gr] = i;
+        group_sum[gr] += key[v];
+        group_count[gr]++;
+      }
+    }
+    // Compare siblings in their nearest common group; group items use n + group ID.
+    auto value = [&](int item) { return item >= n ? group_sum[item - n] / group_count[item - n] : key[item]; };
+    auto first = [&](int item) { return item >= n ? group_first[item - n] : s + pos[item]; };
+    auto compare = [&](int a, int b) -> double {
+      int ia = a;
+      int ib = b;
+      int ca = grp[a];
+      int cb = grp[b];
+      int da = ca < 0 ? 0 : depth[ca];
+      int db = cb < 0 ? 0 : depth[cb];
+      for (; da > db; da--) {
+        ia = n + ca;
+        ca = group_parent[ca];
+      }
+      for (; db > da; db--) {
+        ib = n + cb;
+        cb = group_parent[cb];
+      }
+      while (ca != cb) {
+        ia = n + ca;
+        ca = group_parent[ca];
+        ib = n + cb;
+        cb = group_parent[cb];
+      }
+      const double d = value(ia) - value(ib);
+      return (d != 0 && !std::isnan(d)) ? d : static_cast<double>(first(ia) - first(ib));
+    };
+    i32s row(order.begin() + s, order.begin() + e);
+    std::stable_sort(row.begin(), row.end(), [&](int a, int b) { return compare(a, b) < 0; });
+    std::copy(row.begin(), row.end(), order.begin() + s);
+    for (int i = s; i < e; i++) pos[order[i]] = i - s;
+  };
+  if (g.grouped) {
+    f64s at(n, 0);
+    for (int r = 0; r <= max_rank; r++) {
+      for (int i = layer_start[r]; i < layer_start[r + 1]; i++) at[order[i]] = i - layer_start[r];
+      arrange(r, at);
+    }
+  }
+  long long best = g.grouped ? count() : declared;
+  if (best == 0) return {0, declared};
+  i32s best_order = order;
+  // Require improvements over both the grouped and ungrouped starting orders.
+  const long long start_count = std::min(best, declared);
 
   auto sweep = [&](bool down, bool bias_right) {
     const i32s& start = down ? g.pred_start : g.succ_start;
@@ -960,6 +1040,7 @@ void reduce_crossings(graph& g, const std::vector<layered_node>& nodes) {
     const f64s& other_dx = down ? g.efd : g.etd;
     for (int step = 1; step <= max_rank; step++) {
       const int r = down ? step : max_rank - step;
+      if (g.fixed[r]) continue;
       const int s = layer_start[r];
       const int e = layer_start[r + 1];
       int movable = 0;
@@ -974,6 +1055,12 @@ void reduce_crossings(graph& g, const std::vector<layered_node>& nodes) {
         const int from = start[v];
         const int to = start[v + 1];
         if (from == to) {
+          if (g.grouped) {
+            // Preserve relative position when there are no neighbours in the adjacent rank.
+            const int across = down ? layer_start[r] - layer_start[r - 1] : layer_start[r + 2] - layer_start[r + 1];
+            bary[v] = (static_cast<double>(i - s) * across) / (e - s);
+            continue;
+          }
           bary[v] = -1;
           continue;
         }
@@ -985,6 +1072,10 @@ void reduce_crossings(graph& g, const std::vector<layered_node>& nodes) {
         }
         bary[v] = sum / (to - from);
         moving[movable++] = v;
+      }
+      if (g.grouped) {
+        arrange(r, bary);
+        continue;
       }
       if (movable < 2) continue;
       if (bias_right) {
@@ -1024,9 +1115,51 @@ void reduce_crossings(graph& g, const std::vector<layered_node>& nodes) {
       for (int i = layer_start[r]; i < layer_start[r + 1]; i++) pos[order[i]] = i - layer_start[r];
   };
 
+  // Adjacent swaps can remove crossings missed by barycenter sweeps.
+  auto pin_of = [&](int v) { return v < real ? nodes[v].pin : 0; };
+  auto at_of = [&](int e, bool up) -> double {
+    const int u = up ? g.ef[e] : g.et[e];
+    return g.offsets && g.w[u] > 0 ? pos[u] + (up ? g.efd[e] : g.etd[e]) / g.w[u] : static_cast<double>(pos[u]);
+  };
+  // Crossings between a and b, assuming a is left of b.
+  auto between = [&](int a, int b) -> int {
+    int c = 0;
+    for (int k = g.pred_start[a]; k < g.pred_start[a + 1]; k++) {
+      const double x = at_of(g.pred_e[k], true);
+      for (int j = g.pred_start[b]; j < g.pred_start[b + 1]; j++)
+        if (x > at_of(g.pred_e[j], true)) c++;
+    }
+    for (int k = g.succ_start[a]; k < g.succ_start[a + 1]; k++) {
+      const double x = at_of(g.succ_e[k], false);
+      for (int j = g.succ_start[b]; j < g.succ_start[b + 1]; j++)
+        if (x > at_of(g.succ_e[j], false)) c++;
+    }
+    return c;
+  };
+  auto transpose = [&]() {
+    for (int pass = 0; pass < 8; pass++) {
+      bool improved = false;
+      for (int r = 0; r <= max_rank; r++) {
+        if (g.fixed[r]) continue;
+        const int s = layer_start[r];
+        for (int i = s; i + 1 < layer_start[r + 1]; i++) {
+          const int a = order[i];
+          const int b = order[i + 1];
+          if (pin_of(a) != pin_of(b) || (g.grouped && grp[a] != grp[b])) continue;
+          if (between(b, a) >= between(a, b)) continue;
+          order[i] = b;
+          order[i + 1] = a;
+          pos[b] = i - s;
+          pos[a] = i + 1 - s;
+          improved = true;
+        }
+      }
+      if (!improved) break;
+    }
+  };
+
   // The sweeps are run twice from the same start, going down first and going up first.
   const i32s initial = order;
-  const long long start_count = best;
   const bool small = n <= 600;
   i32s chosen = best_order;
   long long chosen_out = std::numeric_limits<long long>::max();
@@ -1048,6 +1181,15 @@ void reduce_crossings(graph& g, const std::vector<layered_node>& nodes) {
       }
     }
     order = found_order;
+    if (small && found > 0) {
+      settle_positions();
+      transpose();
+      const long long c = count();
+      if (c < found) {
+        found = c;
+        found_order = order;
+      }
+    }
     const long long out = small ? out_of_order() : 0;
     if (attempt == 0 || found < best || (found == best && out < chosen_out)) {
       best = found;
@@ -1058,15 +1200,18 @@ void reduce_crossings(graph& g, const std::vector<layered_node>& nodes) {
   order = chosen;
   settle_positions();
   best_order = chosen;
+  // The retained grouped order may exceed the ungrouped threshold; recount it.
+  if (g.grouped) best = count();
 
   // A drawing and its mirror image cross as often too. Of those two, likewise.
-  if (!small) return;
+  if (!small) return {best, declared};
   for (int i = 0; i < real; i++)
-    if (nodes[i].pin != 0) return;
-  if (chosen_out == 0) return;
+    if (nodes[i].pin != 0) return {best, declared};
+  if (chosen_out == 0 || g.fixed[0] || g.fixed[max_rank]) return {best, declared};
   for (int r = 0; r <= max_rank; r++) std::reverse(order.begin() + layer_start[r], order.begin() + layer_start[r + 1]);
   settle_positions();
   if (count() > best || out_of_order() >= chosen_out) order = best_order;
+  return {best, declared};
 }
 
 // Brandes-Köpf horizontal coordinate assignment: four aligned layouts, balanced.
@@ -1430,6 +1575,13 @@ layered_result layered_layouter::layout(std::vector<layered_node>& nodes, std::v
   const int real = static_cast<int>(nodes.size());
   if (real == 0) return {0, 0};
   const int m = static_cast<int>(edges.size());
+  if (real == 1 && m == 0 && nodes[0].kind == node_kind::node) {
+    layered_node& node = nodes[0];
+    node.rank = 0;
+    node.x = node.w / 2;
+    node.y = node.h / 2;
+    return {node.w, node.h};
+  }
 
   // Every edge gets a middle rank of its own when labels or parallel edges need the room.
   int step = 1;
@@ -1512,6 +1664,8 @@ layered_result layered_layouter::layout(std::vector<layered_node>& nodes, std::v
   }
   i32s first_seg(m, -1);
   i32s last_seg(m, -1);
+  f64s KEY(n, std::nan(""));
+  for (int i = 0; i < real; i++) KEY[i] = nodes[i].key;
   bool offsets = false;
   {
     int next = real;
@@ -1544,6 +1698,7 @@ layered_result layered_layouter::layout(std::vector<layered_node>& nodes, std::v
       for (int r = ra + 1; r < rb; r++) {
         const int d = next++;
         RANK[d] = r;
+        KEY[d] = KEY[a] + ((KEY[b] - KEY[a]) * (r - ra)) / (rb - ra);
         if (r == label_rank) {
           W[d] = e.label_w;
           H[d] = e.label_h;
@@ -1566,6 +1721,37 @@ layered_result layered_layouter::layout(std::vector<layered_node>& nodes, std::v
       if (spans && !(e.reversed ? e.tail_fixed : e.head_fixed)) ETK[ce] = e.reversed ? leaves : arrives;
       last_seg[ei] = ce;
       ce++;
+    }
+  }
+
+  // Bends belong to the innermost group containing both edge endpoints.
+  i32s GRP;
+  if (opt.groups) {
+    const i32s& of = opt.groups->of;
+    const i32s& parent = opt.groups->parent;
+    GRP.assign(n, 0);
+    for (int i = 0; i < real; i++) GRP[i] = of[i];
+    auto depth_of = [&](int gr) {
+      int d = 0;
+      for (; gr >= 0; gr = parent[gr]) d++;
+      return d;
+    };
+    auto lca = [&](int x, int y) {
+      int dx = depth_of(x);
+      int dy = depth_of(y);
+      for (; dx > dy; dx--) x = parent[x];
+      for (; dy > dx; dy--) y = parent[y];
+      while (x != y) {
+        x = parent[x];
+        y = parent[y];
+      }
+      return x;
+    };
+    for (int ei = 0; ei < m; ei++) {
+      if (first_dummy[ei] < 0) continue;
+      const layered_edge& e = edges[ei];
+      const int gr = lca(of[e.tail], of[e.head]);
+      for (int d = first_dummy[ei], end = d + span[ei] - 1; d < end; d++) GRP[d] = gr;
     }
   }
 
@@ -1637,6 +1823,23 @@ layered_result layered_layouter::layout(std::vector<layered_node>& nodes, std::v
     }
   }
 
+  // Sorts the nodes of a rank by `key` if every one has it; the order given breaks ties.
+  auto sort_rank = [&](int r, const std::function<double(int)>& key) -> bool {
+    const int s = layer_start[r];
+    const int e = layer_start[r + 1];
+    if (e - s < 2) return false;
+    for (int i = s; i < e; i++)
+      if (std::isnan(key(order[i]))) return false;
+    i32s layer(order.begin() + s, order.begin() + e);
+    std::stable_sort(layer.begin(), layer.end(), [&](int a, int b) {
+      const double d = key(a) - key(b);
+      return (d != 0 && !std::isnan(d)) && d < 0;
+    });
+    std::copy(layer.begin(), layer.end(), order.begin() + s);
+    return true;
+  };
+  for (int r = 0; r <= max_rank; r++) sort_rank(r, [&](int v) { return KEY[v]; });
+
   bool pinned = false;
   for (int i = 0; i < real; i++)
     if (nodes[i].pin != 0) pinned = true;
@@ -1653,6 +1856,13 @@ layered_result layered_layouter::layout(std::vector<layered_node>& nodes, std::v
       std::copy(layer.begin(), layer.end(), order.begin() + layer_start[r]);
     }
   }
+  // Preserve port order to avoid crossings outside the group.
+  g.fixed.assign(max_rank + 1, 0);
+  auto hint = [&](int v) -> double {
+    return v < real && (nodes[v].kind == node_kind::start_port || nodes[v].kind == node_kind::end_port) ? nodes[v].hint : std::nan("");
+  };
+  for (int r : {0, max_rank})
+    if (sort_rank(r, hint)) g.fixed[r] = 1;
   auto set_positions = [&]() {
     for (int r = 0; r <= max_rank; r++) {
       const int s = layer_start[r];
@@ -1660,10 +1870,40 @@ layered_result layered_layouter::layout(std::vector<layered_node>& nodes, std::v
     }
   };
   set_positions();
+  if (opt.groups) {
+    g.grouped = true;
+    g.grp = GRP;
+    g.group_parent = opt.groups->parent;
+  }
 
+  long long crossings = 0;
+  long long declared = 0;
   if (segments > 0 && max_rank > 0) {
-    reduce_crossings(g, nodes);
+    std::tie(crossings, declared) = reduce_crossings(g, nodes);
     set_positions();
+  }
+  if (opt.order_only) {
+    // Points are (rank, cross-flow position) pairs.
+    const f64s at = position(g, opt);
+    for (int i = 0; i < real; i++) nodes[i].x = at[i];
+    for (int ei = 0; ei < m; ei++) {
+      layered_edge& e = edges[ei];
+      const int a = e.reversed ? e.head : e.tail;
+      const int b = e.reversed ? e.tail : e.head;
+      f64s pts = {static_cast<double>(RANK[a]), at[a]};
+      if (!direct[ei] && first_dummy[ei] >= 0)
+        for (int d = first_dummy[ei], end = d + span[ei] - 1; d < end; d++) {
+          pts.push_back(RANK[d]);
+          pts.push_back(at[d]);
+        }
+      pts.push_back(RANK[b]);
+      pts.push_back(at[b]);
+      e.points = std::move(pts);
+    }
+    layered_result result;
+    result.crossings = crossings;
+    result.declared = declared;
+    return result;
   }
 
   if (spans) spread(g, nodes, EFK, ETK);

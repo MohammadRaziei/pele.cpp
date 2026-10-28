@@ -15,6 +15,11 @@ extern const char* const kRootStyle;
 
 inline constexpr const char* kFontMono = "var(--_fm)";
 inline constexpr const char* kRadius = "var(--pele-radius,4px)";
+
+// Use CSS for rx variables to support older browsers. The default goes first so diagram styles can
+// override it.
+inline constexpr const char* kRounded = " style=\"rx:var(--_r)\"";
+std::string rounded(const std::string& attrs);
 // The colour of what a diagram marks as critical. It is not one of the series colours, as a theme
 // may put those in any order.
 inline constexpr const char* kCritical = "var(--pele-critical,#e45756)";

@@ -3,6 +3,38 @@
 The version of this library follows its own numbering. Which version of Pele (the TypeScript
 library) its SVG matches byte for byte is in `PELE_CPP_REFERENCE_VERSION` (`pele/version.h`).
 
+## 0.2.0
+
+Matches Pele 1.10.0 (was 1.7.0). Adds the class diagram. Newer Pele versions exist (1.10.1, 1.11.0); not yet followed.
+
+Changed to match Pele
+- Rounded corners are written as `style="rx:var(--_r)"` instead of an `rx` attribute.
+- Labels: `<sub>`, `<sup>`, `<u>`, `<code>` (also `kbd`, `samp`, `tt`) and the other HTML tags Pele
+  drops; soft hyphens and zero-width spaces are line break hints; wrapped lines sit closer
+  (line height 1.3 instead of 1.5).
+- SVG text drops characters invalid in XML, including lone surrogates; `<span>` styles for mono,
+  sub, sup and underline.
+- Entity codes are restored once, as Mermaid does, and shown as written in error messages.
+- Errors point at the position in the source as written: preprocessing edits (front matter,
+  directives, comments, entity codes, color semicolons, whitespace after a brace) are mapped back.
+- Layout: groups kept contiguous in ranks, fixed port ranks, an adjacent-swap pass after the
+  crossing sweeps, and for subgraphs a flat layout that orders nodes and ports across groups, with
+  route crossing counts choosing between orderings.
+- Edge limit message: "Edge limit exceeded. The limit is N."
+- c4 detection anchors every keyword.
+
+New
+- class diagram (graph, markers, render, and `wrap_components` for disconnected parts when the host
+  gives a `maxWidth`).
+
+Not ported
+- Math (`$$...$$`), which Pele only uses when given a math renderer. A class diagram without math
+  is complete; `$$` in annotations or cardinalities is drawn as text.
+
+Tests
+- The label, kanban, mindmap, treemap and flowchart generators now produce the new tags and break
+  hints; the compound generator produces stepped routes and fewer per-group directions.
+
 ## 0.1.0
 
 First release. Matches Pele 1.7.0.

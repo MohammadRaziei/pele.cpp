@@ -21,6 +21,9 @@ const TOKENS = [
   '<br/>', '<br>', '<BR />', '\\n', '\n', '<b>', '</b>', '<i>', '</i>', '<strong>', '</strong>', '<em>', '</em>', '<span class="x">', '</span>', '<', '>', '<3',
   '*', '**', '_', '__', '*x*', '**y**', '_z_', '&amp;', '&lt;', '&#65;', '&#x41;', '&unknown;', '&#xZZ;', '&', '&#0;', '&#1114112;', '&#xD800;',
   'fa:fa-car', 'fab:fa-github', 'fas:fa-star', 'fa:fa-missing', 'faz:fa-x', ' fa:fa-car ', 'fa:fa-',
+  '<sub>', '</sub>', '<sup>', '</sup>', '<code>', '</code>', '<u>', '</u>', '<kbd>', '</kbd>', '<samp>', '<tt>', '<var>', '<cite>', '<dfn>', '<ins>', '</ins>',
+  '<SUB>', '</Sup>', '<div>', '</div>', '<mark>', '<s>', 'List<T>', '<foo>', '</foo>', '<a href="x">', '<p/>', '<b', '<sub x=1>',
+  '\u00ad', '&shy;', 'ab\u00adcd', 'long\u00adword\u00adhere', '\u200b', 'path\u200bto\u200bfile', 'x\u00ad ', ' \u00ady', '\u00ad\u00ad', 'sup\u00ad)', '&AMP;', '&LT;', '&lsqb;', '&Hat;',
   '、', '。', '（', '）', '「', '」', '，', 'ー', '😀', 'e\u0301', '\u200b', 'ﬂ°°65¶ß', 'ﬂ°amp¶ß', 'ﬂ°nosuch¶ß', 'ﬂ°', '¶ß', '\r\n', '\r', '    indented', '\n    more',
 ];
 

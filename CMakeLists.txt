@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(pele_cpp VERSION 0.1.0 LANGUAGES CXX)
+project(pele_cpp VERSION 0.2.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -54,6 +54,10 @@ add_library(pele
   src/class/lexer.cpp
   src/class/db.cpp
   src/class/parser.cpp
+  src/class/graph.cpp
+  src/class/markers.cpp
+  src/class/render.cpp
+  src/components.cpp
   src/common/icon.cpp
   src/lowercase.cpp
   src/unicode_letter.cpp

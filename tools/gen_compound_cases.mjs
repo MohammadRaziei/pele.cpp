@@ -23,7 +23,7 @@ for (let c = 0; c < count; c++) {
     nd.isGroup = i > 0 && rnd() < 0.3;
     if (nd.isGroup) {
       nd.padX = pick([0, 12, 16]); nd.padTop = pick([0, 28, 32]); nd.padBottom = pick([0, 12]); nd.minW = pick([0, 0, 90]);
-      if (rnd() < 0.5) nd.dir = pick(DIRS);
+      if (rnd() < 0.15) nd.dir = pick(DIRS);
     }
     nd.seq = rnd() < 0.8 ? i : ri(0, 20);
     nd.span = rnd() < 0.5 ? pick([0, nd.w - 8, nd.w * 0.8]) : 0;
@@ -46,10 +46,10 @@ for (let c = 0; c < count; c++) {
     if (rnd() < 0.4) { e.labelW = pick([20, 33.5, 60]); e.labelH = 21; }
     edges.push(e);
   }
-  const opt = { nodeSep: pick([40, 50, 30]), edgeSep: pick([16, 10]), rankSep: pick([48, 60]), portSep: pick([16, 24]), tracks: false, straight: rnd() < 0.15, apart: rnd() < 0.2, headRoom: pick([0, 8]) };
+  const opt = { nodeSep: pick([40, 50, 30]), edgeSep: pick([16, 10]), rankSep: pick([48, 60]), portSep: pick([16, 24]), tracks: rnd() < 0.2, straight: rnd() < 0.15, apart: rnd() < 0.2, headRoom: pick([0, 8]) };
   const rootDir = pick(DIRS);
   lines.push(`case ${c}`);
-  lines.push(`opts ${opt.nodeSep} ${opt.edgeSep} ${opt.rankSep} ${opt.portSep} 0 ${+opt.straight} ${+opt.apart} ${opt.headRoom} ${rootDir}`);
+  lines.push(`opts ${opt.nodeSep} ${opt.edgeSep} ${opt.rankSep} ${opt.portSep} ${+opt.tracks} ${+opt.straight} ${+opt.apart} ${opt.headRoom} ${rootDir}`);
   lines.push(`nodes ${n}`);
   for (const nd of nodes) lines.push(`${f(nd.w)} ${f(nd.h)} ${nd.parent} ${+nd.isGroup} ${nd.dir ?? '-'} ${f(nd.padX)} ${f(nd.padTop)} ${f(nd.padBottom)} ${f(nd.minW)} ${f(nd.seq)} ${f(nd.span)}`);
   lines.push(`edges ${edges.length}`);
