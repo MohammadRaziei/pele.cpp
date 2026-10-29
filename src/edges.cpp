@@ -332,8 +332,8 @@ void arc(std::vector<double>& out, double x1, double y1, double rx, double ry, d
   const double cy = (-k * ry * hx) / rx + (y1 + y2) / 2;
   const double from = std::atan2((y1 - cy) / ry, (x1 - cx) / rx);
   double turn = std::atan2((y2 - cy) / ry, (x2 - cx) / rx) - from;
-  if (sweep != 0 && turn < 0) turn += 2 * M_PI;
-  else if (sweep == 0 && turn > 0) turn -= 2 * M_PI;
+  if (sweep != 0 && turn < 0) turn += 2 * constant::pi;
+  else if (sweep == 0 && turn > 0) turn -= 2 * constant::pi;
   for (int i = 1; i <= 8; i++) {
     out.push_back(cx + rx * std::cos(from + (turn * i) / 8));
     out.push_back(cy + ry * std::sin(from + (turn * i) / 8));

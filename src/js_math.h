@@ -6,6 +6,11 @@
 
 namespace pele {
 
+// M_PI is not standard: MSVC only defines it with _USE_MATH_DEFINES.
+namespace constant {
+inline constexpr double pi = 3.14159265358979323846;
+}  // namespace constant
+
 // Math.round: halves go up.
 inline double js_round(double v) { return std::floor(v + 0.5); }
 

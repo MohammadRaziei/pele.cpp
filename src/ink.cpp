@@ -8,6 +8,7 @@
 #include <sstream>
 
 #include "chars.h"
+#include "js_math.h"
 
 namespace pele {
 namespace {
@@ -110,7 +111,7 @@ double hue(const ustring& raw) {
   if (!m || m->unit == u"%") return kNaN;
   const ustring unit = lowered(m->unit);
   const double n = m->value;
-  return unit == u"turn" ? n * 360 : unit == u"rad" ? (n * 180) / M_PI : unit == u"grad" ? n * 0.9 : n;
+  return unit == u"turn" ? n * 360 : unit == u"rad" ? (n * 180) / constant::pi : unit == u"grad" ? n * 0.9 : n;
 }
 
 std::vector<ustring> split_on(const ustring& s, const std::function<std::size_t(const ustring&, std::size_t)>& sep_at, bool& any) {
