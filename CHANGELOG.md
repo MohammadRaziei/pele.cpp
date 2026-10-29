@@ -3,6 +3,30 @@
 The version of this library follows its own numbering. Which version of Pele (the TypeScript
 library) its SVG matches byte for byte is in `PELE_CPP_REFERENCE_VERSION` (`pele/version.h`).
 
+## 0.4.0
+
+Matches Pele 1.12.0 (was 1.11.0).
+
+Changed to match Pele
+- Text on a fill: where a style sets a fill, the label takes `--pele-fg-on-light` or
+  `--pele-fg-on-dark`, whichever reads better. Colors are hex (3, 4, 6, 8 digits), `rgb()`/`hsl()`
+  in the comma and space forms, and the named colors; a fill below half opacity, or one this does
+  not know, leaves the label alone. Used by flowchart nodes and subgraph titles, treemap labels
+  and class text (`src/ink.cpp`).
+- Flowchart and subgraphs: a subgraph that sets a fill no longer gets the default 0.5 opacity;
+  edges on a fill take its ink color, and edges that cross a fill's border get a casing in the page
+  color (`pele-casings`) so they stay visible on both sides. Text, brace and braces shapes ignore a
+  style fill.
+- Edge paths keep their tokens, so overlap tests do not parse the path again.
+- URLs: percent escapes are decoded too when checking a scheme, and both the URL and its decoded
+  form must be allowed.
+
+Tests
+- The flowchart generator makes subgraphs with fills and edges inside and across them, and many
+  color forms; the class and treemap generators use the same colors and `cssClass`.
+- Lesson: recording tokens inside one `+` chain of `std::string` calls gives an unspecified order;
+  each call is its own statement.
+
 ## 0.3.0
 
 Matches Pele 1.11.0 (was 1.10.0). Pele 1.12.0 exists and is not followed yet.

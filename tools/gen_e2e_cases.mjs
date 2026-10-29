@@ -36,6 +36,30 @@ function statement(depth) {
   return `${nid()} ${pick(LINKS)} ${nid()}`;
 }
 
+const COLORS = ['#f9f', '#FFF', '#123', '#1234', '#12345678', '#ffeeaa', '#003366', 'red', 'RED', 'navy', 'grey', 'lightgrey', 'gold', 'black', 'white', 'transparent', 'none', 'rgb(0,0,0)', 'rgb(255, 255, 200)', 'rgba(10,20,30,0.4)', 'rgb(100% 0% 0% / 50%)', 'rgb(0 128 0)', 'rgb(10%, 20%, 30%)', 'hsl(210, 60%, 30%)', 'hsl(50deg 90% 60%)', 'hsla(0.5turn, 50%, 50%, 0.9)', 'hsl(120 none 50%)', 'var(--c)', 'rgb(1,2)', 'foo', '#gg0000', 'calc(1+2)', 'rgb(300,300,300)'];
+const OPACITIES = ['', '', '', ',fill-opacity:0.3', ',opacity:0.6', ',fill-opacity:0.5', ',opacity:0.4,fill-opacity:0.9', ',fill-opacity:calc(1/2)', ',opacity:50%', ',opacity:0'];
+const LINES = ['stroke:red', 'stroke:#fff', 'stroke-width:4px', 'stroke:none', 'stroke:transparent', 'stroke-width:calc(1px + 1px)', 'opacity:0.5', 'stroke-opacity:0.4', 'stroke:blue,stroke-width:3px,opacity:0.7', 'stroke-width:1px', 'stroke-width:0.5', 'stroke-width:2.5px'];
+// Subgraphs that set a fill, with edges inside, crossing their border, and styled.
+function filled() {
+  const out = [];
+  const n = ri(1, 3);
+  for (let g = 1; g <= n; g++) {
+    out.push(`subgraph g${g}[${pick(['Group', 'A longer group title here', 'G'])} ${g}]`);
+    if (rnd() < 0.25) out.push(pick(['direction LR', 'direction TB']));
+    const k = ri(2, 5);
+    for (let i = 1; i <= k; i++) out.push(`  n${g}${i}${pick(['', '[Box]', '(Round)', '{Diamond}', '((Circle))', '>Flag]', '[(DB)]'])} ${pick(['-->', '---', '-.->', '==>', '--o', '--x'])}${rnd() < 0.2 ? '|lbl|' : ''} n${g}${(i % k) + 1}`);
+    if (g > 1 && rnd() < 0.6) out.push(`  n${g}1 --> n${g - 1}2`);
+    out.push('end');
+  }
+  for (let i = ri(0, 3); i > 0; i--) out.push(`out${i} ${pick(['-->', '-.->'])} n1${ri(1, 2)}`, `n1${ri(1, 2)} --> out${i}`);
+  for (let g = 1; g <= n; g++) if (rnd() < 0.8) out.push(`style g${g} fill:${pick(COLORS)}${pick(OPACITIES)}${rnd() < 0.3 ? ',stroke:' + pick(COLORS) : ''}${rnd() < 0.2 ? ',color:' + pick(COLORS) : ''}`);
+  for (let i = ri(0, 4); i > 0; i--) out.push(`style n${ri(1, n)}${ri(1, 3)} fill:${pick(COLORS)}${pick(OPACITIES)}${rnd() < 0.3 ? ',color:' + pick(COLORS) : ''}`);
+  if (rnd() < 0.3) out.push(`classDef c1 fill:${pick(COLORS)}`, `class g1 c1`);
+  for (let i = ri(0, 4); i > 0; i--) out.push(`linkStyle ${ri(0, 8)} ${pick(LINES)}`);
+  if (rnd() < 0.15) out.push(`linkStyle default ${pick(LINES)}`);
+  return out.map((l) => '  ' + l).join('\n') + '\n';
+}
+
 const dir = process.argv[4] ?? '/tmp/e2e';
 fs.mkdirSync(dir, { recursive: true });
 const count = Number(process.argv[3] ?? 200);
@@ -44,7 +68,8 @@ for (let c = 0; c < count; c++) {
   let src = pick(['flowchart TD', 'graph TD', 'flowchart LR', 'flowchart RL', 'flowchart BT', 'graph LR', 'flowchart TB']) + '\n';
   if (rnd() < 0.15) src = `---\ntitle: ${pick(['My Chart', 'A longer title for the chart'])}\n---\n` + src;
   if (rnd() < 0.12) src = `%%{init: {"flowchart": {"curve": "${pick(['basis', 'linear', 'step', 'stepBefore', 'cardinal'])}"}}}%%\n` + src;
-  for (let i = ri(1, 9); i > 0; i--) src += '  ' + statement(0) + '\n';
+  if (rnd() < 0.4) src += filled();
+  else for (let i = ri(1, 9); i > 0; i--) src += '  ' + statement(0) + '\n';
   if (rnd() < 0.25) src += pick(['  style A fill:#f9f,stroke:#333,stroke-width:4px', '  classDef cls fill:#ff0,color:#000', '  linkStyle 0 stroke:red,stroke-width:3px', '  linkStyle default stroke:green', '  click A "http://x.y" "tip"', '  A:::cls', '  accTitle: Chart title', '  accDescr: A description']) + '\n';
   if (rnd() < 0.06 && src.length > 3) { const at = ri(0, src.length - 1); src = src.slice(0, at) + pick(['"', '[', ']', '(', ')', '{', '}', '|', '-', '>', ' ']) + src.slice(at); }
   fs.writeFileSync(path.join(dir, `${c}.mmd`), src);

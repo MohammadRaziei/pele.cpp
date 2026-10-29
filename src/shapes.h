@@ -52,6 +52,8 @@ class shape_registry {
   double inset(std::string_view name, double w, double h, int side, double t = 0) const;
   double span(std::string_view name, double w, double h, bool sideways) const;
   bool has_label(std::string_view name) const;
+  // Whether a style fill applies to the shape; text and the braces ignore it.
+  bool filled(std::string_view name) const;
 
  private:
   shape_registry();

@@ -12,6 +12,7 @@
 #include "entities.h"
 #include "fit_width.h"
 #include "graph.h"
+#include "ink.h"
 #include "js_math.h"
 #include "label.h"
 #include "shape_names.h"
@@ -118,6 +119,8 @@ class flowchart_renderer {
     const yaml_value* flow = nullptr;
     std::vector<rendered_link> links;
     std::string curve_name;
+    // Fills an edge may lie on, from groups that set one.
+    std::vector<edge_geometry::fill> fills;
   };
 
   const yaml_value* flow_section() const {
@@ -191,15 +194,16 @@ class flowchart_renderer {
     std::string nodes_out;
     draw_nodes(f, crossings, clusters, struck_titles, nodes_out);
 
+    std::string casings;
     std::string edges_out;
     std::string labels_out;
-    draw_edges(f, edges_out, labels_out);
+    draw_edges(f, casings, edges_out, labels_out);
 
     accessible acc;
     if (db_.acc_title) acc.title = *db_.acc_title;
     if (db_.acc_descr) acc.description = *db_.acc_descr;
     const std::string content = svg::label_svg(title, width / 2, f.pad + title.height / 2, " class=\"pele-title\" font-weight=\"var(--_tw)\"") +
-                                (clusters.empty() ? "" : "<g class=\"pele-clusters\">" + clusters + "</g>") +
+                                (clusters.empty() ? "" : "<g class=\"pele-clusters\">" + clusters + "</g>") + edge_geometry::casings_svg(casings) +
                                 (edges_out.empty() ? "" : "<g class=\"pele-edges\" fill=\"none\" stroke=\"var(--_l)\" stroke-linecap=\"round\">" + edges_out + "</g>") +
                                 (struck_titles.empty() ? "" : "<g class=\"pele-cluster-titles\">" + struck_titles + "</g>") +
                                 (labels_out.empty() ? "" : "<g class=\"pele-edge-labels\" font-size=\"" + js_number_string(f.edge_size) + "\">" + labels_out + "</g>") +
@@ -332,13 +336,15 @@ class flowchart_renderer {
       const std::string classes = theme::class_names(strip_default(node.css_classes));
       const std::string id = svg::esc_text(node.id);
       if (c.is_group) {
+        if (paints(view.style.shape)) f.fills.push_back({{x - c.w / 2, y - c.h / 2, x + c.w / 2, y + c.h / 2}, view.style.shape});
         const double title_x = crossings.title_x(c, view.text.width, f.group_pad);
         const double title_y = y - c.h / 2 + 8 + view.text.height / 2;
-        const std::string title_attrs = " class=\"pele-cluster-label\" fill=\"var(--_m)\"" + view.style.text;
         const bool struck = crossings.crossed(c, view.text.width, title_x);
+        // A title drawn over the edges sits on a halo in the theme's colors.
+        const std::string title_attrs = " class=\"pele-cluster-label\"" + (struck ? std::string(" fill=\"var(--_m)\"") : ink_fill(view.style, "var(--_m)")) + view.style.text;
         if (struck) struck_titles += struck_title(view.text, title_x, title_y, title_attrs, id, f.cnodes, i, &icons_);
         clusters += "<g class=\"pele-cluster" + classes + "\" data-id=\"" + id + "\"><rect x=\"" + svg::num(x - c.w / 2) + "\" y=\"" + svg::num(y - c.h / 2) + "\" width=\"" +
-                    svg::num(c.w) + "\" height=\"" + svg::num(c.h) + "\" fill=\"var(--_a)\" fill-opacity=\"0.5\" stroke=\"var(--_b)\"" +
+                    svg::num(c.w) + "\" height=\"" + svg::num(c.h) + "\" fill=\"var(--_a)\"" + (theme::sets_fill(view.style.shape) ? "" : " fill-opacity=\"0.5\"") + " stroke=\"var(--_b)\"" +
                     theme::rounded(view.style.shape) + "/>" + (struck ? "" : svg::label_svg(view.text, title_x, title_y, title_attrs, &icons_)) + "</g>";
         continue;
       }
@@ -346,6 +352,7 @@ class flowchart_renderer {
       const double w = view.w;
       const double h = view.h;
       std::string inner;
+      std::string ink;
       if (node.img && !node.img->empty()) {
         const double aw = asset_size(node.asset_width, 80);
         const double ah = asset_size(node.asset_height, 80);
@@ -373,9 +380,10 @@ class flowchart_renderer {
                 icons_.markup(to_utf8(*node.icon)) + "</svg>";
       } else {
         inner = shape_registry::instance().draw(view.shape, w, h, std::string(kShapeAttrs) + view.style.shape, std::string(kLineAttrs) + view.style.line);
+        if (shape_registry::instance().filled(view.shape)) ink = ink_fill(view.style);
       }
 
-      std::string text = svg::label_svg(view.text, 0, view.dy, " class=\"pele-label\"" + view.style.text, &icons_);
+      std::string text = svg::label_svg(view.text, 0, view.dy, " class=\"pele-label\"" + ink + view.style.text, &icons_);
       const bool internal = has_internal_link(classes);
       if (internal && node.label && !node.label->empty() && options_.links) {
         // The label is a note name, but it still ends up in an href, so it gets the same check as a URL.
@@ -394,7 +402,7 @@ class flowchart_renderer {
     }
   }
 
-  void draw_edges(frame& f, std::string& edges_out, std::string& labels_out) {
+  void draw_edges(frame& f, std::string& casings, std::string& edges_out, std::string& labels_out) {
     side_reach reach;
     for (std::size_t i = 0; i < f.cedges.size(); i++) {
       const compound_edge& ce = f.cedges[i];
@@ -440,12 +448,15 @@ class flowchart_renderer {
           path = edge_geometry::route_path(route, edge.curve ? std::string_view(*edge.curve) : std::string_view(), edge_geometry::marker_trim(start_type),
                                            edge_geometry::marker_trim(end_type), leaves, arrives);
         }
-        const std::string color = style && style->stroke && !style->stroke->empty() ? svg::esc(*style->stroke) : "var(--_l)";
+        const std::string line = style ? style->line : std::string();
+        const std::optional<std::string> over = edge_geometry::over_fills(path.d, {path.sx, path.sy, path.ex, path.ey}, f.fills, line, path.tokens);
+        const std::string color = over && !over->empty() ? *over : (style && style->stroke && !style->stroke->empty() ? svg::esc(*style->stroke) : "var(--_l)");
         std::string attrs;
         if (edge.thickness && *edge.thickness == "thick") attrs += " stroke-width=\"2.5\"";
         else if (edge.thickness && *edge.thickness == "dotted") attrs += " stroke-dasharray=\"3 4\"";
         const std::string classes = theme::class_names(strip_edge_classes(edge.classes));
-        edges_out += "<g class=\"pele-edge" + classes + "\" data-id=\"" + svg::esc_text(edge.id) + "\"" + (style ? style->line : std::string()) + "><path d=\"" + path.d + "\"" + attrs + "/>" +
+        if (over && over->empty()) casings += edge_geometry::edge_casing(path, start_type, end_type, line, edge.thickness && *edge.thickness == "thick");
+        edges_out += "<g class=\"pele-edge" + classes + "\" data-id=\"" + svg::esc_text(edge.id) + "\"" + (over && !over->empty() ? " stroke=\"" + *over + "\"" : std::string()) + line + "><path d=\"" + path.d + "\"" + attrs + "/>" +
                      edge_geometry::marker(start_type, path.sx, path.sy, path.sdx, path.sdy, color) + edge_geometry::marker(end_type, path.ex, path.ey, path.edx, path.edy, color) +
                      "</g>";
       }

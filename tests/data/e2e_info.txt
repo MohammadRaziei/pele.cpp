@@ -1,103 +1,103 @@
-0	-	info  \naccDescr:   spaced  \r\ntitle é ü ñ\naccDescr {\n  \n  T\n}	svg:531537b791648534e9051395547bc37465ed69af58337242cdb1494f365adf4a
-1	-	info\n	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-2	-	info\n\n  title\n\n	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+0	-	info  \naccDescr:   spaced  \r\ntitle é ü ñ\naccDescr {\n  \n  T\n}	svg:6fc977dc6dd9a65fbc7bca31e2a59b86fd22ab6b3d073c52b5c6187ee27be2ab
+1	-	info\n	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+2	-	info\n\n  title\n\n	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 3	-	info\n;showInfo;   \naccDescr: é ü ñ\naccDescr{My Chart}	err:syntax\nLexical error on line 2. Unrecognized text.\n;showInfo;   \n^
-4	-	  \ninfo\naccDescr {\n日本語のタイトル\n    spaced  \n}\r\ntitle \n  title\ntitle T	svg:9f4e976332bcebf86158282a5f178f2447f6a83c0807eaf92a2f4fa1916e5224
-5	-	info\n\nshowInfo\n\r\naccDescr {\n\na%%b\n}\r\n%% a comment\naccDescr {\n  T\n    spaced  \n}	svg:e2f147ca0f592b665852b3c34a5a3f981ee0a418c8a375751faa9e833253ba19
-6	-	info\n\n%%{init: {"theme": "dark"}}%%	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-7	-	info	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-8	-	---\ntitle: 日本語のタイトル\nconfig:\n  theme: dark\n---\ninfo\nshowInfo\n  title T %% trailing\r\naccTitle:T	svg:229924a832a11a30f59129e5ce4b3a3b13436eb2baad712650d0f86502037a48
+4	-	  \ninfo\naccDescr {\n日本語のタイトル\n    spaced  \n}\r\ntitle \n  title\ntitle T	svg:f54d73486486411d878cba8a744e736bc887f74a6f4e5f15f2ad8a24ef1bfeac
+5	-	info\n\nshowInfo\n\r\naccDescr {\n\na%%b\n}\r\n%% a comment\naccDescr {\n  T\n    spaced  \n}	svg:e49e67b3e558478b1a28ebb2ea197cbecc4968a1a17c309b88b6712d0ee6f745
+6	-	info\n\n%%{init: {"theme": "dark"}}%%	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+7	-	info	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+8	-	---\ntitle: 日本語のタイトル\nconfig:\n  theme: dark\n---\ninfo\nshowInfo\n  title T %% trailing\r\naccTitle:T	svg:b0d8d8289f919176b173f18c93977f7c5d835799ea6c389178b991638fce3a90
 9	-	info;title A much longer title for the info diagram that goes on\r\ntitle a%%b\r\naccDescr{x  y   z}\n%%{init: {"theme": "dark"}}%%	err:syntax\nLexical error on line 1. Unrecognized text.\ninfo;title A much longer title for the info diagram that goes on\n^
 10	-	info;accTitle:  spaced  \r\ntitle My Chart %% trailing\ntitle  %% trailing\n	err:syntax\nLexical error on line 1. Unrecognized text.\ninfo;accTitle:  spaced  \n^
 11	-	info\n  accDescr: A much longer title for the info diagram that goes on\nshowInfo	err:syntax\nParse error on line 3:\nshowInfo\n^\nExpecting a title or the end of input but found `showInfo`.
 12	-	info\nunknown\n  title <b>bold</b> & more %% trailing\n  accTitle: é ü ñ	err:syntax\nLexical error on line 2. Unrecognized text.\nunknown\n^
 13	-	info\nshowInfo\n  accTitle:\n%%{init: {"theme": "dark"}}%%\ntitle: A much longer title for the info diagram that goes on\n  accTitle:é ü ñ	err:syntax\nLexical error on line 5. Unrecognized text.\ntitle: A much longer title for the info diagram that goes on\n-----^
-14	-	info  	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-15	-	%%{init: {"info": {"useMaxWidth": false}}}%%\ninfo\ntitle <b>bold</b> & more %% trailing\naccDescr{T}\naccTitle:  spaced  \r\naccDescr{  spaced  }	svg:3bfaa6749e650188598977b2318b47a37099dc979db0ab94365b3da7e9ea108a
-16	-	info  	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-17	-	info\ntitle	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-18	-	info  \n  accDescr {\n  A much longer title for the info diagram that goes on\n  a%%b\n}	svg:1cc2725625534c109edc101a2e7769271f616fac3b4b72356ae959bc20a6ad76
+14	-	info  	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+15	-	%%{init: {"info": {"useMaxWidth": false}}}%%\ninfo\ntitle <b>bold</b> & more %% trailing\naccDescr{T}\naccTitle:  spaced  \r\naccDescr{  spaced  }	svg:6b84f139805772fe5f3fdecaae665396e766daaf12b11f82e1432ecbfc4619eb
+16	-	info  	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+17	-	info\ntitle	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+18	-	info  \n  accDescr {\n  A much longer title for the info diagram that goes on\n  a%%b\n}	svg:d24b0a85cbae9a3b0bd181116a50ef33cc2724b2a5230491dfacf7bdf0908341
 19	-	info  \n     ;   \n%% a comment	err:syntax\nLexical error on line 2. Unrecognized text.\n     ;   \n-----^
 20	-	info  \n   \ninfo	err:syntax\nParse error on line 3:\ninfo\n^\nExpecting a title or the end of input but found `info`.
 21	-	---\ntitle:   spaced  \n---\ninfo% showInfo\ntitle	err:syntax\nLexical error on line 4. Unrecognized text.\ninfo% showInfo\n^
 22	-	info;%%{init: {"theme": "dark"}}%%;%% a comment;accDescr {\n  My Chart\n  spaced  \n}	err:syntax\nLexical error on line 1. Unrecognized text.\ninfo;%%{init: {"theme": "dark"}}%%;%% a comment;accDescr {\n^
-23	-	info	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-24	-	info showInfo	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-25	-	info  \n  title\naccTitle: My Chart	svg:3c6a444a0c50d811c72bca959b9c78b0f9d237564b9177d6e63ac04edd1b9f21
+23	-	info	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+24	-	info showInfo	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+25	-	info  \n  title\naccTitle: My Chart	svg:4e67b7ca72fbc1b2ec4204e57152972f318f8e5dab1f9f9b20affa8517551b81
 26	-	info\n\nunknown;unknown\ntitle	err:syntax\nLexical error on line 3. Unrecognized text.\nunknown;unknown\n^
 27	-	info;unknown	err:syntax\nLexical error on line 1. Unrecognized text.\ninfo;unknown\n^
-28	-	info  \n  accDescr:   spaced  	svg:5bf0c3a83c4681e302f85f73c1b7c32c3d325746766836888b10ed63010051c7
-29	-	---\ntitle: x  y   z\n---\ninfo\n  title T %% trailing;title a%%b %% trailing\n	svg:ceaeee4379f10b1a19dedfc491cd568770e1460a6c86394a2bd4cd1ff446b17a
+28	-	info  \n  accDescr:   spaced  	svg:c105d2d243771eedbcb72b5461538c035438b05fe7bd5a83279d065e4570128d
+29	-	---\ntitle: x  y   z\n---\ninfo\n  title T %% trailing;title a%%b %% trailing\n	svg:1209aae5baa962e377f57e1712c1dbc76a71bbfcac477a373437b403d62aa821
 30	-	info\n   ;accDescr: x  y   z\n%% a comment\naccDescr{é ü ñ}	err:syntax\nLexical error on line 2. Unrecognized text.\n   ;accDescr: x  y   z\n---^
 31	-	---\ntitle: <b>bold</b> & more\nconfig:\n  theme: dark\n---\ninfo showInfo;showInfo	err:syntax\nLexical error on line 6. Unrecognized text.\ninfo showInfo;showInfo\n-----^
 32	-	info\n  accDescr {\n\t  spaced  \nHello\n};accTitle:   spaced  \n  title My Chart\naccTitle: x  y   z	err:syntax\nLexical error on line 5. Unrecognized text.\n};accTitle:   spaced  \n-^
 33	-	info\n%%{init: {"theme": "dark"}}%%\naccTitle:a%%b;   \n  title: 	err:syntax\nLexical error on line 4. Unrecognized text.\n  title: \n-------^
-34	-	---\ntitle: F\n---\ninfo\r\nshowInfo	svg:e3280dd05451ba4fd4f33ab51400da7bfe01676d36579b653dceb7947edc50b5
+34	-	---\ntitle: F\n---\ninfo\r\nshowInfo	svg:7d291e4e1c1e3626b18a17025c86495ba9ea05476a60e8da8649e77472f50c92
 35	-	---\ntitle: a%%b\n---\n  \ninfo\n\n  accDescr: \r\naccDescr: é ü ñ\n  %%{init: {"theme": "dark"}}%%;accDescr: é ü ñ	err:syntax\nLexical error on line 9. Unrecognized text.\n  %%{init: {"theme": "dark"}}%%;accDescr: é ü ñ\n-------------------------------^
 36	-	info\nshowInfo;title: 日本語のタイトル\ntitle x  y   z %% trailing\n  accDescr: Hello	err:syntax\nLexical error on line 2. Unrecognized text.\nshowInfo;title: 日本語のタイトル\n^
 37	-	info\n\r\nunknown	err:syntax\nLexical error on line 3. Unrecognized text.\nunknown\n^
 38	-	info\n\nshowInfo\n;showInfo\r\n   \ninfo	err:syntax\nLexical error on line 4. Unrecognized text.\n;showInfo\n^
-39	-	info\nshowInfo\ntitle a%%b %% trailing\n  accDescr: a%%b;title	svg:800c503d9608b1e23dc16edafbf814872584896daa479a0d10bd31ada13abdcb
+39	-	info\nshowInfo\ntitle a%%b %% trailing\n  accDescr: a%%b;title	svg:b7ee151213c374b49b7c7d3d84266c08dacfedada4880a6a537536b94a3c536b
 40	-	info showInfo;accDescr{My Chart}\n%% a comment\ninfo	err:syntax\nLexical error on line 1. Unrecognized text.\ninfo showInfo;accDescr{My Chart}\n-----^
-41	-	info\n	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+41	-	info\n	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 42	-	---\ntitle: é ü ñ\n---\n%% c\ninfo\n\nshowInfo\n\r\ntitle \naccTitle:a%%b;title 日本語のタイトル %% trailing\ntitle: é ü ñ	err:syntax\nLexical error on line 11. Unrecognized text.\ntitle: é ü ñ\n-----^
 43	-	---\ntitle:   spaced  \n---\ninfo\nshowInfo\ntitle: ;info;accTitle:Hello	err:syntax\nLexical error on line 6. Unrecognized text.\ntitle: ;info;accTitle:Hello\n-----^
-44	-	info\n  title	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-45	-	info showInfo	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+44	-	info\n  title	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+45	-	info showInfo	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 46	-	---\ntitle: Hello\nconfig:\n  theme: dark\n---\n%%{init: {"info": {"useMaxWidth": false}}}%%\ninfo;info	err:syntax\nLexical error on line 7. Unrecognized text.\ninfo;info\n^
-47	-	info showInfo\ntitle x  y   z %% trailing\n  accDescr{}\ntitle Hello\naccTitle: x  y   z	svg:05802727dedfea44543742aa2b0f22bbb5b189bc4948d7ad91418d42d93a9abf
-48	-	%%{init: {"info": {"useMaxWidth": false}}}%%\ninfo showInfo	svg:fb1d2401eec3b92e43f4333343854116422f439910d2d179fdfc92e5ab2fc7cf
-49	-	info\nshowInfo\n  title é ü ñ %% trailing\r\ntitle \r\naccDescr {\na%%b\n<b>bold</b> & more\n}	svg:b0335db440009408f75848161d7d2aff52dd0c944922e6ecf3e12167b0e78862
+47	-	info showInfo\ntitle x  y   z %% trailing\n  accDescr{}\ntitle Hello\naccTitle: x  y   z	svg:4afeea02b66293ce0a126c98462f97c0e802e6a24f3596ac5db0da130be873d7
+48	-	%%{init: {"info": {"useMaxWidth": false}}}%%\ninfo showInfo	svg:37cbec182a1c78f5ca79dc2ad9f88e19d62a3dbb74ed7c0b353d19e8f8885747
+49	-	info\nshowInfo\n  title é ü ñ %% trailing\r\ntitle \r\naccDescr {\na%%b\n<b>bold</b> & more\n}	svg:a88d005f5ffd8fcd860675675599e7453c8613b2d34f14b0031dec44f444c0d8
 50	-	---\ntitle: a%%b\nconfig:\n  theme: dark\n---\n\n\ninfo;   \nunknown	err:syntax\nLexical error on line 8. Unrecognized text.\ninfo;   \n^
-51	-	info showInfo	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+51	-	info showInfo	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 52	-	info showInfo\n%% a comment\nshowInfo	err:syntax\nParse error on line 3:\nshowInfo\n^\nExpecting a title or the end of input but found `showInfo`.
-53	-	\n\ninfo  \ntitle   spaced  ;accDescr: Hello;accDescr: a%%b	svg:c6eccb417842cc6c389648f29674ee3689131faf0b524e3c34ba722f1891ede4
-54	-	---\ntitle: Hello\n---\ninfo  \n  %% a comment\n%% a comment\naccTitle:A much longer title for the info diagram that goes on\n\n	svg:253e5f9e75217567f4c87679ec9ce0efb94270ab60c65c1caedee8bc62889ee6
+53	-	\n\ninfo  \ntitle   spaced  ;accDescr: Hello;accDescr: a%%b	svg:1cc115db11d448533df635366e5d3c28bbe98df48911e49c16ff0e549b4ca09d
+54	-	---\ntitle: Hello\n---\ninfo  \n  %% a comment\n%% a comment\naccTitle:A much longer title for the info diagram that goes on\n\n	svg:e5d57f42ead7242ff55d73d65f3174641161eb532430b8dfa741762ae3f28849
 55	-	  \ninfo\\\n	err:syntax\nLexical error on line 2. Unrecognized text.\ninfo\\\n^
-56	-	info  \naccDescr{日本語のタイトル}\n%%{init: {"theme": "dark"}}%%\r\naccDescr {\n  A much longer title for the info diagram that goes on\nx  y   z\n}	svg:06bc86f96765982ab522f65bc3e948bff8655e5b91c07a162d84aad300ff7a07
-57	-	info\n     \n\n	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-58	-	info\n\naccTitle:My Chart;%%{init: {"theme": "dark"}}%%\ntitle\n	svg:be942c704e5bb9049ae526347dc25ef24c45f63636498077eb2327d26ad3301c
+56	-	info  \naccDescr{日本語のタイトル}\n%%{init: {"theme": "dark"}}%%\r\naccDescr {\n  A much longer title for the info diagram that goes on\nx  y   z\n}	svg:3cf9a16b343f6be724fdda2401d835018052fb95f4e701a29ebb2d44f7616916
+57	-	info\n     \n\n	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+58	-	info\n\naccTitle:My Chart;%%{init: {"theme": "dark"}}%%\ntitle\n	svg:e6d9f0b6eb8c656a391c09586986402ddc894864d9d22a86ee0964d39f107476
 59	-	---\ntitle: My Chart\nconfig:\n  theme: dark\n---\ninfo\ninfo\r\n   \naccDescr {\n\tHello\n  T\n}\r\n   	err:syntax\nParse error on line 7:\ninfo\n^\nExpecting a title or the end of input but found `info`.
-60	-	---\ntitle: A much longer title for the info diagram that goes on\nconfig:\n  theme: dark\n---\ninfo\n\nshowInfo\n\r\n%%{init: {"theme": "dark"}}%%\naccDescr{My Chart}\n	svg:55af44201a0763016a309212dd9cfa32e5ebda2e638e3d939face91ffa3b75de
+60	-	---\ntitle: A much longer title for the info diagram that goes on\nconfig:\n  theme: dark\n---\ninfo\n\nshowInfo\n\r\n%%{init: {"theme": "dark"}}%%\naccDescr{My Chart}\n	svg:1dd54cfe111944b33e6b921ff18a37d99ed008f0f529339267e7e8336e75878d
 61	-	info  ;title My Chart %% trailing\naccDescr {\nHello\n  Hello\n}\ntitle:   spaced  	err:syntax\nLexical error on line 1. Unrecognized text.\ninfo  ;title My Chart %% trailing\n------^
-62	-	---\ntit;le: é ü ñ\nconfig:\n  theme: dark\n---\ninfo\n\r\ntitle ;title   spaced  \r\n   \r\ntitle 	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+62	-	---\ntit;le: é ü ñ\nconfig:\n  theme: dark\n---\ninfo\n\r\ntitle ;title   spaced  \r\n   \r\ntitle 	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 63	-	info  \ntitle: My Chart\ntitle: a%%b\r\naccDescr: A much longer title for the info diagram that goes on;accDescr {\n\té ü ñ\n  <b>bold</b> & more\n}	err:syntax\nLexical error on line 2. Unrecognized text.\ntitle: My Chart\n-----^
-64	-	---\ntitle: T\nconfig:\n  theme: dark\n---\ninfo\n\nshowInfo\n	svg:ceaeee4379f10b1a19dedfc491cd568770e1460a6c86394a2bd4cd1ff446b17a
-65	-	info\n\naccTitle:é ü ñ	svg:5668c13595b1179c40405036abef9fa10c793977267ae558c58ac754830d46af
-66	-	info\n  accTitle:日本語のタイトル;unknown	svg:3c9e2a569157150ea688c17e203a04f4af7596a10458c56a732c1951c5b2d4eb
+64	-	---\ntitle: T\nconfig:\n  theme: dark\n---\ninfo\n\nshowInfo\n	svg:1209aae5baa962e377f57e1712c1dbc76a71bbfcac477a373437b403d62aa821
+65	-	info\n\naccTitle:é ü ñ	svg:cd74e7b5c350b4eef255ee9c8213fa7f3e798e3afc8133616a879b7a8d40d935
+66	-	info\n  accTitle:日本語のタイトル;unknown	svg:767308da9533f61e2904d50062bd777ffa702756c73efe2b9dd6d0bfe80c28aa
 67	-	info  \n  info\n  unknown\n  accDescr {\n\té ü ñ\n\n}\r\naccTitle:日本語のタイトル	err:syntax\nLexical error on line 3. Unrecognized text.\n  unknown\n--^
 68	-	info  \nshowInfo\ninfo\n  accDescr: é ü ñ\naccDescr {\n\t<b>bold</b> & more\n  Hello\n}	err:syntax\nParse error on line 3:\ninfo\n^\nExpecting a title or the end of input but found `info`.
 69	-	info\ntitle 日本語のタイトル %% tra:iling\n  unknown;   	err:syntax\nLexical error on line 3. Unrecognized text.\n  unknown;   \n--^
 70	-	info\n\nshowInfo\n;title 日本語のタイトル %% trailing;%%{init: {"theme": "dark"}}%%\n  accDescr {\n\t  spaced  \n  T\n}	err:syntax\nLexical error on line 4. Unrecognized text.\n;title 日本語のタイトル %% trailing;%%{init: {"theme": "dark"}}%%\n^
-71	-	info\n\nshowInfo\n\ntitle\naccTitle:a%%b\n  accTitle: <b>bold</b> & more\n%% a comment\n\n	svg:89f5e6df84f9747468e2d56c2a8a7a2bdc67d99db647925063c87e5e0826ca25
-72	-	info\naccTitle: My Chart\ntitle My Chart\r\n   	svg:e1b7d0594a739381f40fed362fc9cda8f965ef17a193787c8dcd167f876f40e5
-73	-	---\ntitle: é ü ñ\nconfig:\n  theme: dark\n---\ninfo\ntitle\n  accDescr: é ü ñ	svg:ea65edb4d473dd6550d88aa900361d9be687301f9874c869bda850e5798481cb
-74	-	---\ntitle: x  y   z\n---\ninfo\n  %%{init: {"theme": "dark"}}%%\n     \n\n	svg:565afb10089cac036f3c01c59ed2ed774bbf3c04428bf96ecfb634a7ba720c48
+71	-	info\n\nshowInfo\n\ntitle\naccTitle:a%%b\n  accTitle: <b>bold</b> & more\n%% a comment\n\n	svg:7437b75e1e51ba739b714046e21ae2a4a8944a25a1c534f7a0fdd3aa329fa236
+72	-	info\naccTitle: My Chart\ntitle My Chart\r\n   	svg:9a7eed9e481b44b40bd48832c8cbd41864e593b5a018ce0a61e44cc708479c94
+73	-	---\ntitle: é ü ñ\nconfig:\n  theme: dark\n---\ninfo\ntitle\n  accDescr: é ü ñ	svg:355124d3951cceb235415da010d7e497d8f9264cdc6ae606d14f13851f5ca249
+74	-	---\ntitle: x  y   z\n---\ninfo\n  %%{init: {"theme": "dark"}}%%\n     \n\n	svg:b0ee97e98f0fe1d0eb898eaa2826f2fcc96645db888b7ab5d3b8b8d4227c4f1f
 75	-	info\nshowInfo\nshowInfo\ntitle A much longer title for the info diagram that goes on %% trailing	err:syntax\nParse error on line 3:\nshowInfo\n^\nExpecting a title or the end of input but found `showInfo`.
-76	-	info	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-77	-	---\ntitle: a%%b\nconfig:\n  theme: dark\n---\ninfo\r\naccTitle:A much longer title for the info diagram that goes on\naccTitle: 日本語のタイトル\r\naccTitle:	svg:f822014d4db51b2decac6a02f37927121a84d969e77edc500aa744eca7f50dac
-78	-	info  	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-79	-	---\ntitle: T\n---\ninfo\n\naccDescr {\nMy Chart\n  é ü ñ\n}	svg:89f10558f6dfb8fdadd582e0af8bb2be7096e838e2c354c186402e61feefccf2
-80	-	  \ninfo	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+76	-	info	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+77	-	---\ntitle: a%%b\nconfig:\n  theme: dark\n---\ninfo\r\naccTitle:A much longer title for the info diagram that goes on\naccTitle: 日本語のタイトル\r\naccTitle:	svg:d999d374ad1f90e1067318594de327581ebfa115359a996b945548be3e148d01
+78	-	info  	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+79	-	---\ntitle: T\n---\ninfo\n\naccDescr {\nMy Chart\n  é ü ñ\n}	svg:ea06501ec7ea4a4d15891dc231002e554bc27a014e898811286654a1c35555a8
+80	-	  \ninfo	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 81	-	info\r\n   \r\n%%{init: {"theme": "dark"}}%%;title\nshowInfo	err:syntax\nLexical error on line 3. Unrecognized text.\n%%{init: {"theme": "dark"}}%%;title\n-----------------------------^
-82	-	---\ntitle: <b>bold</b> & more\n---\ninfo  \r\ntitle a%%b\ntitle	svg:adcabc2c765683fd5734a4116d8925d3dc7e4f98236041fcf3c7fee451eebf96
-83	-	---\ntitle: Hell;o\n---\ninfo\n	svg:ec7e4fbb11301ae74ed7ba22d31eaf6ffa54094d5285ec4b4ed9569dbbdb955a
-84	-	info\nshowInfo	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+82	-	---\ntitle: <b>bold</b> & more\n---\ninfo  \r\ntitle a%%b\ntitle	svg:7e88d839886267c1cf7ce9dc0c1f2c7f2b571f734cfc94da1a48872798a1a576
+83	-	---\ntitle: Hell;o\n---\ninfo\n	svg:eb99fcc84d085c57bac79c73a1483ecae049c8450af1998d6134bae3ded069da
+84	-	info\nshowInfo	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 85	-	info  \r\n%%{init: {"theme": "dark"}}%%;%%{init: {"theme": "dark"}}%%\naccTitle: My Chart\naccTitle: é ü ñ	err:syntax\nLexical error on line 2. Unrecognized text.\n%%{init: {"theme": "dark"}}%%;%%{init: {"theme": "dark"}}%%\n-----------------------------^
-86	-	---\ntitle: 日本語のタイトル\n---\n%%{init: {"info": {"useMaxWidth": false}}}%%\ninfo showInfo\ntitle\t\n  %% a comment\n\n	svg:d4e9a668519123fd87899ece6d275754efb1a4b7853192e270c762546f0a2f84
-87	-	info showInfo\n  title\r\ntitle 	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+86	-	---\ntitle: 日本語のタイトル\n---\n%%{init: {"info": {"useMaxWidth": false}}}%%\ninfo showInfo\ntitle\t\n  %% a comment\n\n	svg:1ffbd92a1051f8246b466108c7098c78f0d6c7bbfb4db5d694886631e79c94b1
+87	-	info showInfo\n  title\r\ntitle 	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 88	-	---\ntitle: T\n---\ninfo  ;title\n  title \n  %% a comment	err:syntax\nLexical error on line 4. Unrecognized text.\ninfo  ;title\n------^
-89	-	info\n  title a%%b	svg:6ede84cda61379824ff39561c2cd20281de9f3a251e32539a07c523778f5fcd7
+89	-	info\n  title a%%b	svg:c606fee0f283586ee2a69de9c59280ce67b956425af9a2bc36f8d599dc95c472
 90	-	info;accTitle:é ü ñ	err:syntax\nLexical error on line 1. Unrecognized text.\ninfo;accTitle:é ü ñ\n^
-91	-	info showInfo\n  accDescr{}\n   \ntitle x  y   z	svg:5c4cbeafae3a76be8838e7c76c354ad9c351c1bcc09c26f256a643afd5b77e71
-92	-	---\ntitle: My Chart\nconfig:\n  theme: dark\n---\n\n\ninfo\n\nshowInfo\n\n  accDescr: \n  accDescr: \n  accTitle:日本語のタイトル\n     \n\n	svg:27d4ca84fa5111cd82d6c5bb0649c5ce3abf03e7c04274089f3b06ae7af12d03
-93	-	info\n\nshowInfo\n\n	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-94	-	---\ntitle: My Chart\n---\ninfo  \n  accDescr{<b>bold</b> & more}\ntitle   spaced   %% trailing	svg:a20303b1d3e4165a10a613016df9eaba8fba0f40ee98330db19b67e7886f6832
+91	-	info showInfo\n  accDescr{}\n   \ntitle x  y   z	svg:af4e98c63ed40169b523b40972b47a77e06700db59da9af7cfc7b2470e456f74
+92	-	---\ntitle: My Chart\nconfig:\n  theme: dark\n---\n\n\ninfo\n\nshowInfo\n\n  accDescr: \n  accDescr: \n  accTitle:日本語のタイトル\n     \n\n	svg:cadb3f7a902dddbaa88047326c887bdf37e8792109da0d9f693d71f17e3dc701
+93	-	info\n\nshowInfo\n\n	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+94	-	---\ntitle: My Chart\n---\ninfo  \n  accDescr{<b>bold</b> & more}\ntitle   spaced   %% trailing	svg:f2c4002cfef4b8d063cc31779aad074345660d3509253978b0aeed8ca6277668
 95	-	info\n\n%% a comment\n%%{init: {"theme": "dark"}}%%;%%{init: {"theme": "dark"}}%%\naccDescr {\nx  y   z\n  Hello\n}	err:syntax\nLexical error on line 4. Unrecognized text.\n%%{init: {"theme": "dark"}}%%;%%{init: {"theme": "dark"}}%%\n-----------------------------^
-96	-	info\nshowInfo	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-97	-	info  \r\naccTitle: a%%b\ntitle 日本語のタイトル %% trailing	svg:d40cf139e3098c141328b9ff4da1f8597871265bdc954e8921f12e1802413911
-98	-	info\naccDescr: T	svg:e8eefc4fbd8770b94eda73e6bc0118c1695b074835ff2561f53c2587a985b494
-99	-	---\ntitle: x  y   z\n---\ninfo\n%%{init: {"theme": "dark"}}%%	svg:565afb10089cac036f3c01c59ed2ed774bbf3c04428bf96ecfb634a7ba720c48
+96	-	info\nshowInfo	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+97	-	info  \r\naccTitle: a%%b\ntitle 日本語のタイトル %% trailing	svg:1eb56282c9aa9287db9072217b0ac267dae01cc4c214015fc26a5e0fa97ad405
+98	-	info\naccDescr: T	svg:47f1f58cc070c0c006899cbb332b49e6b647ca752111037a96cc52dad8a10295
+99	-	---\ntitle: x  y   z\n---\ninfo\n%%{init: {"theme": "dark"}}%%	svg:b0ee97e98f0fe1d0eb898eaa2826f2fcc96645db888b7ab5d3b8b8d4227c4f1f
 100	-	info;accDescr:   spaced  \nunknown;info\ntitle: <b>bold</b> & more	err:syntax\nLexical error on line 1. Unrecognized text.\ninfo;accDescr:   spaced  \n^
 101	-	---\ntitle:   spaced  \n---\ninfo;showInfo	err:syntax\nLexical error on line 4. Unrecognized text.\ninfo;showInfo\n^
 102	-	info\nshowInfo;title\r\naccDescr: a%%b\naccTitle:é ü ñ\n     	err:syntax\nLexical error on line 2. Unrecognized text.\nshowInfo;title\n^
@@ -105,196 +105,196 @@
 104	-	---\ntitle: My Cha;rt\n---\n%% c\ninfo\n   ;   \r\n%%{init: {"theme": "dark"}}%%;%%{init: {"theme": "dark"}}%%	err:syntax\nLexical error on line 6. Unrecognized text.\n   ;   \n---^
 105	-	---\ntitle:   spaced  \n---\n%%{init: {"info": {"useMaxWidth": false}}}%%\ninfo\ntitle;title My Chart\nunknown\ntitle	err:syntax\nLexical error on line 6. Unrecognized text.\ntitle;title My Chart\n-----^
 106	-	info\n\ninfo;accDescr{  spaced  }\n  info\naccTitle: é ü ñ	err:syntax\nLexical error on line 3. Unrecognized text.\ninfo;accDescr{  spaced  }\n^
-107	-	---\ntitle: <b>bold</b> & more\n---\ninfo\naccTitle:<b>b%old</b> & more	svg:0678da30805c64d0243586e08180f76614ac8af4b1feedd5d1301db33cc7ed44
-108	-	  \ninfo\n\nshowInfo\n\r\naccTitle:日本語のタイトル	svg:f990acd0670c30ea5b489274fee0343b4b00c73031b5338b065d7b823f252a6c
-109	-	info showInfo\n%% a comment\n  %%{init: {"theme": "dark"}}%%\ntitle	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-110	-	info\n\nshowInfo\n\naccTitle:  spaced  \n  accTitle:Hello\r\ntitle\t;info	svg:580a930ae2a62dafee55f30441e03340b1a7b07d7f5d849703ed8ec9b07dac82
+107	-	---\ntitle: <b>bold</b> & more\n---\ninfo\naccTitle:<b>b%old</b> & more	svg:417c8c1a9f168c3bbef09b1ba160dbf964214fa23b43406ffff3cf6b4b680892
+108	-	  \ninfo\n\nshowInfo\n\r\naccTitle:日本語のタイトル	svg:3cb28fb9159c84191be2005a125320ffefc5874b43eb833d601ce260e1157670
+109	-	info showInfo\n%% a comment\n  %%{init: {"theme": "dark"}}%%\ntitle	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+110	-	info\n\nshowInfo\n\naccTitle:  spaced  \n  accTitle:Hello\r\ntitle\t;info	svg:767a4af998e891fb849cf358c97bfc1fe1504044be563e6ae6d0659168690b06
 111	-	  \ninfo showInfo\r\naccDescr {\n\nA much longer title for the info diagram that goes on\n}\nunknown\r\ninfo	err:syntax\nLexical error on line 7. Unrecognized text.\nunknown\n^
-112	-	info  \naccDescr{é ü ñ}	svg:75cb465c2afcfbc05e7cd6f8ac91c447c0676afa578e38b84bfcd3bd100e7d81
-113	-	info\nshowInfo\r\naccDescr: 	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-114	-	info\nshowInfo\ntitle \n\n	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-115	-	info\n\nshowInfo\n\n  accTitle: A much longer title for the info diagram that goes on\n%% a comment\ntitle My Chart %% trailing\naccDescr {\n  x  y   z\n  \n}	svg:e0117ba175a153a789348fea9c569f5eeb2460ba98c8592eaf56e492f9ecb35a
+112	-	info  \naccDescr{é ü ñ}	svg:13174a58cc21c19ace642644a857c9cf8d566d8f544b3d070e545e6c8ce08894
+113	-	info\nshowInfo\r\naccDescr: 	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+114	-	info\nshowInfo\ntitle \n\n	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+115	-	info\n\nshowInfo\n\n  accTitle: A much longer title for the info diagram that goes on\n%% a comment\ntitle My Chart %% trailing\naccDescr {\n  x  y   z\n  \n}	svg:05160118e7545221c8de64d662f21bd5c1cdbb743248f85684ab584a3c71e409
 116	-	info  \nshowInfo\n  accTitle: 日本語のタイトル\r\nunknown\naccDescr: A much longer title for the info diagram that goes on	err:syntax\nLexical error on line 4. Unrecognized text.\nunknown\n^
 117	-	info\n%% a comment\n  unknown;accTitle:日本語のタイトル\n  showInfo	err:syntax\nLexical error on line 3. Unrecognized text.\n  unknown;accTitle:日本語のタイトル\n--^
-118	-	%% c\ninfo\n  accTitle:日本語のタイトル\n  title a%%b\r\ntitle	svg:f990acd0670c30ea5b489274fee0343b4b00c73031b5338b065d7b823f252a6c
+118	-	%% c\ninfo\n  accTitle:日本語のタイトル\n  title a%%b\r\ntitle	svg:3cb28fb9159c84191be2005a125320ffefc5874b43eb833d601ce260e1157670
 119	-	info\n\nshowInfo\n;   \ntitle a%%b\ntitle: 	err:syntax\nLexical error on line 4. Unrecognized text.\n;   \n^
 120	-	info\ninfo	err:syntax\nParse error on line 2:\ninfo\n^\nExpecting a title or the end of input but found `info`.
-121	-	info showInfo	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-122	-	\n\ninfo\n\naccTitle: é ü ñ;showInfo;showInfo\r\n   	svg:d688ca0e6b1623373f634eb79c5e51ff4503038f0eb5b9dacae6aa2d36146425
-123	-	---\ntitle: My Chart\n---\ninfo\nshowInfo	svg:058e47f370c30617768bd7e0859ade4a47ff35201436a70a7661c69af455ef54
+121	-	info showInfo	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+122	-	\n\ninfo\n\naccTitle: é ü ñ;showInfo;showInfo\r\n   	svg:448f6a355aefe4aa62ac3f07af2838d3f22884e92f297cb419609600e6879d2e
+123	-	---\ntitle: My Chart\n---\ninfo\nshowInfo	svg:89482f1f6107c455844442df079b447740adb9db1a5a567855231cbba95ef1e6
 124	-	%% c\ninfo sho[wInfo\r\nshowInfo	err:syntax\nLexical error on line 2. Unrecognized text.\ninfo sho[wInfo\n-----^
-125	-	info\ntitle T\n\n	svg:ceaeee4379f10b1a19dedfc491cd568770e1460a6c86394a2bd4cd1ff446b17a
+125	-	info\ntitle T\n\n	svg:1209aae5baa962e377f57e1712c1dbc76a71bbfcac477a373437b403d62aa821
 126	-	  \ninfo showInfo;showInfo\n  accDescr: T	err:syntax\nLexical error on line 2. Unrecognized text.\ninfo showInfo;showInfo\n-----^
-127	-	info showInfo\ntitle   spaced   %% trailing\r\ntitle\t	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-128	-	---\ntitle: A much longer title for the info diagram that goes on\n---\ninfo\n  %% a comment\ntitle\ntitle é ü ñ	svg:0694c5a7b73fb53c92228410e8673438c4036f5cba8ed4b6d81abf49c5b62017
-129	-	info  \r\naccTitle:Hello\ntitle	svg:2f9bc4684141a9d91600cc2b7fb259c93ab45fa72413c37fd22bbe043bb8e903
+127	-	info showInfo\ntitle   spaced   %% trailing\r\ntitle\t	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+128	-	---\ntitle: A much longer title for the info diagram that goes on\n---\ninfo\n  %% a comment\ntitle\ntitle é ü ñ	svg:0a888868fbd83a37e296280d76db0da580ec3603bda4c8560fd2f24c4396eedb
+129	-	info  \r\naccTitle:Hello\ntitle	svg:36250522dde39020ab95777e7dab982c66e3cbdd2020c342ab0bd6aefafabcf3
 130	-	info\naccDescr {\na%%b\nA much longer title for the info diagram that goes on\n};title\t\ntitle 	err:syntax\nLexical error on line 5. Unrecognized text.\n};title\t\n-^
 131	-	info\nshowInfo\ntitle\r\nshowInfo\n%%{init: {"theme": "dark"}}%%	err:syntax\nParse error on line 4:\nshowInfo\n^\nExpecting a title or the end of input but found `showInfo`.
-132	-	---\ntitle: My Chart\n---\ninfo\n  title 日本語のタイトル %% trailing;   \n  title	svg:058e47f370c30617768bd7e0859ade4a47ff35201436a70a7661c69af455ef54
-133	-	info  \ntitle \ntitle a%%b	svg:6ede84cda61379824ff39561c2cd20281de9f3a251e32539a07c523778f5fcd7
-134	-	---\ntitle: My Chart\n---\n%% c\ninfo\n\nshowInfo\n%%{init: {"theme": "dark"}}%%\n%% a comment	svg:058e47f370c30617768bd7e0859ade4a47ff35201436a70a7661c69af455ef54
-135	-	  \ninfo\n\nshowInfo\n	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-136	-	info\naccTitle: A much longer title for the info diagram that goes on	svg:e782f7d5e30d6bbfba322a4fa6a381800a8dbc96c4f314e3db0b89c5bf8b3db0
-137	-	---\ntitle: é ü ñ\nconfig:\n  theme: dark\n---\ninfo\n\nshowInfo\n\naccTitle:a%%b;accTitle: My Chart	svg:4a44e5a2fa0ea2355ff0651a5e07347a23f5e6de60bafd70c8136e63c88ccc32
+132	-	---\ntitle: My Chart\n---\ninfo\n  title 日本語のタイトル %% trailing;   \n  title	svg:89482f1f6107c455844442df079b447740adb9db1a5a567855231cbba95ef1e6
+133	-	info  \ntitle \ntitle a%%b	svg:c606fee0f283586ee2a69de9c59280ce67b956425af9a2bc36f8d599dc95c472
+134	-	---\ntitle: My Chart\n---\n%% c\ninfo\n\nshowInfo\n%%{init: {"theme": "dark"}}%%\n%% a comment	svg:89482f1f6107c455844442df079b447740adb9db1a5a567855231cbba95ef1e6
+135	-	  \ninfo\n\nshowInfo\n	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+136	-	info\naccTitle: A much longer title for the info diagram that goes on	svg:6ee21853f1869582514c826c27655d436340eeea620a47d5f51055bbf673f7d8
+137	-	---\ntitle: é ü ñ\nconfig:\n  theme: dark\n---\ninfo\n\nshowInfo\n\naccTitle:a%%b;accTitle: My Chart	svg:f78f7b4b54bc1883243a888cc01cd8e536fe75408f6c53d732a808515b730f96
 138	-	info  \r\naccTitle:é ü ñ\nshowInfo\n  ac[cDescr: a%%b	err:syntax\nLexical error on line 4. Unrecognized text.\n  ac[cDescr: a%%b\n--^
 139	-	info;accTitle: <b>bold{</b> & more	err:syntax\nLexical error on line 1. Unrecognized text.\ninfo;accTitle: <b>bold{</b> & more\n^
 140	-	info\nshowInfo\ntitle T\n  %%{init: {"theme": "dark"}}%%\ntitle: T	err:syntax\nLexical error on line 5. Unrecognized text.\ntitle: T\n-----^
 141	-	---\ntitle: My Chart\n---\ninfo\nshowInfo\r\nshowInfo;accDescr {\n  é ü ñ\nx  y   z\n}\n%% a comment	err:syntax\nLexical error on line 6. Unrecognized text.\nshowInfo;accDescr {\n^
 142	-	info showInfo\nshowInfo\ntitle a%%b\ntitle a%%b %% trailing\n	err:syntax\nParse error on line 2:\nshowInfo\n^\nExpecting a title or the end of input but found `showInfo`.
-143	-	---\ntitle: Hello\n---\ninfo\nshowInfo\n  title "\n  accDescr {\n\t<b>bold</b> & more\nMy Chart\n}\n%% a comment\naccDescr: Hello\n	svg:5ce537e38eca6339c9a89dcc5710eba6d318e1703a855677609e02839fd0f3e8
-144	-	  \ninfo\n%%{init: {"theme": "dark"}}%%\nshowInfo	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-145	-	%%{init: {"info": {"useMaxWidth": false}}}%%\ninfo\n  %%{init: {"theme": "dark"}}%%\n  title 日本語のタイトル %% trailing\naccTitle: a%%b	svg:b9864f6931f7f0180e22a070f8018fd9a3c04034a77fceb01077f7987b72711a
+143	-	---\ntitle: Hello\n---\ninfo\nshowInfo\n  title "\n  accDescr {\n\t<b>bold</b> & more\nMy Chart\n}\n%% a comment\naccDescr: Hello\n	svg:27268d431fd7b4bcf8cd7ea35e4c2032c90491ffdce6f717ac77dc0d7df4777f
+144	-	  \ninfo\n%%{init: {"theme": "dark"}}%%\nshowInfo	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+145	-	%%{init: {"info": {"useMaxWidth": false}}}%%\ninfo\n  %%{init: {"theme": "dark"}}%%\n  title 日本語のタイトル %% trailing\naccTitle: a%%b	svg:02c5d807e06018b8049659ddc77d16af5269ea1533f84b3c355d439263bff5a3
 146	-	info\n\nshowInfo\n\n  showInfo	err:syntax\nParse error on line 5:\n  showInfo\n--^\nExpecting a title or the end of input but found `showInfo`.
-147	-	info showInfo	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-148	-	info\r\ntitle T\r\n%% a comment\n  accDescr: My Chart	svg:3d0f95fad7913a506ff2cd17a13e0448d6a9fcadd44e9e3837f627d4bb3c838a
-149	-	---\ntitle:   spaced  \nconfig:\n  theme: dark\n---\ninfo\r\naccTitle:a%%b\r\naccTitle: Hello	svg:f1478c271e6694e9840b5d48e71c2f2c39d8955c17241d34b7c2f4d34f846bea
+147	-	info showInfo	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+148	-	info\r\ntitle T\r\n%% a comment\n  accDescr: My Chart	svg:68acdbdfde45cd238523e0322a8f560da6a9336f644ef7abdc997cd9745e356c
+149	-	---\ntitle:   spaced  \nconfig:\n  theme: dark\n---\ninfo\r\naccTitle:a%%b\r\naccTitle: Hello	svg:a2d9fe2de01cca1e292d71eb81e4ddf7f317cbcff33b75ce1b5140b56e793c62
 150	-	\n\ninfo showInfo\nunknown\naccDescr: x  y   z;title: 日本語のタイトル\r\n%% a comment	err:syntax\nLexical error on line 4. Unrecognized text.\nunknown\n^
-151	-	info	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+151	-	info	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 152	-	info\r\naccDescr{日本語のタイトル};title   spaced  \naccTitle: Hello\n  accDescr:   spaced  	err:syntax\nLexical error on line 2. Unrecognized text.\naccDescr{日本語のタイトル};title   spaced  \n------------------^
-153	-	info\ntitle \naccDescr{My Chart}\n%%{init: {"theme": "dark"}}%%	svg:7fdefd429aeb0f7c3e9411226cd764077d5c969fd7094ea98fac27a41a6e5cf2
+153	-	info\ntitle \naccDescr{My Chart}\n%%{init: {"theme": "dark"}}%%	svg:cb8fe3f7d089b1f1b47ad796e540d5514262c1ad0c4a147c68f9b5a0b675e72c
 154	-	---\ntitle: A much longer title for the info diagram that goes on\nconfig:\n  theme: dark\n---\ninfo\ninfo\ninfo	err:syntax\nParse error on line 7:\ninfo\n^\nExpecting a title or the end of input but found `info`.
-155	-	info  	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+155	-	info  	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 156	-	info  \r\ntitle\n  unknown	err:syntax\nLexical error on line 3. Unrecognized text.\n  unknown\n--^
 157	-	%%{init: {"info": {"useMaxWidth": false}}}%%\ninfo showInfo\nunknown;showInfo	err:syntax\nLexical error on line 3. Unrecognized text.\nunknown;showInfo\n^
 158	-	info\nshowInfo\n  unknown\nunknown\n%% a comment	err:syntax\nLexical error on line 3. Unrecognized text.\n  unknown\n--^
-159	-	info\n  accTitle: <b>bold</b> & more;title	svg:15c9e4fccde71ea371c0f50ffab134a1dae64571b1c69cd31e946cdc2318c7e9
-160	-	info showInfo\ntitle \n  title a%%b %% trailing\n%% a comment	svg:6ede84cda61379824ff39561c2cd20281de9f3a251e32539a07c523778f5fcd7
+159	-	info\n  accTitle: <b>bold</b> & more;title	svg:ba20746a0c95fffac662ce55b9d73f2f319f03c4a25431771bb002f1b9ecee98
+160	-	info showInfo\ntitle \n  title a%%b %% trailing\n%% a comment	svg:c606fee0f283586ee2a69de9c59280ce67b956425af9a2bc36f8d599dc95c472
 161	-	info\n   \nac}cDescr {\n    spaced  \n  Hello\n}	err:syntax\nLexical error on line 3. Unrecognized text.\nac}cDescr {\n^
-162	-	info\naccTitle:\naccDescr: T\r\n%% a comment;showInfo	svg:e8eefc4fbd8770b94eda73e6bc0118c1695b074835ff2561f53c2587a985b494
+162	-	info\naccTitle:\naccDescr: T\r\n%% a comment;showInfo	svg:47f1f58cc070c0c006899cbb332b49e6b647ca752111037a96cc52dad8a10295
 163	-	%% \\c\ninfo\nshowInfo;%%{init: {"theme": "dark"}}%%\r\nunknown	err:syntax\nLexical error on line 3. Unrecognized text.\nshowInfo;%%{init: {"theme": "dark"}}%%\n^
 164	-	---\ntitle: é ü ñ\n---\ninfo\nunknown\r\ntitle   spaced   %% trailing\ntitle	err:syntax\nLexical error on line 5. Unrecognized text.\nunknown\n^
-165	-	---\ntitle: T\nconfig:\n  theme: dark\n---\ninfo\n  %% a comment\n  accTitle: Hello	svg:1e6a26bd8aada0ed910a20d7d1c3fc869308c33d4d3eeb8da6b155fda7663d18
+165	-	---\ntitle: T\nconfig:\n  theme: dark\n---\ninfo\n  %% a comment\n  accTitle: Hello	svg:b105963b9c0f27145b6846d1e1f20c1f412b0243da5993a1690fcc26024320a7
 166	-	info\n\nshowInfo\n\n%%{init: {"theme": "dark"}}%%\naccDescr {\n  \n  \n}\n  showInfo	err:syntax\nParse error on line 10:\n  showInfo\n--^\nExpecting a title or the end of input but found `showInfo`.
-167	-	---\ntitle: a%%b\nconfig:\n  theme: dark\n---\ninfo  \ntitle 日本語のタイトル %% trailing\n   \n%%{init: {"theme": "dark"}}%%	svg:2adc664b9cfcd7d5f45640e32fc0c6028137fc6a85ff0a74e2101a741a026dd0
-168	-	info showInfo	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+167	-	---\ntitle: a%%b\nconfig:\n  theme: dark\n---\ninfo  \ntitle 日本語のタイトル %% trailing\n   \n%%{init: {"theme": "dark"}}%%	svg:4cb56914895741b72c5fd8f48d44a715eb8ca8671bca551f18afc9e69f15bd87
+168	-	info showInfo	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 169	-	info\n;title   spaced  \n  accDescr{T}\r\n   \r\n   	err:syntax\nLexical error on line 2. Unrecognized text.\n;title   spaced  \n^
 170	-	info;%% a comment\r\ntitle 日本語のタイトル\r\naccTitle:   spaced  	err:syntax\nLexical error on line 1. Unrecognized text.\ninfo;%% a comment\n^
 171	-	info\n\nshowInfo\n\n  unknown	err:syntax\nLexical error on line 5. Unrecognized text.\n  unknown\n--^
 172	-	info showInfo;accDescr {\nMy Chart\n  \n};accTitle: x  y   z	err:syntax\nLexical error on line 1. Unrecognized text.\ninfo showInfo;accDescr {\n-----^
 173	-	---\ntitle: <b>bold</b> & more\n---\ninfo;title My Chart %% trailing\n\n	err:syntax\nLexical error on line 4. Unrecognized text.\ninfo;title My Chart %% trailing\n^
-174	-	---\ntitle: My Chart\nconfig:\n  theme: dark\n---\ninfo	svg:058e47f370c30617768bd7e0859ade4a47ff35201436a70a7661c69af455ef54
-175	-	info  	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+174	-	---\ntitle: My Chart\nconfig:\n  theme: dark\n---\ninfo	svg:89482f1f6107c455844442df079b447740adb9db1a5a567855231cbba95ef1e6
+175	-	info  	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 176	-	---\ntitle:   spaced  \n---\ninfo showInfo\n%% a comment\r\ninfo\r\naccDescr {\n\t\nMy Chart\n}\n\n	err:syntax\nParse error on line 6:\ninfo\n^\nExpecting a title or the end of input but found `info`.
-177	-	info\n\naccDescr {\né ü ñ\n<b>bold</b> & more\n}\ntitle \ntitle A much longer title for the info diagram that goes on %% trailing\r\naccDescr {\n  Hello\n  spaced  \n}	svg:3c10b9de5a46d84d1aca31a2cc887723580074071f7890df7dced8dc1dc51c26
+177	-	info\n\naccDescr {\né ü ñ\n<b>bold</b> & more\n}\ntitle \ntitle A much longer title for the info diagram that goes on %% trailing\r\naccDescr {\n  Hello\n  spaced  \n}	svg:dcaa473fae92dfb87ad1da2004b9a87144588f1aa5fb0a7aad0cb50256f56e56
 178	-	info\n\nshowInfo\n\n  title \r\ntitle 日本語のタイトル\r\nshowInfo	err:syntax\nParse error on line 7:\nshowInfo\n^\nExpecting a title or the end of input but found `showInfo`.
-179	-	info\naccTitle:A much longer title for the info diagram that goes on\r\naccDescr: 	svg:e782f7d5e30d6bbfba322a4fa6a381800a8dbc96c4f314e3db0b89c5bf8b3db0
-180	-	info\r\ntitle a%%b;title a%%b %% trailing\n  accTitle: My Chart	svg:e6f01fa7c3f95c8c0a196644cf189c09f39658226066e70ed1a232849120c965
-181	-	info  \n  accTitle:Hello\naccTitle: x  y   z\n	svg:86a88bc7b8c41a5ef51d225ef469896056bdcdf83c2300c4a490f6871df1ebea
-182	-	info\nshowInfo\n  title \n  %% a comment;accDescr: x  y   z;accTitle: A much longer title for the info diagram that goes on	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+179	-	info\naccTitle:A much longer title for the info diagram that goes on\r\naccDescr: 	svg:6ee21853f1869582514c826c27655d436340eeea620a47d5f51055bbf673f7d8
+180	-	info\r\ntitle a%%b;title a%%b %% trailing\n  accTitle: My Chart	svg:94c102349bf2cc6700ed362fd16452e94e2603e0ff2efc22ac51f5187f674b42
+181	-	info  \n  accTitle:Hello\naccTitle: x  y   z\n	svg:3cf12a5c577d6942ebc4da9ea48d0cb6a8519c518a520eea97c75759982fdf9d
+182	-	info\nshowInfo\n  title \n  %% a comment;accDescr: x  y   z;accTitle: A much longer title for the info diagram that goes on	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 183	-	info;title\r\nunknown	err:syntax\nLexical error on line 1. Unrecognized text.\ninfo;title\n^
 184	-	info  \naccDescr {\n  A much longer title for the info diagram that goes on\n  x  y   z\n};   \r\n   \naccDescr{a%%b}	err:syntax\nLexical error on line 5. Unrecognized text.\n};   \n-^
-185	-	info  \naccTitle:日本語のタイトル	svg:f990acd0670c30ea5b489274fee0343b4b00c73031b5338b065d7b823f252a6c
+185	-	info  \naccTitle:日本語のタイトル	svg:3cb28fb9159c84191be2005a125320ffefc5874b43eb833d601ce260e1157670
 186	-	info showInfo\ntitle\r\ntitle Hello\naccDescr {\n\tA much longer title for the info diagram that goes on\n  A much longer title for the info diagram that goes on\n}\nshowInfo	err:syntax\nParse error on line 8:\nshowInfo\n^\nExpecting a title or the end of input but found `showInfo`.
-187	-	info	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-188	-	info\n\nshowInfo\n\r\ntitle a%%b\n  %%{init: {"theme": "dark"}}%%\r\ntitle\n%%{init: {"theme": "dark"}}%%	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+187	-	info	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+188	-	info\n\nshowInfo\n\r\ntitle a%%b\n  %%{init: {"theme": "dark"}}%%\r\ntitle\n%%{init: {"theme": "dark"}}%%	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 189	-	info\n\r\naccDescr {\nx  y   z\n  x  y   z\n};%% a comment	err:syntax\nLexical error on line 6. Unrecognized text.\n};%% a comment\n-^
-190	-	info	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-191	-	info	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-192	-	info\n\r\nshowInfo\n  %% a comment	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+190	-	info	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+191	-	info	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+192	-	info\n\r\nshowInfo\n  %% a comment	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 193	-	---\ntitle: F\nconfig:\n  theme: dark\n---\ninfo showInfo;accTitle: x  y   z\naccDescr: <b>bold</b> & more	err:syntax\nLexical error on line 6. Unrecognized text.\ninfo showInfo;accTitle: x  y   z\n-----^
-194	-	---\ntitle: <b>bold</b> & more\n---\ninfo showInfo\ntitle é ü ñ %% trailing\r\naccTitle:My Chart	svg:8607b74518a91f08fd559e97575cae293b9d97569306ec6182122fafcc0c01fc
-195	-	info	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-196	-	info\n\nshowInfo\n	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+194	-	---\ntitle: <b>bold</b> & more\n---\ninfo showInfo\ntitle é ü ñ %% trailing\r\naccTitle:My Chart	svg:ead9a58c14a16fd8e761bb640247f60d0d74edb20073bdf8ac7ec4f0d263b52f
+195	-	info	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+196	-	info\n\nshowInfo\n	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 197	-	info showInfo\n  title\n%%{init: {"theme": "dark"}}%%;accTitle: \ntitle\n	err:syntax\nLexical error on line 3. Unrecognized text.\n%%{init: {"theme": "dark"}}%%;accTitle: \n-----------------------------^
 198	-	---\ntitle:   spaced  \n---\ninfo\nshowInfo;info	err:syntax\nLexical error on line 5. Unrecognized text.\nshowInfo;info\n^
 199	-	---\ntitle: é ü ñ\n---\ninfo\r\naccDescr {\n\t<b>bold</b> & more\n日本語のタイトル\n};showInfo	err:syntax\nLexical error on line 8. Unrecognized text.\n};showInfo\n-^
 200	-	---\ntitle: a%%b\n---\ninfo  \naccTitle: Hello\ninfo;title\t\nunknown	err:syntax\nLexical error on line 6. Unrecognized text.\ninfo;title\t\n^
-201	-	info\n\nshowInfo\n\n%% a comment	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+201	-	info\n\nshowInfo\n\n%% a comment	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 202	-	info\n\nshowInfo\n\r\naccDescr {\n\tT\nT\n}\n  unknown	err:syntax\nLexical error on line 9. Unrecognized text.\n  unknown\n--^
 203	-	info\n\nshowInfo\n\r\ntitle: Hello\naccTitle:  spaced  ;accTitle: a%%b\ntitle\t	err:syntax\nLexical error on line 5. Unrecognized text.\ntitle: Hello\n-----^
-204	-	info\n\nshowInfo\n	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-205	-	info\n  title\t\r\naccDescr: A much longer title for the info diagram that goes on	svg:399b84fc6b5dcd9b06c2d6ccc8ffc3f79143796b55cbcb9cc48d5f3c63ba9773
-206	-	---\ntitle: <b>bold</b> & more\n---\ninfo\n	svg:adcabc2c765683fd5734a4116d8925d3dc7e4f98236041fcf3c7fee451eebf96
-207	-	%% c\ninfo\n\nshowInfo\n\naccTitle: 日本語のタイトル\n  title\t\r\ntitle T %% trailing	svg:07b4eb0ddc5f4bf2823abfb5bfc452bb46e5ad3df5ae92723c1fb11bbb4f846f
+204	-	info\n\nshowInfo\n	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+205	-	info\n  title\t\r\naccDescr: A much longer title for the info diagram that goes on	svg:8ee617824c4b88ff168d6ff9821bbc5c9e1a713be484ba61c2b712f8e0964055
+206	-	---\ntitle: <b>bold</b> & more\n---\ninfo\n	svg:7e88d839886267c1cf7ce9dc0c1f2c7f2b571f734cfc94da1a48872798a1a576
+207	-	%% c\ninfo\n\nshowInfo\n\naccTitle: 日本語のタイトル\n  title\t\r\ntitle T %% trailing	svg:211c4b36de56dfea47948e9472c6c88826bd0c417b62e87eac6d6692c140aba2
 208	-	---\ntitle: x  y   z\nconfig:\n  theme: dark\n---\ninfo showInfo\n%% a comment\naccDescr{My Chart};title	err:syntax\nLexical error on line 8. Unrecognized text.\naccDescr{My Chart};title\n------------------^
 209	-	info\n;showInfo\r\naccDescr{<b>bold</b> & more}\naccDescr{T}	err:syntax\nLexical error on line 2. Unrecognized text.\n;showInfo\n^
-210	-	---\ntitle: <b>bold</b> & more\n---\ninfo\naccDescr: é ü ñ\naccTitle:é ü ñ	svg:672e3eb73a6e472068dc39552ee986f16932bbd57af3c95d8be1d79e57e97a61
+210	-	---\ntitle: <b>bold</b> & more\n---\ninfo\naccDescr: é ü ñ\naccTitle:é ü ñ	svg:79ea00f28d971bdc22829e5e0049109e97c4535cb05e69df1c69e394e014235b
 211	-	%% c\ninfo showInfo\n  title: x  y   z	err:syntax\nLexical error on line 3. Unrecognized text.\n  title: x  y   z\n-------^
 212	-	info\nshowInfo\naccDescr{é ü ñ}\ninfo\n%% a comment;accDescr {\n  A much longer title for the info diagram that goes on\nA much longer title for the info diagram that goes on\n}	err:syntax\nLexical error on line 6. Unrecognized text.\n  A much longer title for the info diagram that goes on\n--^
-213	-	info\n\n	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+213	-	info\n\n	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 214	-	info showInfo\n  title\n  showInfo;accDescr: Hello	err:syntax\nLexical error on line 3. Unrecognized text.\n  showInfo;accDescr: Hello\n--^
 215	-	info\n\nshowInfo\n;title: <b>bold</b> & more	err:syntax\nLexical error on line 4. Unrecognized text.\n;title: <b>bold</b> & more\n^
-216	-	---\ntitle: x  y   z\n---\ninfo\n\n%%{init: {"theme": "dark"}}%%\nshowInfo\ntitle\t	svg:565afb10089cac036f3c01c59ed2ed774bbf3c04428bf96ecfb634a7ba720c48
-217	-	info\n	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+216	-	---\ntitle: x  y   z\n---\ninfo\n\n%%{init: {"theme": "dark"}}%%\nshowInfo\ntitle\t	svg:b0ee97e98f0fe1d0eb898eaa2826f2fcc96645db888b7ab5d3b8b8d4227c4f1f
+217	-	info\n	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 218	-	---\ntitle: a%%b\nconfig:\n  theme: dark\n---\ninfo\ntitle\r\ntitle: <b>bold</b> & more;accDescr: x  y   z\n\n	err:syntax\nLexical error on line 8. Unrecognized text.\ntitle: <b>bold</b> & more;accDescr: x  y   z\n-----^
 219	-	info\n\nshowInfo\n\naccDescr: 日本語のタイトル\ntitle 日本語のタイトル %% trailing;%% a comment\ntitle: a%%b	err:syntax\nLexical error on line 7. Unrecognized text.\ntitle: a%%b\n-----^
 220	-	info\n\nshowInfo\n;info\n  %%{init: {"theme": "dark"}}%%\naccTitle: ;accDescr: 日本語のタイトル\n	err:syntax\nLexical error on line 4. Unrecognized text.\n;info\n^
-221	-	info\n  accTitle:é ü ñ	svg:5668c13595b1179c40405036abef9fa10c793977267ae558c58ac754830d46af
+221	-	info\n  accTitle:é ü ñ	svg:cd74e7b5c350b4eef255ee9c8213fa7f3e798e3afc8133616a879b7a8d40d935
 222	-	info\n\nshowInfo\n;%%{init: {"theme": "dark"}}%%;title \ntitle	err:syntax\nLexical error on line 4. Unrecognized text.\n;%%{init: {"theme": "dark"}}%%;title \n^
-223	-	info\n\nshowInfo\n\r\naccDescr: <b>bold</b> & more	svg:0fa154c35139f86c6cf925651328f0dc88f644a9d8f9822e94f65245c5cf9d5c
-224	-	\n\ninfo	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+223	-	info\n\nshowInfo\n\r\naccDescr: <b>bold</b> & more	svg:c365787d6f77f09aa443f9bb473de364d0e25270387cdacf16a8059808e7e3fd
+224	-	\n\ninfo	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 225	-	  \ninfo\n\nshowInfo\n\ntitle a%%b %% trailing\n  title <b>bold</b> & more %% trailing\ntitle: 日本語のタイトル\n\n	err:syntax\nLexical error on line 8. Unrecognized text.\ntitle: 日本語のタイトル\n-----^
 226	-	---\ntitle: <b>bold</b> & more\n---\ninfo showInfo;title a%%b %% trailing\n  accDescr{Hello}\nunknown	err:syntax\nLexical error on line 4. Unrecognized text.\ninfo showInfo;title a%%b %% trailing\n-----^
 227	-	---\ntitle: T\n---\ninfo\n%%{init: {"theme": "dark"}}%%\n  unknown	err:syntax\nLexical error on line 6. Unrecognized text.\n  unknown\n--^
 228	-	info  \naccDescr{Hello}\n  accDesc\\r: é ü ñ\naccDescr {\n<b>bold</b> & more\n  Hello\n}\n   	err:syntax\nLexical error on line 3. Unrecognized text.\n  accDesc\\r: é ü ñ\n--^
-229	-	info\nshowInfo	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-230	-	info\naccTitle:T\n  %%{init: {"theme": "dark"}}%%\r\ntitle\n%%{init: {"theme": "dark"}}%%	svg:843d9addbf1750d0026fb26749b75eaf1dcd7dfddfcd8d0f7250279646595bb2
+229	-	info\nshowInfo	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+230	-	info\naccTitle:T\n  %%{init: {"theme": "dark"}}%%\r\ntitle\n%%{init: {"theme": "dark"}}%%	svg:64db991c2913e55385ca516738167236282238f24ca9c11c542b3be466508526
 231	-	info\n\ninfo\n  accDescr{My Chart}\n  showInfo\n}  %%{init: {"theme": "dark"}}%%	err:syntax\nLexical error on line 6. Unrecognized text.\n}  %%{init: {"theme": "dark"}}%%\n^
-232	-	%%{init: {"info": {"useMaxWidth": false}}}%%\ninfo\nshowInfo	svg:fb1d2401eec3b92e43f4333343854116422f439910d2d179fdfc92e5ab2fc7cf
+232	-	%%{init: {"info": {"useMaxWidth": false}}}%%\ninfo\nshowInfo	svg:37cbec182a1c78f5ca79dc2ad9f88e19d62a3dbb74ed7c0b353d19e8f8885747
 233	-	info\n\nshowInfo\n\r\nunknown\n     \n%% a comment	err:syntax\nLexical error on line 5. Unrecognized text.\nunknown\n^
 234	-	in%fo\n\n	err:unsupported-diagram\nNo diagram type detected for the given text.
-235	-	info\n\n  accDescr{Hello}	svg:8c5d9258af595222e2d0eae266ac1cc64560e5abc924e68d9d9e52b4ee92ebf3
+235	-	info\n\n  accDescr{Hello}	svg:291c7ff6f5ca32fe87ac1a53c1d3203e1b226b45db1a4ec462d3336f6243fbe7
 236	-	---\ntitle: 日本語のタイトル\n---\ninfo\r\naccDescr {\n  日本語のタイトル\n  Hello\n};title x  y   z\naccDescr: A much longer title for the info diagram that goes on\n   \n	err:syntax\nLexical error on line 8. Unrecognized text.\n};title x  y   z\n-^
 237	-	info\n\nshowInfo\n\naccDescr{a%%b}\ntitle My Chart\n{  %% a comment	err:syntax\nLexical error on line 7. Unrecognized text.\n{  %% a comment\n^
 238	-	info;title\t	err:syntax\nLexical error on line 1. Unrecognized text.\ninfo;title\t\n^
-239	-	info\n%% a comment\ntitle Hello %% trailing\naccTitle:Hello	svg:bec681af09e5b02620efceaf6506015c77e3ec1febae2bb15fa49f172cdc898f
-240	-	info\r\ntitle Hello %% trailing\naccTitle:日本語のタイトル	svg:4c78461a6b41344a184af236df77f8a29f80492f223c8c4aa136cfa963e06306
+239	-	info\n%% a comment\ntitle Hello %% trailing\naccTitle:Hello	svg:8968d1cb68cae6e8494f7ae404839c46fcfba3591f33252c45354da563b0d71a
+240	-	info\r\ntitle Hello %% trailing\naccTitle:日本語のタイトル	svg:f6807d677e0c57d40c4b065e6ecbf58e3d17e6695581ff2fa697c11c3977de8d
 241	-	info;%%{init: {"theme": "dark"}}%%\r\ninfo	err:syntax\nLexical error on line 1. Unrecognized text.\ninfo;%%{init: {"theme": "dark"}}%%\n^
-242	-	---\ntitle: <b>bold</b> & more\n---\ninfo showInfo	svg:adcabc2c765683fd5734a4116d8925d3dc7e4f98236041fcf3c7fee451eebf96
-243	-	info\nshowInfo\r\naccTitle:x  y   z	svg:86a88bc7b8c41a5ef51d225ef469896056bdcdf83c2300c4a490f6871df1ebea
-244	-	info  \n     \naccDescr {\n日本語のタイトル\nMy Chart\n}\naccDescr: x  y   z	svg:c6cb2bff21f46bd453ff28236d3b24a40da98326147b8dce02547174be469dfd
+242	-	---\ntitle: <b>bold</b> & more\n---\ninfo showInfo	svg:7e88d839886267c1cf7ce9dc0c1f2c7f2b571f734cfc94da1a48872798a1a576
+243	-	info\nshowInfo\r\naccTitle:x  y   z	svg:3cf12a5c577d6942ebc4da9ea48d0cb6a8519c518a520eea97c75759982fdf9d
+244	-	info  \n     \naccDescr {\n日本語のタイトル\nMy Chart\n}\naccDescr: x  y   z	svg:8b8f939bfcdcc59299c89f3c7750ffb38d1d22a36b57430a541286032fe69817
 245	-	---\ntitle: 日本語のタイトル\nconfig:\n  theme: dark\n---\ninfo showInfo\nshowInfo\ntitle a%%b %% trailing\ninfo\n	err:syntax\nParse error on line 7:\nshowInfo\n^\nExpecting a title or the end of input but found `showInfo`.
-246	-	info\n\nshowInfo\n\ntitle T %% trailing\naccTitle: é ü ñ;%%{init: {"theme": "dark"}}%%	svg:49b83786f842cf5442762798717b764f9e98bf6f002aa50650d23ff9e9cd5624
-247	-	info\nshowInfo\ntitle\r\n%% a comment\r\ntitle My Chart %% trailing	svg:058e47f370c30617768bd7e0859ade4a47ff35201436a70a7661c69af455ef54
-248	-	info\n\nshowInfo\n	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+246	-	info\n\nshowInfo\n\ntitle T %% trailing\naccTitle: é ü ñ;%%{init: {"theme": "dark"}}%%	svg:17ccf17bd63c140c657ba9f87616e630940276ffc4032355130c07c7ed161cf6
+247	-	info\nshowInfo\ntitle\r\n%% a comment\r\ntitle My Chart %% trailing	svg:89482f1f6107c455844442df079b447740adb9db1a5a567855231cbba95ef1e6
+248	-	info\n\nshowInfo\n	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 249	-	info;accDescr{T}\naccTitle:a%%b	err:syntax\nLexical error on line 1. Unrecognized text.\ninfo;accDescr{T}\n^
-250	-	info showInfo	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-251	-	info\n	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-252	-	---\ntitle:;   spaced  \n---\ninfo\naccTitle:a%%b\naccTitle: T\n  title x  y   z	svg:5f7eb99e6fdb1eb2f037c6c7fa4884d53c73729b88c780f2f756f053208230a6
-253	-	info  \r\ntitle\naccDescr: Hello\n  title   spaced   %% trailing	svg:bb29650a03211249f09c4252c3c7730c5f8315aa7a409245d9435e96c3f75f9a
+250	-	info showInfo	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+251	-	info\n	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+252	-	---\ntitle:;   spaced  \n---\ninfo\naccTitle:a%%b\naccTitle: T\n  title x  y   z	svg:44d8c708d51f6f3c4a6afc579f786f6d14db6364c627e1901fd18339f5b09dc7
+253	-	info  \r\ntitle\naccDescr: Hello\n  title   spaced   %% trailing	svg:ddf59acb30cf2a741186e084e85ebc389841d4bd881e94b66a2ae0a1e393902e
 254	-	info;accDescr{A much longer title for the info diagram that goes on}\ntitle T\r\ntitle T %% trailing;accDescr {\n\ta%%b\n  日本語のタイトル\n}\n\n	err:syntax\nLexical error on line 1. Unrecognized text.\ninfo;accDescr{A much longer title for the info diagram that goes on}\n^
-255	-	info\n	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-256	-	info\nshowInfo	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+255	-	info\n	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+256	-	info\nshowInfo	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 257	-	%% c\ninfo\n\nshowInfo\n\n  title: T	err:syntax\nLexical error on line 6. Unrecognized text.\n  title: T\n-------^
 258	-	info showInfo\r\ntitle\t\r\naccTitle:Hello;accDescr {\n    spaced  \n  T\n}\n	err:syntax\nLexical error on line 4. Unrecognized text.\n    spaced  \n----^
 259	-	---\ntitle: My Chart\n---\ninfo\n  %% a comment\nunknown\r\naccTitle:<b>bold</b> & more;title 日本語のタイトル\n	err:syntax\nLexical error on line 6. Unrecognized text.\nunknown\n^
-260	-	%% c\ninfo\r\naccTitle:é ü ñ\n%% a comment\n  accTitle:x  y   z	svg:86a88bc7b8c41a5ef51d225ef469896056bdcdf83c2300c4a490f6871df1ebea
-261	-	info\nshowInfo	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-262	-	info\naccDescr: <b>bold</b> & more\n   \n%%{init: {"theme": "dark"}}%%\r\naccDescr: A much longer title for the info diagram that goes on	svg:399b84fc6b5dcd9b06c2d6ccc8ffc3f79143796b55cbcb9cc48d5f3c63ba9773
+260	-	%% c\ninfo\r\naccTitle:é ü ñ\n%% a comment\n  accTitle:x  y   z	svg:3cf12a5c577d6942ebc4da9ea48d0cb6a8519c518a520eea97c75759982fdf9d
+261	-	info\nshowInfo	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+262	-	info\naccDescr: <b>bold</b> & more\n   \n%%{init: {"theme": "dark"}}%%\r\naccDescr: A much longer title for the info diagram that goes on	svg:8ee617824c4b88ff168d6ff9821bbc5c9e1a713be484ba61c2b712f8e0964055
 263	-	info;showInfo	err:syntax\nLexical error on line 1. Unrecognized text.\ninfo;showInfo\n^
-264	-	---\ntitle: a%%b\nconfig:\n  theme: dark\n---\n%%{init: {"info": {"useMaxWidth": false}}}%%\ninfo\n\n  title 日本語のタイトル %% trailing\naccTitle:x  y   z\ntitle T %% trailing\n  title 	svg:c7b8a84afd61cbbd2fbba44985254d4a8514c003098ae25a5f25a326a420bcce
-265	-	---\ntitle:   spaced  \nconfig:\n  theme: dark\n---\ninfo\n\nshowInfo\n\n  accTitle:My Chart\r\naccDescr{}	svg:d07b84446374af371fe7c89917bd89997760fbfe70007418cc6a54bb9e15ab80
-266	-	info\r\naccDescr {\n\nT\n}\naccDescr: T\naccDescr {\nMy Chart\n  x  y   z\n}	svg:ee0602999cb4fe1f39926e3b8681165d491e6b2c9398903194578bf84c4688c2
-267	-	info\n\n	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-268	-	info	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
-269	-	info\n  %%{init: {"theme": "dark"}}%%\ntitle \ntitle   spaced:  \r\ntitle My Chart	svg:058e47f370c30617768bd7e0859ade4a47ff35201436a70a7661c69af455ef54
+264	-	---\ntitle: a%%b\nconfig:\n  theme: dark\n---\n%%{init: {"info": {"useMaxWidth": false}}}%%\ninfo\n\n  title 日本語のタイトル %% trailing\naccTitle:x  y   z\ntitle T %% trailing\n  title 	svg:fb3909f6186cf559fcf3511674c577849ab3728f34bf20618c1d77419864b205
+265	-	---\ntitle:   spaced  \nconfig:\n  theme: dark\n---\ninfo\n\nshowInfo\n\n  accTitle:My Chart\r\naccDescr{}	svg:17e51ff20aecb079394fad57056216a7825cf33826407d41d872bf9bbdca8ece
+266	-	info\r\naccDescr {\n\nT\n}\naccDescr: T\naccDescr {\nMy Chart\n  x  y   z\n}	svg:b79a499d1f165ef9272da95359d06b5a28f09cdc1127c7db5d2756e32d84bbdd
+267	-	info\n\n	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+268	-	info	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
+269	-	info\n  %%{init: {"theme": "dark"}}%%\ntitle \ntitle   spaced:  \r\ntitle My Chart	svg:89482f1f6107c455844442df079b447740adb9db1a5a567855231cbba95ef1e6
 270	-	\n\ninfo\nshowInfo\ntitle\\\nshowInfo	err:syntax\nLexical error on line 5. Unrecognized text.\ntitle\\\n-----^
 271	-	info\n\n  title\n   \n  title: My Chart	err:syntax\nLexical error on line 5. Unrecognized text.\n  title: My Chart\n-------^
 272	-	info;showInfo\naccDescr{}\n%% a comment\n  title\t	err:syntax\nLexical error on line 1. Unrecognized text.\ninfo;showInfo\n^
 273	-	info\n  title: é ü ñ\n  title T;title <b>bold</b> & mo}re	err:syntax\nLexical error on line 2. Unrecognized text.\n  title: é ü ñ\n-------^
-274	-	\n\ninfo showInfo\naccTitle: T	svg:843d9addbf1750d0026fb26749b75eaf1dcd7dfddfcd8d0f7250279646595bb2
+274	-	\n\ninfo showInfo\naccTitle: T	svg:64db991c2913e55385ca516738167236282238f24ca9c11c542b3be466508526
 275	-	info  ;showInfo\n  %%{init: {"theme": "dark"}}%%	err:syntax\nLexical error on line 1. Unrecognized text.\ninfo  ;showInfo\n------^
 276	-	info  ;accDescr {\n  My Chart\n  日本語のタイトル\n}\nshowInfo	err:syntax\nLexical error on line 1. Unrecognized text.\ninfo  ;accDescr {\n------^
-277	-	info\n\nshowInfo\n\naccTitle: A much longer title for the info diagram that goes on	svg:e782f7d5e30d6bbfba322a4fa6a381800a8dbc96c4f314e3db0b89c5bf8b3db0
-278	-	info\ntitle	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+277	-	info\n\nshowInfo\n\naccTitle: A much longer title for the info diagram that goes on	svg:6ee21853f1869582514c826c27655d436340eeea620a47d5f51055bbf673f7d8
+278	-	info\ntitle	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 279	-	info  \n   \naccDescr: Hello\ntitle: T\n   	err:syntax\nLexical error on line 4. Unrecognized text.\ntitle: T\n-----^
 280	-	  \ninfo\nshowInfo\r\naccTitl"e: T\r\n   	err:syntax\nLexical error on line 4. Unrecognized text.\naccTitl"e: T\n^
 281	-	info\n  title \nunknown\ninfo\n	err:syntax\nLexical error on line 3. Unrecognized text.\nunknown\n^
 282	-	\n\ninfo\nunknown\naccTitle: a%%b\n  unknown\naccTitle: x  y   z	err:syntax\nLexical error on line 4. Unrecognized text.\nunknown\n^
 283	-	---\ntitle: x  y   z\nconfig:\n  theme: dark\n---\n\n\ninfo showInfo;accDescr: <b>bold</b> & more;title x  y   z	err:syntax\nLexical error on line 8. Unrecognized text.\ninfo showInfo;accDescr: <b>bold</b> & more;title x  y   z\n-----^
-284	-	info\n  title a%%b %% trailing\n	svg:6ede84cda61379824ff39561c2cd20281de9f3a251e32539a07c523778f5fcd7
-285	-	info\n  %% a comment\n   \r\ntitle   spaced  \n     	svg:e87533a8e4fd76fd983d76f87466240f7bace48fcafe050e3f84994dc43f65ed
+284	-	info\n  title a%%b %% trailing\n	svg:c606fee0f283586ee2a69de9c59280ce67b956425af9a2bc36f8d599dc95c472
+285	-	info\n  %% a comment\n   \r\ntitle   spaced  \n     	svg:e74c9a7f92bca12302572dc91ad00c68c48ef4fd3d5913aede0293e3bce38e60
 286	-	---\ntitle: x  y   z\nconfig:\n  theme: dark\n---\ninfo;title \r\ntitle A much longer title for the info diagram that goes on\ntitle Hello;title\t	err:syntax\nLexical error on line 6. Unrecognized text.\ninfo;title \n^
-287	-	---\ntitle: é ü ñ\n---\ninfo\n\naccTitle: <b>bold</b> & more\naccDescr{x  y   z}	svg:449bc13479de7465c91db7012cace10d61ef9f5eed7138518ec9dbf1f1270388
-288	-	info\ntitle é ü ñ %% trailing\n  accDescr{日本語のタイトル}\n%%{init: {"theme": "dark"}}%%\n  %% a comment\n	svg:bbca82e37951b2b20349f03149c603da72610e629471eb7c9f31227bd99d7b2b
-289	-	info\n\nshowInfo\n	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+287	-	---\ntitle: é ü ñ\n---\ninfo\n\naccTitle: <b>bold</b> & more\naccDescr{x  y   z}	svg:26e4b586e5989cc526a5e29b724949678b6c822a5da1f1ae6de5f9ce8a646d4e
+288	-	info\ntitle é ü ñ %% trailing\n  accDescr{日本語のタイトル}\n%%{init: {"theme": "dark"}}%%\n  %% a comment\n	svg:1e444138f5694d1350069c08ea248c965bc9caf02f518d0c7f20de64c68a2469
+289	-	info\n\nshowInfo\n	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 290	-	---\ntitle: A much longer title for the info diagram that goes on\n---\ninfo\n\nshowInfo\n;accTitle:<b>bold</b> & more\n  title  %% trailing\n  title é ü ñ\n	err:syntax\nLexical error on line 7. Unrecognized text.\n;accTitle:<b>bold</b> & more\n^
 291	-	info\n\nshowInfo\n;   \r\nunknown\r\n%%{init: {"theme": "dark"}}%%	err:syntax\nLexical error on line 4. Unrecognized text.\n;   \n^
-292	-	---\ntitle: a%%b\nconfig:\n  theme: dark\n---\ninfo\r\nshowInfo	svg:f822014d4db51b2decac6a02f37927121a84d969e77edc500aa744eca7f50dac
+292	-	---\ntitle: a%%b\nconfig:\n  theme: dark\n---\ninfo\r\nshowInfo	svg:d999d374ad1f90e1067318594de327581ebfa115359a996b945548be3e148d01
 293	-	---"\ntitle:   spaced  \nconfig:\n  theme: dark\n---\n%%{init: {"info": {"useMaxWidth": false}}}%%\ninfo\n	err:unsupported-diagram\nNo diagram type detected for the given text.
-294	-	info  \n	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+294	-	info  \n	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 295	-	---\ntitle: é ü ñ\n---\n%% c\ninfo  ;%%{init: {"theme": "dark"}}%%\r\naccTitle: 日本語のタイトル\n  title: \n%%{init: {"theme": "dark"}}%%	err:syntax\nLexical error on line 5. Unrecognized text.\ninfo  ;%%{init: {"theme": "dark"}}%%\n------^
-296	-	\n\ninfo\ntitle A much longer title for the info diagram that goes on %% trailing;accTitle:	svg:23ffe55c7ae2fcf9d1fdc915a35a0c73b1ab8ae2841827030f1a70afd2e37afd
-297	-	info\n\nshowInfo\n	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+296	-	\n\ninfo\ntitle A much longer title for the info diagram that goes on %% trailing;accTitle:	svg:7e4d24bcd03ac8742e2804228e1e1d34b174750e6d6665032464f2f63a76b88b
+297	-	info\n\nshowInfo\n	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922
 298	-	info\nshowInfo;unknown\r\nshowInfo\n  title   spaced   %% trailing	err:syntax\nLexical error on line 2. Unrecognized text.\nshowInfo;unknown\n^
-299	-	info showInfo\n	svg:c25d393d216c34a5ef41791fbda1d1720fa49124bf600c0ae4e1beae55fd840f
+299	-	info showInfo\n	svg:b2a3ea83f69607a76518222773fd33480b1d5d3c2d16ce3be86dcaf550c18922

@@ -505,6 +505,11 @@ double shape_registry::span(std::string_view name, double w, double h, bool side
   return s != nullptr ? std::max(0.0, s->span(w, h, sideways)) : 0;
 }
 
+bool shape_registry::filled(std::string_view name) const {
+  if (find(name) == nullptr) return true;
+  return !(name == "text" || name == "brace" || name == "brace-r" || name == "braces");
+}
+
 bool shape_registry::has_label(std::string_view name) const {
   const shape* s = find(name);
   return s == nullptr || s->has_label();

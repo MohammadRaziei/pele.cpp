@@ -250,6 +250,12 @@ std::string series_color(int index) {
   return "var(--pele-series-" + std::to_string(k + 1) + "," + kSeries[k] + ")";
 }
 
+bool sets_fill(const std::string& shape) {
+  for (std::size_t i = 0; i + 6 <= shape.size(); i++)
+    if ((shape[i] == '"' || shape[i] == ';') && shape.compare(i + 1, 5, "fill:") == 0) return true;
+  return false;
+}
+
 std::string rounded(const std::string& attrs) {
   const std::size_t at = attrs.find(" style=\"");
   if (at == std::string::npos) return attrs + kRounded;

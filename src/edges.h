@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -14,6 +15,8 @@ namespace pele {
 // The path of an edge, and where it starts and ends and which way it heads there.
 struct edge_path {
   std::string d;
+  // The path as command codes, argument counts and arguments, as it is written, so that it need not be parsed again. Empty if not kept.
+  std::vector<double> tokens;
   double sx = 0;
   double sy = 0;
   double sdx = 0;
@@ -65,7 +68,7 @@ class edge_geometry {
   static double marker_trim(std::string_view type);
 
   // Draws a marker whose tip is at (x, y), pointing along (dx, dy).
-  static std::string marker(std::string_view type, double x, double y, double dx, double dy, std::string_view color);
+  static std::string marker(std::string_view type, double x, double y, double dx, double dy, std::string_view color, std::string_view stroke = "none");
 
   // An edge label on a patch of the background, so the line does not run through the text.
   static std::string label_svg(std::string_view id, const label& l, double x, double y, const std::string& attrs, const icon_set* icons = nullptr);
@@ -73,6 +76,22 @@ class edge_geometry {
   // A self-loop beside a node centred at (cx, cy) of drawn size w by h: out of the side that lies
   // across the flow and back in. `k` counts the loops already on the node, so each one reaches a
   // little further. Also places the edge's label beyond the loop.
+  // A fill an edge may lie on: its bounds as left, top, right, bottom, and its style.
+  struct fill {
+    std::array<double, 4> box{};
+    std::string shape;
+  };
+
+  // The ink of the innermost fill that holds the whole edge and its marker tips, "" for a casing
+  // where it crosses a border, or nothing off the fills.
+  static std::optional<std::string> over_fills(const std::string& d, const std::vector<double>& tips, const std::vector<fill>& fills, const std::string& line = "",
+                                               const std::vector<double>& tokens = {});
+
+  // A wider page-colored stroke under an edge, as faint as it; markers drop their class so marker styles skip it.
+  static std::string edge_casing(const edge_path& path, std::string_view start_type, std::string_view end_type, const std::string& line = "", bool thick = false);
+
+  static std::string casings_svg(const std::string& casings);
+
   static edge_path loop_path(double cx, double cy, double w, double h, int k, bool sideways, double base, double trim, loop_label& e);
 };
 

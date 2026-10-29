@@ -17,6 +17,7 @@
 #include "edges.h"
 #include "entities.h"
 #include "fit_width.h"
+#include "ink.h"
 #include "js_math.h"
 #include "regex.h"
 #include "label.h"
@@ -625,6 +626,7 @@ rendered class_renderer::draw(bool turned, bool tight) {
     const double member_size = js_round(v.font_size * 0.875);
     const double line_height = js_round(member_size * 1.5);
     std::string body = "<rect x=\"" + n(left) + "\" y=\"" + n(top) + "\" width=\"" + n(w) + "\" height=\"" + n(h) + "\" fill=\"var(--_s)\" stroke=\"var(--_b)\"" + theme::rounded(style.shape) + "/>";
+    const std::string ink = ink_fill(style);
     const double first = top + v.title_h;
     const double second = first + v.attributes_h;
     if (h > v.title_h) {
@@ -633,12 +635,12 @@ rendered class_renderer::draw(bool turned, bool tight) {
     }
     double y = top + kTitlePad;
     for (const ustring& annotation : v.annotations) {
-      body += "<text class=\"pele-annotation\" x=\"0\" y=\"" + n(y + tiny_height / 2 + tiny * 0.35) + "\" text-anchor=\"middle\" font-size=\"" + n(tiny) + "\" fill=\"var(--_m)\">" +
+      body += "<text class=\"pele-annotation\" x=\"0\" y=\"" + n(y + tiny_height / 2 + tiny * 0.35) + "\" text-anchor=\"middle\" font-size=\"" + n(tiny) + "\"" + (ink.empty() ? " fill=\"var(--_m)\"" : ink) + ">" +
               esc(annotation) + "</text>";
       y += tiny_height;
     }
     const std::string title_size = v.font_size == size ? "" : " font-size=\"" + n(v.font_size) + "\"";
-    body += svg::label_svg(v.text, 0, (y + first - kTitlePad) / 2, " class=\"pele-label\"" + title_size + " font-weight=\"var(--_hw)\"" + style.text, &icons_);
+    body += svg::label_svg(v.text, 0, (y + first - kTitlePad) / 2, " class=\"pele-label\"" + title_size + " font-weight=\"var(--_hw)\"" + ink + style.text, &icons_);
     auto lines = [&](const std::vector<line_view>& list, const std::string& kind, double from) {
       std::string out;
       double baseline = from + kSectionPad + line_height / 2 + member_size * 0.35;
@@ -657,7 +659,7 @@ rendered class_renderer::draw(bool turned, bool tight) {
       return out;
     };
     if (!v.attributes.empty() || !v.methods.empty())
-      body += "<g class=\"pele-members\" font-size=\"" + n(member_size) + "\"" + (class_mono ? " font-family=\"var(--_fm)\"" : "") + ">" + lines(v.attributes, "attribute", first) + lines(v.methods, "method", second) + "</g>";
+      body += "<g class=\"pele-members\" font-size=\"" + n(member_size) + "\"" + ink + (class_mono ? " font-family=\"var(--_fm)\"" : "") + ">" + lines(v.attributes, "attribute", first) + lines(v.methods, "method", second) + "</g>";
     if (cls.tooltip && !cls.tooltip->empty()) body = "<title>" + esc_text(*cls.tooltip) + "</title>" + body;
     if (cls.link && !cls.link->empty()) {
       const bool target = cls.link_target && !cls.link_target->empty() && is_target(*cls.link_target);

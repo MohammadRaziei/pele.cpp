@@ -1,4 +1,8 @@
-# UPDATE (latest session): moved to Pele 1.11.0 (version 0.3.0)
+# UPDATE (latest session): moved to Pele 1.12.0 (version 0.4.0)
+
+(Changes are in CHANGELOG.md. Sections below describe earlier steps.)
+
+# UPDATE: moved to Pele 1.11.0 (version 0.3.0)
 
 (The section below describes the 1.10.0 step; 1.11.0 changes are in CHANGELOG.md. Pele 1.12.0 exists.)
 

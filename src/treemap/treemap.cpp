@@ -8,6 +8,7 @@
 #include "common/tokens.h"
 #include "entities.h"
 #include "fit_width.h"
+#include "ink.h"
 #include "js_math.h"
 #include "js_parse.h"
 #include "label.h"
@@ -422,6 +423,7 @@ rendered render_treemap(const treemap_model& model, const config& settings, cons
     // Inline font sizes override SVG attributes, so truncate instead of shrinking.
     const std::optional<double>& fixed = style.font_size;
     const int text_flags = (style.bold ? text_style::bold : 0) | (style.italic ? text_style::italic : 0);
+    const std::string ink = ink_fill(style);
 
     if (node.section) {
       std::string text;
@@ -439,10 +441,10 @@ rendered render_treemap(const treemap_model& model, const config& settings, cons
         if (fitted_label) drawn = fitted_label->text;
         if (fitted_label)
           text += "<text x=\"" + svg::num(x + kSide + 2) + "\" y=\"" + svg::num(baseline + label_size * 0.35) + "\" font-weight=\"var(--_hw)\"" +
-                  (short_header ? " font-size=\"" + js_number_string(label_size) + "\"" : std::string()) + style.text + ">" + svg::esc(fitted_label->text) + "</text>";
+                  (short_header ? " font-size=\"" + js_number_string(label_size) + "\"" : std::string()) + ink + style.text + ">" + svg::esc(fitted_label->text) + "</text>";
         if (with_value && value_size * kLine <= kHeader)
           text += "<text class=\"pele-value\" x=\"" + svg::num(x + b.w - kSide - 2) + "\" y=\"" + svg::num(baseline + value_size * 0.35) + "\" font-size=\"" + js_number_string(tiny) +
-                  "\" text-anchor=\"end\" fill=\"var(--_m)\"" + style.text + ">" + svg::esc(to_utf16(value)) + "</text>";
+                  "\" text-anchor=\"end\"" + (ink.empty() ? " fill=\"var(--_m)\"" : ink) + style.text + ">" + svg::esc(to_utf16(value)) + "</text>";
       }
       // A section is a tint of its color, unless a class gives it a fill of its own. Headerless
       // sections draw no box, so their children blend into the grid.
@@ -467,11 +469,11 @@ rendered render_treemap(const treemap_model& model, const config& settings, cons
       if (!value.empty() && lines <= b.h - 4 && measurer.width(to_utf16(value), value_size, text_flags) <= room) {
         const double first = cy - lines / 2 + (label->size * kLine) / 2;
         const double second = cy + lines / 2 - (value_size * kLine) / 2;
-        text = "<text x=\"" + cx + "\" y=\"" + svg::num(first + label->size * 0.35) + "\" font-size=\"" + svg::num(label->size) + "\"" + style.text + ">" + svg::esc(label->text) + "</text>" +
-               "<text class=\"pele-value\" x=\"" + cx + "\" y=\"" + svg::num(second + value_size * 0.35) + "\" font-size=\"" + svg::num(value_size) + "\"" + style.text + ">" +
+        text = "<text x=\"" + cx + "\" y=\"" + svg::num(first + label->size * 0.35) + "\" font-size=\"" + svg::num(label->size) + "\"" + ink + style.text + ">" + svg::esc(label->text) + "</text>" +
+               "<text class=\"pele-value\" x=\"" + cx + "\" y=\"" + svg::num(second + value_size * 0.35) + "\" font-size=\"" + svg::num(value_size) + "\"" + ink + style.text + ">" +
                svg::esc(to_utf16(value)) + "</text>";
       } else {
-        text = "<text x=\"" + cx + "\" y=\"" + svg::num(cy + label->size * 0.35) + "\" font-size=\"" + svg::num(label->size) + "\"" + style.text + ">" + svg::esc(label->text) + "</text>";
+        text = "<text x=\"" + cx + "\" y=\"" + svg::num(cy + label->size * 0.35) + "\" font-size=\"" + svg::num(label->size) + "\"" + ink + style.text + ">" + svg::esc(label->text) + "</text>";
       }
     }
     std::optional<ustring> label_text;

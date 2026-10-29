@@ -20,6 +20,9 @@ inline constexpr const char* kRadius = "var(--pele-radius,4px)";
 // override it.
 inline constexpr const char* kRounded = " style=\"rx:var(--_r)\"";
 std::string rounded(const std::string& attrs);
+
+// Whether a shape style from resolve_style() sets a fill.
+bool sets_fill(const std::string& shape);
 // The colour of what a diagram marks as critical. It is not one of the series colours, as a theme
 // may put those in any order.
 inline constexpr const char* kCritical = "var(--pele-critical,#e45756)";

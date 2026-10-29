@@ -332,32 +332,44 @@ bool normalize_http(const ustring& text, ustring& out) {
 
 }  // namespace
 
-ustring sanitize_url(const ustring& url) {
-  if (url.empty()) return kBlank;
-  auto decode = [](const ustring& s) {
-    bool ok = true;
-    ustring out = decode_component(s, ok);
-    return ok ? out : s;
-  };
-  ustring decoded = decode(trim(url));
+namespace {
+
+ustring decode_or_same(const ustring& s) {
+  bool ok = true;
+  ustring out = decode_component(s, ok);
+  return ok ? out : s;
+}
+
+// Removes the control characters, entity codes and escapes that could hide a scheme, and with
+// `percent`, percent escapes too. Nothing for a URL wrapped too many times to be a real one.
+std::optional<ustring> unwrap(const ustring& url, bool percent) {
+  ustring out = percent ? decode_or_same(trim(url)) : trim(url);
   int rounds = 0;
   bool more;
   do {
-    // Each round peels one layer of encoding. A URL wrapped this many times is not a real one.
-    if (++rounds > 32) return kBlank;
-    decoded = trim(strip_hidden(decoded));
-    decoded = decode(decoded);
-    more = has_more(decoded);
+    if (++rounds > 32) return std::nullopt;
+    out = trim(strip_hidden(out));
+    if (percent) out = decode_or_same(out);
+    more = has_more(out);
   } while (more);
+  return out;
+}
 
-  if (decoded.empty()) return kBlank;
-  if (decoded[0] == '.' || decoded[0] == '/') return decoded;
-  const ustring trimmed = trim_start(decoded);
+}  // namespace
+
+ustring sanitize_url(const ustring& url) {
+  if (url.empty()) return kBlank;
+  const std::optional<ustring> decoded_opt = unwrap(url, true);
+  const std::optional<ustring> kept_opt = unwrap(url, false);
+  if (!decoded_opt || !kept_opt || decoded_opt->empty() || kept_opt->empty()) return kBlank;
+  const ustring& decoded = *decoded_opt;
+  const ustring& kept = *kept_opt;
+  if (decoded[0] == '.' || decoded[0] == '/') return kept;
   ustring scheme;
-  if (!find_scheme(trimmed, scheme)) return decoded;
+  if (!find_scheme(trim_start(decoded), scheme)) return kept;
   const ustring protocol = trim(lower_ascii(scheme));
   if (invalid_protocol(protocol)) return kBlank;
-  ustring normalized = trimmed;
+  ustring normalized = trim_start(kept);
   for (char16_t& c : normalized)
     if (c == '\\') c = '/';
   if (protocol == u"mailto:" || protocol.find(u"://") != ustring::npos) return normalized;
@@ -373,9 +385,9 @@ ustring safe_url(const ustring& url) { return sanitize_url(decode_entities(url))
 
 namespace {
 
-std::optional<ustring> allow(const ustring& url, const std::vector<std::string>& schemes) {
+bool allowed(const ustring& url, const std::vector<std::string>& schemes) {
   // A network-path reference (`//host/path`) is not relative: it names another site.
-  if (url.size() >= 2 && (url[0] == '/' || url[0] == '\\') && (url[1] == '/' || url[1] == '\\')) return std::nullopt;
+  if (url.size() >= 2 && (url[0] == '/' || url[0] == '\\') && (url[1] == '/' || url[1] == '\\')) return false;
   // ^([a-z][a-z0-9+.-]*):
   std::size_t i = 0;
   if (i < url.size() && is_letter(url[i])) {
@@ -383,10 +395,16 @@ std::optional<ustring> allow(const ustring& url, const std::vector<std::string>&
     while (i < url.size() && (is_letter(url[i]) || is_digit(url[i]) || url[i] == '+' || url[i] == '.' || url[i] == '-')) i++;
     if (unit_at(url, i) == ':') {
       const std::string scheme = to_utf8(lower_ascii(url.substr(0, i)));
-      if (std::find(schemes.begin(), schemes.end(), scheme) == schemes.end()) return std::nullopt;
+      if (std::find(schemes.begin(), schemes.end(), scheme) == schemes.end()) return false;
     }
   }
-  return url;
+  return true;
+}
+
+// The decoded URL is checked too, for an app that decodes the href before opening it.
+std::optional<ustring> allow(const ustring& url, const std::vector<std::string>& schemes) {
+  const std::optional<ustring> decoded = unwrap(url, true);
+  return decoded && allowed(url, schemes) && allowed(*decoded, schemes) ? std::optional<ustring>(url) : std::nullopt;
 }
 
 const std::vector<std::string>& default_link_schemes() {
