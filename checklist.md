@@ -95,7 +95,8 @@
 - [x] cynefin — ۱۳٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت (`tools/gen_cynefin_cases.mjs`، `tests/data/e2e_cynefin.txt`) و مولد seed در سطح بیت (`tools/gen_seed_cases.mjs`)
 - [x] class — ۶٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت (`tools/gen_class_cases.mjs`، `tests/data/e2e_class.txt`)؛ حدود ۴۰٪ هر مجموعه خطای نحوی است که پیامش هم مقایسه می‌شود؛ شامل namespace، cardinality، حلقه‌ی خودی، عنوان خط‌خورده و `maxWidth` (شکستن بخش‌های جدا)
 - [x] er — ۱۱٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت (`tools/gen_er_cases.mjs`، `tests/data/e2e_er.txt`)؛ حدود ۳۵٪ هر مجموعه خطای نحوی است که پیامش هم مقایسه می‌شود؛ شامل جدول attribute، marker ها، subgraph، حلقه‌ی خودی، رنگ پر، لینک داخلی و `monospace`
-- [ ] sequence، state، gantt، gitGraph
+- [x] state — ۱۲٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت (`tools/gen_state_cases.mjs`، `tests/data/e2e_state.txt`)؛ composite، region، fork/join/choice، note، لینک، کلاس و استایل، حلقه‌ی خودی
+- [ ] sequence، gantt، gitGraph
 - [ ] timeline، journey، xychart، quadrant، requirement
 - [ ] c4، sankey، block، architecture، radar
 - [ ] سایر انواع (agentflow، usecase، railroad، treeView، venn، wardley، swimlane، ishikawa، eventmodeling)

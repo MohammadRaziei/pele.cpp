@@ -28,7 +28,8 @@ The SVG draws everything with CSS variables that have fallbacks (`--pele-bg`, `-
 | info, packet, pie, kanban, mindmap, treemap, cynefin | done: the same, checked on tens of thousands of random diagrams each, errors included |
 | class | done: checked on about six thousand random diagrams, errors included (math is not supported) |
 | er | done: checked on about eleven thousand random diagrams, errors included (math is not supported) |
-| sequence, state, gantt, gitGraph | next |
+| state | done: checked on about twelve thousand random diagrams, errors included (math is not supported) |
+| sequence, gantt, gitGraph | next |
 | the other 19 types | not started |
 
 The full list is in `checklist.md`. `pele-cli --version` prints the version of this library and the

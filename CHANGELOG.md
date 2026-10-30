@@ -3,6 +3,25 @@
 The version of this library follows its own numbering. Which version of Pele (the TypeScript
 library) its SVG matches byte for byte is in `PELE_CPP_REFERENCE_VERSION` (`pele/version.h`).
 
+## 0.6.0
+
+Matches Pele 1.12.0 (unchanged). New diagram type: `state`.
+
+Added
+- State diagrams (`src/state/state.h`, `src/state/state.cpp`; lexer, parser, model, graph and
+  renderer in one pair of files): transitions with labels and self-transitions, `[*]` start and
+  end states, descriptions, composites nested to any depth, concurrent regions (`--`), fork, join
+  and choice, notes (beside a state, multi-line and floating), `classDef`, `class`, `style` and
+  `:::`, `click` links with tooltips, `direction` inside composites, the flowchart `curve`
+  setting, and `nodeSpacing`, `rankSpacing` and `wrappingWidth`. Errors, including the grammar's
+  own "State name must be a single word", are worded as Pele words them.
+
+Tests
+- `tools/gen_state_cases.mjs` and `tests/data/e2e_state.txt` (600 cases, about a third of them
+  invalid text, compared by code and message). About twelve thousand more cases from other seeds
+  also matched, covering composites with fills crossed by transitions, loops, notes and regions.
+- Not ported: math in labels, as before.
+
 ## 0.5.0
 
 Matches Pele 1.12.0 (unchanged). New diagram type: `er`.
