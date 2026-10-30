@@ -94,7 +94,8 @@
 - [x] زیرساخت: `js_format` (toFixed/toExponential/toPrecision) و `js_parse_float` — ۲۰۰٬۰۰۰+ عدد (`tools/gen_format_cases.mjs`)
 - [x] cynefin — ۱۳٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت (`tools/gen_cynefin_cases.mjs`، `tests/data/e2e_cynefin.txt`) و مولد seed در سطح بیت (`tools/gen_seed_cases.mjs`)
 - [x] class — ۶٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت (`tools/gen_class_cases.mjs`، `tests/data/e2e_class.txt`)؛ حدود ۴۰٪ هر مجموعه خطای نحوی است که پیامش هم مقایسه می‌شود؛ شامل namespace، cardinality، حلقه‌ی خودی، عنوان خط‌خورده و `maxWidth` (شکستن بخش‌های جدا)
-- [ ] sequence، state، er، gantt، gitGraph
+- [x] er — ۱۱٬۰۰۰+ دیاگرام تصادفی بایت‌به‌بایت (`tools/gen_er_cases.mjs`، `tests/data/e2e_er.txt`)؛ حدود ۳۵٪ هر مجموعه خطای نحوی است که پیامش هم مقایسه می‌شود؛ شامل جدول attribute، marker ها، subgraph، حلقه‌ی خودی، رنگ پر، لینک داخلی و `monospace`
+- [ ] sequence، state، gantt، gitGraph
 - [ ] timeline، journey، xychart، quadrant، requirement
 - [ ] c4، sankey، block، architecture، radar
 - [ ] سایر انواع (agentflow، usecase، railroad، treeView، venn، wardley، swimlane، ishikawa، eventmodeling)

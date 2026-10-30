@@ -90,6 +90,23 @@ class edge_geometry {
   // A wider page-colored stroke under an edge, as faint as it; markers drop their class so marker styles skip it.
   static std::string edge_casing(const edge_path& path, std::string_view start_type, std::string_view end_type, const std::string& line = "", bool thick = false);
 
+  // The same around markers that are already drawn: their class is dropped so marker styles skip them.
+  static std::string casing(const std::string& d, const std::string& markers, const std::string& line = "", bool thick = false);
+
+  // The innermost fill that holds the whole edge and its marker tips. `crossing` is set where the edge
+  // crosses a border, and nothing is held off the fills.
+  struct fill_hold {
+    const fill* holder = nullptr;
+    bool crossing = false;
+  };
+  static fill_hold fill_under(const std::string& d, const std::vector<double>& tips, const std::vector<fill>& fills, const std::vector<double>& tokens = {});
+
+  // The fill's ink for an edge on it, or "" for a casing when unknown or when the line style sets a stroke.
+  static std::string edge_ink(const fill& f, const std::string& line = "");
+
+  // Markers with the page color inside them, with the fill's color there instead.
+  static std::string hollow_on(const std::string& markers, const fill& f);
+
   static std::string casings_svg(const std::string& casings);
 
   static edge_path loop_path(double cx, double cy, double w, double h, int k, bool sideways, double base, double trim, loop_label& e);

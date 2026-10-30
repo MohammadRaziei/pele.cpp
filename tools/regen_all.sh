@@ -71,6 +71,7 @@ e2e pie gen_pie_cases.mjs 500
 e2e treemap gen_treemap_cases.mjs 500
 e2e cynefin gen_cynefin_cases.mjs 500
 e2e class gen_class_cases.mjs 600
+e2e er gen_er_cases.mjs 600
 
 if [ $check = 1 ]; then
   differ=0

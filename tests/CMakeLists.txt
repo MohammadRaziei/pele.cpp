@@ -58,6 +58,7 @@ target_include_directories(test_seed PRIVATE ${CMAKE_SOURCE_DIR}/src ${CMAKE_SOU
 add_test(NAME test_seed COMMAND test_seed ${CMAKE_SOURCE_DIR}/tests/data/seed_cases.txt)
 add_test(NAME test_e2e_cynefin COMMAND test_e2e ${CMAKE_SOURCE_DIR}/tests/data/e2e_cynefin.txt)
 add_test(NAME test_e2e_class COMMAND test_e2e ${CMAKE_SOURCE_DIR}/tests/data/e2e_class.txt)
+add_test(NAME test_e2e_er COMMAND test_e2e ${CMAKE_SOURCE_DIR}/tests/data/e2e_er.txt)
 add_executable(test_members test_members.cpp)
 target_link_libraries(test_members PRIVATE pele)
 target_include_directories(test_members PRIVATE ${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/include/pele)

@@ -466,9 +466,8 @@ constexpr double kCase = 4;
 
 }  // namespace
 
-std::optional<std::string> edge_geometry::over_fills(const std::string& d, const std::vector<double>& tips, const std::vector<fill>& fills, const std::string& line,
-                                                     const std::vector<double>& tokens) {
-  if (fills.empty()) return std::nullopt;
+edge_geometry::fill_hold edge_geometry::fill_under(const std::string& d, const std::vector<double>& tips, const std::vector<fill>& fills, const std::vector<double>& tokens) {
+  if (fills.empty()) return {};
   const std::vector<double> points = !tokens.empty() ? sample(tokens) : sample(tokenize(d));
   double min_x = std::numeric_limits<double>::infinity();
   double min_y = min_x;
@@ -493,23 +492,63 @@ std::optional<std::string> edge_geometry::over_fills(const std::string& d, const
     bool touched = enters(points, l + 0.5, t + 0.5, r - 0.5, b - 0.5);
     for (std::size_t k = 0; k < tips.size() && !touched; k += 2) touched = tips[k] > l + 0.5 && tips[k] < r - 0.5 && tips[k + 1] > t + 0.5 && tips[k + 1] < b - 0.5;
     if (!touched) continue;
-    if (min_x < l || max_x > r || min_y < t || max_y > b) return std::string();
+    if (min_x < l || max_x > r || min_y < t || max_y > b) return {nullptr, true};
     const double area = (r - l) * (b - t);
     if (area < least) {
       least = area;
       holder = &f;
     }
   }
-  if (holder == nullptr) return std::nullopt;
+  return {holder, false};
+}
+
+std::string edge_geometry::edge_ink(const fill& f, const std::string& line) {
   // The fill's ink for an edge on it, or "" for a casing when unknown or when the line style sets a stroke.
   if (line.find("\"stroke:") != std::string::npos || line.find(";stroke:") != std::string::npos) return std::string();
-  const auto color = ink(holder->shape);
+  const auto color = ink(f.shape);
   return color ? *color : std::string();
 }
 
+std::string edge_geometry::hollow_on(const std::string& markers, const fill& f) {
+  // /[";]fill:([^;"]*)/
+  const std::string& s = f.shape;
+  for (std::size_t i = 0; i + 5 <= s.size(); i++) {
+    if ((s[i] != '"' && s[i] != ';') || s.compare(i + 1, 5, "fill:") != 0) continue;
+    std::size_t end = i + 6;
+    while (end < s.size() && s[end] != ';' && s[end] != '"') end++;
+    const std::string color = to_utf8(trim(to_utf16(s.substr(i + 6, end - i - 6))));
+    if (color.empty()) return markers;
+    const std::string from = " fill=\"var(--_bg)\"";
+    const std::string to = " fill=\"" + color + "\"";
+    std::string out;
+    for (std::size_t k = 0; k < markers.size();) {
+      if (markers.compare(k, from.size(), from) == 0) {
+        out += to;
+        k += from.size();
+      } else {
+        out += markers[k++];
+      }
+    }
+    return out;
+  }
+  return markers;
+}
+
+std::optional<std::string> edge_geometry::over_fills(const std::string& d, const std::vector<double>& tips, const std::vector<fill>& fills, const std::string& line,
+                                                     const std::vector<double>& tokens) {
+  const fill_hold hold = fill_under(d, tips, fills, tokens);
+  if (hold.crossing) return std::string();
+  if (hold.holder == nullptr) return std::nullopt;
+  return edge_ink(*hold.holder, line);
+}
+
 std::string edge_geometry::edge_casing(const edge_path& path, std::string_view start_type, std::string_view end_type, const std::string& line, bool thick) {
-  const std::string markers = marker(start_type, path.sx, path.sy, path.sdx, path.sdy, "var(--_bg)", "var(--_bg)") +
-                              marker(end_type, path.ex, path.ey, path.edx, path.edy, "var(--_bg)", "var(--_bg)");
+  const std::string start = marker(start_type, path.sx, path.sy, path.sdx, path.sdy, "var(--_bg)", "var(--_bg)");
+  const std::string end = marker(end_type, path.ex, path.ey, path.edx, path.edy, "var(--_bg)", "var(--_bg)");
+  return casing(path.d, start + end, line, thick);
+}
+
+std::string edge_geometry::casing(const std::string& d, const std::string& markers, const std::string& line, bool thick) {
   const auto stroke = decl(line, "stroke");
   if (stroke && (*stroke == "none" || *stroke == "transparent")) return "";
   const std::optional<std::string> width = thick ? std::optional<std::string>("2.5") : decl(line, "stroke-width");
@@ -531,7 +570,7 @@ std::string edge_geometry::edge_casing(const edge_path& path, std::string_view s
     if (markers.compare(i, drop.size(), drop) == 0) i += drop.size();
     else cleaned += markers[i++];
   }
-  const std::string body = "<path d=\"" + path.d + "\"/>" + cleaned;
+  const std::string body = "<path d=\"" + d + "\"/>" + cleaned;
   return !attrs.empty() || !style.empty() ? "<g" + attrs + (!style.empty() ? " style=\"" + style + "\"" : "") + ">" + body + "</g>" : body;
 }
 

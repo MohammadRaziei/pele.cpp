@@ -3,6 +3,29 @@
 The version of this library follows its own numbering. Which version of Pele (the TypeScript
 library) its SVG matches byte for byte is in `PELE_CPP_REFERENCE_VERSION` (`pele/version.h`).
 
+## 0.5.0
+
+Matches Pele 1.12.0 (unchanged). New diagram type: `er`.
+
+Added
+- ER diagrams (`src/er/er.h`, `src/er/er.cpp`; one pair of files for lexer, model, parser, graph,
+  markers and renderer): entities with attribute tables (keys, comments, generic types, monospace),
+  aliases, the crow's foot, ring, bar and `md_parent` markers, subgraphs with their own direction,
+  `style`, `classDef`, `class` and `:::`, internal links, self-relationships looping out of the
+  right or the bottom, edge ends spread along a side, and `nodeSpacing` / `rankSpacing`.
+  Errors are worded as Mermaid words them.
+- `edge_geometry::fill_under`, `edge_ink`, `hollow_on` and `casing` (the pieces `over_fills` and
+  `edge_casing` are made of), which ER needs apart.
+
+Fixed
+- The build on MSVC: `M_PI` is not standard; `pele::constant::pi` (in `js_math.h`) replaces it.
+
+Tests
+- `tools/gen_er_cases.mjs` and `tests/data/e2e_er.txt` (600 cases, about a third of them invalid
+  text, compared by code and message). About eleven thousand more cases from other seeds also
+  matched, covering loops on both sides, subgraph fills with hollow markers and casings.
+- Not ported: math in labels, as before.
+
 ## 0.4.0
 
 Matches Pele 1.12.0 (was 1.11.0).

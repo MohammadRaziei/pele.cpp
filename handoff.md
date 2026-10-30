@@ -1,3 +1,9 @@
+# UPDATE (latest session): version 0.5.0, Pele 1.12.0, `er` added (33 ctest)
+
+(Changes are in CHANGELOG.md. Done diagrams: flowchart, info, packet, pie, kanban, mindmap, treemap,
+cynefin, class, er. ER lives in one pair of files, `src/er/er.h` and `src/er/er.cpp`; the user
+prefers few files. `M_PI` is replaced by `pele::constant::pi`: MSVC is part of CI.)
+
 # UPDATE (latest session): moved to Pele 1.12.0 (version 0.4.0)
 
 (Changes are in CHANGELOG.md. Sections below describe earlier steps.)
